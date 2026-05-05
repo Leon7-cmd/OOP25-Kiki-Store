@@ -1,7 +1,7 @@
 plugins {
     // Apply the java plugin to add support for Java
     java
-
+    id("org.openjfx.javafxplugin") version "0.1.0"
     // Apply the application plugin to add support for building a CLI application
     // You can run your app via task "run": ./gradlew run
     application
@@ -13,6 +13,11 @@ plugins {
      */
     id("com.gradleup.shadow") version "9.4.1"
     id("org.danilopianini.gradle-java-qa") version "1.172.0"
+}
+
+javafx {
+    version = "17" // Inserisci la versione del JDK che state usando (solitamente 17 o 21 per i progetti universitari)
+    modules = listOf("javafx.controls", "javafx.graphics", "javafx.media") 
 }
 
 repositories { // Where to search for dependencies
