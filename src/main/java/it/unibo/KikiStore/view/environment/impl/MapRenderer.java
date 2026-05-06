@@ -1,7 +1,7 @@
 package it.unibo.KikiStore.view.environment.impl;
 
-import it.unibo.KikiStore.view.SpriteManager;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
+import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

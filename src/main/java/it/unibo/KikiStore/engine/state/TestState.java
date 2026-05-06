@@ -7,11 +7,12 @@ import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
-import it.unibo.KikiStore.view.SpriteManager;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
 import it.unibo.KikiStore.view.environment.impl.MapRenderer;
+import it.unibo.KikiStore.view.utility.Camera;
+import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -30,6 +31,7 @@ public class TestState implements GameState {
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
     
+    private Camera cam = new Camera();
     private int frameCount = 0;
     private final int[][] visualGrid;
 
@@ -65,19 +67,17 @@ public class TestState implements GameState {
 
     @Override
     public void render(GraphicsContext gc) {
-        double screenWidth = 800; 
-        double screenHeight = 600;
+        double screenWidth = gc.getCanvas().getWidth(); 
+        double screenHeight = gc.getCanvas().getHeight();
         
         // Clear the screen with a solid background color
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, screenWidth, screenHeight);
 
         // --- CAMERA LOGIC ---
-        double cameraX = kiki.getX() - (screenWidth / 2) + (64 / 2);
-        double cameraY = kiki.getY() - (screenHeight / 2) + (64 / 2);
-
         gc.save(); 
-        gc.translate(-cameraX, -cameraY); 
+        cam.update(kiki.getX(), kiki.getY(), screenWidth, screenHeight);
+        gc.translate(-cam.getX(), -cam.getY()); 
 
         // --- WORLD RENDERING ---
         MapRenderData mapData = new MapRenderData(visualGrid, 64);

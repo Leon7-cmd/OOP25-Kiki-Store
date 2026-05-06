@@ -1,4 +1,4 @@
-package it.unibo.KikiStore.view;
+package it.unibo.KikiStore.view.utility;
 
 import javafx.scene.image.Image;
 import java.io.InputStream;
