@@ -5,17 +5,22 @@ import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
+import it.unibo.KikiStore.model.item.api.Item;
+import it.unibo.KikiStore.model.item.impl.ItemImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
 import it.unibo.KikiStore.view.environment.impl.MapRenderer;
+import it.unibo.KikiStore.view.item.api.ItemRenderData;
+import it.unibo.KikiStore.view.item.impl.ItemRenderer;
 import it.unibo.KikiStore.view.utility.Camera;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,10 +35,12 @@ public class TestState implements GameState {
     private final SpriteManager spriteManager;
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
+    private final ItemRenderer itemRenderer;
     
     private Camera cam = new Camera();
     private int frameCount = 0;
     private final int[][] visualGrid;
+    private final List<Item> itemsInWorld;
 
     public TestState(InputHandler input) {
         this.input = input;
@@ -54,6 +61,11 @@ public class TestState implements GameState {
         this.spriteManager = new SpriteManager();
         this.entityRenderer = new EntityRenderer(spriteManager);
         this.environmentRenderer = new MapRenderer(spriteManager);
+        this.itemRenderer = new ItemRenderer(spriteManager);
+
+        // --- 4. ITEM CREATION ---
+        this.itemsInWorld = new ArrayList<>();
+        this.itemsInWorld.add(new ItemImpl("sprites/items/crystal", 50, 50, 64, 64, true));
     }
 
     @Override
@@ -87,6 +99,14 @@ public class TestState implements GameState {
             kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
         );
         entityRenderer.render(gc, List.of(kikiData), frameCount);
+
+        List<ItemRenderData> itemsToDraw = itemsInWorld.stream()
+            .map(obj -> new ItemRenderData(
+                obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight(), 
+                obj.getId(), obj.isAnimated()
+            ))
+            .toList();
+        itemRenderer.render(gc, itemsToDraw, frameCount);
 
         gc.restore(); 
     }
