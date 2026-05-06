@@ -35,12 +35,10 @@ public class TestState implements GameState {
     private final SpriteManager spriteManager;
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
-    private final ItemRenderer itemRenderer;
     
     private Camera cam = new Camera();
     private int frameCount = 0;
     private final int[][] visualGrid;
-    private final List<Item> itemsInWorld;
 
     public TestState(InputHandler input) {
         this.input = input;
@@ -61,11 +59,6 @@ public class TestState implements GameState {
         this.spriteManager = new SpriteManager();
         this.entityRenderer = new EntityRenderer(spriteManager);
         this.environmentRenderer = new MapRenderer(spriteManager);
-        this.itemRenderer = new ItemRenderer(spriteManager);
-
-        // --- 4. ITEM CREATION ---
-        this.itemsInWorld = new ArrayList<>();
-        this.itemsInWorld.add(new ItemImpl("sprites/items/crystal", 50, 50, 64, 64, true));
     }
 
     @Override
@@ -99,14 +92,6 @@ public class TestState implements GameState {
             kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
         );
         entityRenderer.render(gc, List.of(kikiData), frameCount);
-
-        List<ItemRenderData> itemsToDraw = itemsInWorld.stream()
-            .map(obj -> new ItemRenderData(
-                obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight(), 
-                obj.getId(), obj.isAnimated()
-            ))
-            .toList();
-        itemRenderer.render(gc, itemsToDraw, frameCount);
 
         gc.restore(); 
     }

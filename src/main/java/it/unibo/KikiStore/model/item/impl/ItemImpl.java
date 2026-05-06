@@ -3,8 +3,10 @@ package it.unibo.KikiStore.model.item.impl;
 import it.unibo.KikiStore.model.item.api.Item;
 import javafx.geometry.Rectangle2D;
 
-public class ItemImpl implements Item{
-    private final String id;      
+public abstract class ItemImpl implements Item{
+    private final String id;
+    private final String name;
+    private int quantity;
     private final double x, y;     
     private final double width, height; 
     private final boolean animated; 
@@ -17,22 +19,30 @@ public class ItemImpl implements Item{
      * @param height   The height of the item's sprite/hitbox.
      * @param animated Whether the item should be treated as an animated sprite.
      */
-    public ItemImpl(String id, double x, double y, double width, double height, boolean animated) {
+
+    public ItemImpl(String id, double x, double y, double width, double height, boolean animated, String name, int quantity) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.animated = animated;
+        this.name = name;
+        this.quantity = quantity;
     }
-
+ 
     // --- View Getters ---
+    public int getQuantity() { return quantity; }
+    public String getName() { return name; }
     public String getId() { return id; }
     public double getX() { return x; }
     public double getY() { return y; }
     public double getWidth() { return width; }
     public double getHeight() { return height; }
     public boolean isAnimated() { return animated; }
+
+    // --- Setters ---
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
     /**
      * Returns the collision area (Hitbox) of the object.
