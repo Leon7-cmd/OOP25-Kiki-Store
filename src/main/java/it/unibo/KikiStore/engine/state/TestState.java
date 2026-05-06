@@ -1,47 +1,93 @@
 package it.unibo.KikiStore.engine.state;
 
+import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.engine.api.GameState;
+import it.unibo.KikiStore.model.map.impl.CollisionHandler;
+import it.unibo.KikiStore.model.map.impl.MapLoader;
+import it.unibo.KikiStore.model.map.impl.TileMapImpl;
+import it.unibo.KikiStore.model.map.api.GameTile;
+import it.unibo.KikiStore.model.player.impl.PlayerImpl;
+import it.unibo.KikiStore.view.SpriteManager;
+import it.unibo.KikiStore.view.entity.api.EntityRenderData;
+import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
+import it.unibo.KikiStore.view.environment.api.MapRenderData;
+import it.unibo.KikiStore.view.environment.impl.MapRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.List;
+
 /**
- * TestState per verificare il corretto funzionamento del Game Engine.
- * Dimostra l'esecuzione in sequenza di init(), update() e render().
+ * Concrete implementation of GameState used to test the integration of 
+ * player movement, dual-layered maps (visual/collision), and camera scrolling.
  */
 public class TestState implements GameState {
 
-    private double boxX = 100;
-    private final double boxY = 200;
-    private double speedX = 5.0;
+    private final InputHandler input;
+    private final PlayerImpl kiki; 
+    
+    private final SpriteManager spriteManager;
+    private final EntityRenderer entityRenderer;
+    private final MapRenderer environmentRenderer;
+    
+    private int frameCount = 0;
+    private final int[][] visualGrid;
+
+    public TestState(InputHandler input) {
+        this.input = input;
+        
+        // --- 1. RESOURCE LOADING ---
+        this.visualGrid = MapLoader.loadMap("maps/test.txt");
+        int[][] maskGrid = MapLoader.loadMap("maps/col/testCol.txt");
+        
+        // --- 2. MODEL INITIALIZATION ---
+        GameTile collisionMap = new TileMapImpl(maskGrid, 64);
+        CollisionHandler collisionHandler = new CollisionHandler(collisionMap);
+        
+        // Initialize the player and inject the collision logic
+        this.kiki = new PlayerImpl(100, 100);
+        this.kiki.setCollisionHandler(collisionHandler); 
+        
+        // --- 3. VIEW INITIALIZATION ---
+        this.spriteManager = new SpriteManager();
+        this.entityRenderer = new EntityRenderer(spriteManager);
+        this.environmentRenderer = new MapRenderer(spriteManager);
+    }
 
     @Override
     public void init() {}
 
-    /**
-     * Dimostra che il Game Loop sta girando aggiornando la logica costantemente.
-     */
     @Override
     public void update() {
-        // Facciamo muovere il quadrato avanti e indietro
-        boxX += speedX;
-
-        if (boxX > 700 || boxX < 50) {
-            speedX = -speedX; 
-        }
+        kiki.update(input);
+        frameCount++;
     }
 
-    /**
-     * Dimostra che il GraphicsContext sta dipingendo correttamente sul Canvas.
-     */
     @Override
     public void render(GraphicsContext gc) {
-        double canvasWidth = gc.getCanvas().getWidth();
-        double canvasHeight = gc.getCanvas().getHeight();
+        double screenWidth = 800; 
+        double screenHeight = 600;
+        
+        // Clear the screen with a solid background color
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, screenWidth, screenHeight);
 
-        gc.setFill(Color.DARKSLATEGRAY);
-        gc.fillRect(0, 0, canvasWidth, canvasHeight);
+        // --- CAMERA LOGIC ---
+        double cameraX = kiki.getX() - (screenWidth / 2) + (64 / 2);
+        double cameraY = kiki.getY() - (screenHeight / 2) + (64 / 2);
 
-        gc.setFill(Color.CRIMSON);
-        gc.fillRect(boxX, boxY, 80, 80);
+        gc.save(); 
+        gc.translate(-cameraX, -cameraY); 
+
+        // --- WORLD RENDERING ---
+        MapRenderData mapData = new MapRenderData(visualGrid, 64);
+        environmentRenderer.render(gc, mapData);
+
+        EntityRenderData kikiData = new EntityRenderData(
+            kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
+        );
+        entityRenderer.render(gc, List.of(kikiData), frameCount);
+
+        gc.restore(); 
     }
 }
