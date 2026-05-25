@@ -1,0 +1,69 @@
+[
+{
+    "name": "Dreamglow Potion",
+    "description": "A soft glowing mixture that brings peaceful and vivid dreams.",
+    "effect": "sleep",
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "ingredients": [
+        "starlavender",
+        "milkflower",
+        "blue_lotus"
+    ]
+},
+{
+    "name": "Bloomheart Tonic",
+    "description": "A sweet rosy potion that lifts the spirit and brightens gloomy days.",
+    "effect": "joy",
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "ingredients": [
+      "rosebud",
+      "sunberry",
+      "honey"
+    ]
+},
+{
+    "name": "Moonwhisper Tea",
+    "description": "Silvery potion that fills the drinker with quiet focus under the moonlight.",
+    "effect": "focus",
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "ingredients": [
+      "moonpetal",
+      "silvermint",
+      "dewberry"
+    ]
+},
+{
+    "name": "Wanderer Potion",
+    "description": "Smells like pine and adventure, makes your heart feel brave",
+    "effect": "courage",
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "ingredients": [
+        "Wind Grass",
+        "Dandelion",
+        "Feather Fern"
+    ]
+},
+{
+    "name": "Tummy Trouble Potion",
+    "description": "Smells like peppermint and fixes a grumpy stomach right up",
+    "effect": "digestion",
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "ingredients": [
+        "Mint",
+        "Ginger Root",
+        "Fennel"
+    ]
+},
+{
+    "name": "Lucky Clover Potion",
+    "description": "Suspiciously green and smells like a garden after rain",
+    "effect": "luck",
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "ingredients": [
+        "Four_Leaf_Clover",
+        "Mint",
+        "Dandelion"
+    ]
+}
+
+]
