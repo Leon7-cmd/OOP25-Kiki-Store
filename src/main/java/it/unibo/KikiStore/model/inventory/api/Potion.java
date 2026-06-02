@@ -1,7 +1,7 @@
 package it.unibo.KikiStore.model.inventory.api;
-import it.unibo.KikiStore.model.item.api.Item;
+import it.unibo.KikiStore.model.item.api.GameItem;
 
-public interface Potion extends Item {
+public interface Potion extends GameItem {
     public String getDescription();
     public String getEffect();
     public boolean isBlack();

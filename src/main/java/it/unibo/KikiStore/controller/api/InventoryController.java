@@ -6,16 +6,15 @@ import it.unibo.KikiStore.model.inventory.api.Recipe;
 import java.util.List;
 
 public interface InventoryController {
-    public void addIngredient(String id, double x, double y, double width, double height, boolean animated, String name, int quantity, String type);
-    public void addPotion(String id, double x, double y, double width, double height, boolean animated, String name, int quantity, String description, String effect, boolean isBlack);
-    public void removeIngredient(String id, int quantity);
-    public void removePotion(String id, int quantity); 
-    public boolean hasIngredient(String id);
-    public boolean hasEnoughIngredient(String id, int quantity);
+    public void addIngredient(String name, String imagePath, int quantity, String type);
+    public void addPotion(String name, String imagePath, int quantity, String description, String effect, boolean isBlack);
+    public void removeIngredient(String name, int quantity);
+    public void removePotion(String name, int quantity); 
+    public boolean hasIngredient(Ingredient ingredient);
+    public boolean hasEnoughIngredient(String name, int quantity);
+    public List<Ingredient> getMissingIngredients(Recipe recipe);
     public boolean canCraftPotion(Recipe recipe);
-    public List<Ingredient> getMissingIngnredients(Recipe recipe);
     public Inventory getInventory();
-    public int getIngredientQuantity(String id);
+    public int getIngredientQuantity(String name);
     public boolean isFull();
-    public boolean isEmpty();
 }

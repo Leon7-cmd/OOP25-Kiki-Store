@@ -40,9 +40,9 @@ public class RecipeBookImpl implements RecipeBook {
 
             for (JsonElement ing : ingredientsArray) {
                 String ingName = ing.getAsString();
-                ingredients.add(new IngredientImpl("", 0,0,0,0,false, ingName, 0, "ingredient"));
+                ingredients.add(new IngredientImpl(ingName, "", 0, "ingredient"));
             }
-            Potion potion = new PotionImpl(id, 0,0,0,0,false, name, 0, description, effect, false);
+            Potion potion = new PotionImpl(name, id, 0, description, effect, false);
             Recipe recipe = new RecipeImpl(ingredients, potion, false);
             allRecipes.add(recipe);
         }

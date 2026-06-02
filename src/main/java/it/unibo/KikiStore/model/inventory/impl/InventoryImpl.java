@@ -37,8 +37,4 @@ public class InventoryImpl implements Inventory{
     @Override public void removePotion(Potion potion) {
         potions.remove(potion);
     }
-
-    @Override public boolean hasIngredient(Ingredient ingredient) {
-        return ingredients.contains(ingredient);
-    }
 }
