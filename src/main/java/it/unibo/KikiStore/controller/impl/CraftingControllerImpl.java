@@ -1,7 +1,6 @@
 package it.unibo.KikiStore.controller.impl;
 import it.unibo.KikiStore.controller.api.CraftingController;
 import it.unibo.KikiStore.controller.api.InventoryController;   
-import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Potion;
@@ -13,6 +12,8 @@ import java.util.List;
 public class CraftingControllerImpl implements CraftingController {
     private final InventoryController inventoryController;
     private final RecipeBook recipeBook;
+    private static final String BLACK_POTION_NAME = "Failed Potion";
+    private static final String BLACK_POTION_PATH = "assets/potions/black.png";
 
     public CraftingControllerImpl(InventoryController inventoryController, RecipeBook recipeBook) {
         this.inventoryController = inventoryController;
@@ -26,13 +27,13 @@ public class CraftingControllerImpl implements CraftingController {
            inventoryController.addPotion(potion.getName(), potion.getImagePath(), potion.getQuantity(), potion.getDescription(), potion.getEffect(), false);
            recipe.setUnlocked();
            //inventoryController.removeIngredients(ingredients);//da sistemare, serve metodo che prende lista
-           for (Ingredient ingredient : ingredients) {
-               inventoryController.removeIngredient(ingredient.getName(), 1); 
-           }
+           for (Ingredient ingredient : recipe.getIngredients()) {
+                inventoryController.removeIngredient(ingredient.getName(), ingredient.getQuantity());
+            }
 
         } else  {
-            Potion blackPotion = new Potion();//da capire come gestire le pozioni fallite
-            blackPotion.setBlack(true);
+            inventoryController.addPotion(BLACK_POTION_NAME, BLACK_POTION_PATH, 1, "A failed attempt...", "none", true);
+            //blackPotion.setBlack(true);metodo probabilmente da togliere da potion
         }
     }
 
