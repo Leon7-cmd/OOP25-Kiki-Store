@@ -2,6 +2,7 @@ package it.unibo.KikiStore.controller.impl;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
 import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
+import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +24,23 @@ public class RecipeBookControllerImpl implements RecipeBookController{
         return recipeBook.getUnlockedRecipes();
     }
 
-    @Override public List<Recipe> findByEffect(String effect){
-        return recipeBook.findByEffect(effect);
+    @Override public Recipe findByIngredients(List<Ingredient> ingredients) {
+        for (Recipe recipe : recipeBook.getRecipes()) {
+            if (recipe.getIngredients().containsAll(ingredients) && (recipe.getIngredients().size() == ingredients.size())) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
+    @Override public List<Recipe> findByEffect(String effect) {
+        List<Recipe> matchingRecipes = new ArrayList<>();
+        for (Recipe recipe : recipeBook.getRecipes()) {
+            if (recipe.getPotion().getEffect().toLowerCase().contains(effect.toLowerCase())) {
+                matchingRecipes.add(recipe);
+            }
+        }
+        return matchingRecipes;
     }
 
     @Override public void unlockRecipe(Recipe recipe){
@@ -41,5 +57,19 @@ public class RecipeBookControllerImpl implements RecipeBookController{
         }
 
         return craftableRecipes;
+    }
+
+    @Override public Recipe findByName(String recipeName){
+        for (Recipe recipe : recipeBook.getRecipes()) {
+            if (recipe.getPotion().getName().toLowerCase().contains(recipeName.toLowerCase())) {
+                return recipe;
+            }
+        }
+
+        return null;
+    }
+
+    @Override public int getUnlockedCount(){
+        return recipeBook.getUnlockedRecipes().size();
     }
 }
