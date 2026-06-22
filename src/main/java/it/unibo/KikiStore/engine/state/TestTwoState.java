@@ -19,12 +19,7 @@ import javafx.scene.paint.Color;
 
 import java.util.List;
 
-/**
- * Concrete implementation of GameState used to test the integration of 
- * player movement, dual-layered maps (visual/collision), and camera scrolling.
- */
-public class TestState implements GameState {
-
+public class TestTwoState implements GameState{
     private final InputHandler input;
     private final PlayerImpl kiki; 
     
@@ -41,15 +36,15 @@ public class TestState implements GameState {
     private final int[][] upperGrid;
     private final int[][] maskGrid;
 
-    public TestState(GameStateTransition transitionController ,InputHandler input) {
+    public TestTwoState(GameStateTransition transitionController ,InputHandler input) {
         this.transitionController = transitionController;
         this.input = input;
         
         // --- 1. RESOURCE LOADING ---
-        this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
-        this.decorationGrid = MapLoader.loadMap("maps/map0/testDecor.txt");
-        this.upperGrid = MapLoader.loadMap("maps/map0/testUpper.txt");
-        this.maskGrid = MapLoader.loadMap("maps/map0/col/testCol.txt");
+        this.groundGrid = MapLoader.loadMap("maps/map1/testGround.txt");
+        this.decorationGrid = MapLoader.loadMap("maps/map1/testDecor.txt");
+        this.upperGrid = MapLoader.loadMap("maps/map1/testUpper.txt");
+        this.maskGrid = MapLoader.loadMap("maps/map1/col/testCol.txt");
         
         // --- 2. MODEL INITIALIZATION ---
         GameTile collisionMap = new TileMapImpl(maskGrid, 32);
@@ -75,7 +70,7 @@ public class TestState implements GameState {
 
         int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
-            GameState newState = new TestTwoState(transitionController, input);
+            GameState newState = new TestState(transitionController, input);
             transitionController.pushState(newState);
         }
     }

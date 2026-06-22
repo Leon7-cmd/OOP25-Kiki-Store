@@ -26,7 +26,7 @@ public class MapLoader {
         try (InputStream is = MapLoader.class.getResourceAsStream(path)) {
             
             if (is == null) {
-                System.err.println("Errore: File mappa non trovato -> " + path);
+                System.err.println("Error: Map not found -> " + path);
                 return createFallbackMap();
             }
 

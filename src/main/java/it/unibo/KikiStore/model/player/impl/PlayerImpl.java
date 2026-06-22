@@ -8,11 +8,11 @@ public class PlayerImpl implements Player {
 
     private double x;
     private double y;
-    private final double speed = 2.0;
+    private final double speed = 3.5;
     
     // Hitbox dimensions: Defines the physical size of the player for collisions
-    private final double hitboxWidth = 40; 
-    private final double hitboxHeight = 20; 
+    private final double hitboxWidth = 32; 
+    private final double hitboxHeight = 32; 
     
     // Hitbox offsets: Positions the hitbox relative to the top-left corner of the sprite
     private final double hitboxOffsetX = 12; 

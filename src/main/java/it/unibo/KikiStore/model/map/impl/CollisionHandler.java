@@ -46,6 +46,26 @@ public class CollisionHandler {
                !isSolid(collisionMask.getTileId(rightCol, bottomRow));
     }
 
+    public int getInteractableTileId(double x, double y, double width, double height){
+        int tileId = 0;
+        int tileSize = collisionMask.getTileSize();
+
+        int startCol = (int) (x / tileSize);
+        int endCol = (int) ((x + width - 0.1) / tileSize);
+        int startRow = (int) (y / tileSize);
+        int endRow = (int) ((y + height - 0.1) / tileSize);
+
+        for (int col = startCol; col <= endCol; col++) {
+            for (int row = startRow; row <= endRow; row++) {
+                tileId = collisionMask.getTileId(col, row);
+                if (tileId == 2) { 
+                    return tileId;
+                }
+            }
+        }
+        return tileId;
+    }
+
     /**
      * Internal logic to define what constitutes a 'solid' object.
      * 

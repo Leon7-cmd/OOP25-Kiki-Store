@@ -7,12 +7,6 @@ public class TileMapImpl implements GameTile {
     private final int[][] grid;
     private final int tileSize;
 
-    /**
-     * Constructs a TileMap with a specific grid and tile size.
-     * 
-     * @param grid     The 2D array representing the map layout.
-     * @param tileSize The size of each tile in pixels.
-     */
     public TileMapImpl(int[][] grid, int tileSize) {
         this.grid = grid;
         this.tileSize = tileSize;
