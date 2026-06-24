@@ -13,10 +13,14 @@ public interface Player {
      */
     double getX();
 
+    void setX(double newX);
+
     /**
      * @return the current Y-coordinate of the player.
      */
     double getY();
+
+    void setY(double newY);
 
     /**
      * Retrieves the current facing direction of the player.

@@ -56,7 +56,7 @@ public class TestState implements GameState {
         collisionHandler = new CollisionHandler(collisionMap);
         
         // Initialize the player and inject the collision logic
-        this.kiki = new PlayerImpl(220, 220);
+        this.kiki = new PlayerImpl(1850, 2950);
         this.kiki.setCollisionHandler(collisionHandler); 
         
         // --- 3. VIEW INITIALIZATION ---
@@ -72,11 +72,15 @@ public class TestState implements GameState {
     public void update() {
         kiki.update(input);
         frameCount++;
-
+        // 2550 1480
         int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
-            GameState newState = new TestTwoState(transitionController, input);
-            transitionController.pushState(newState);
+            kiki.setX(2550);
+            kiki.setY(1480);
+        }
+        if (tileId == 3 && input.isAction()) {
+            kiki.setX(1280);
+            kiki.setY(2410);
         }
     }
 

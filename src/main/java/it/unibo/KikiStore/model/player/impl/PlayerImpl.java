@@ -83,6 +83,8 @@ public class PlayerImpl implements Player {
 
     @Override public double getX() { return x; }
     @Override public double getY() { return y; }
+    @Override public void setX(double newX) { x = newX; }
+    @Override public void setY(double newY) { y = newY; }
     public String getDirection() { return direction; }
     public String getState() { return state; }
 }
