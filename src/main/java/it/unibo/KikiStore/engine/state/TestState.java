@@ -72,7 +72,6 @@ public class TestState implements GameState {
     public void update() {
         kiki.update(input);
         frameCount++;
-        // 2550 1480
         int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
             kiki.setX(2550);
@@ -81,6 +80,9 @@ public class TestState implements GameState {
         if (tileId == 3 && input.isAction()) {
             kiki.setX(1280);
             kiki.setY(2410);
+        }
+        if (tileId == 4 && input.isAction()){
+            transitionController.pushState(new TestTwoState(transitionController, input));
         }
     }
 
