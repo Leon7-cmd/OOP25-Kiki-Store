@@ -1,8 +1,9 @@
 package it.unibo.KikiStore.engine.api;
 
-// Represents the main game engine.
+/**
+ * Represents the main game engine.
+ */
 public interface GameEngine {
-    
     /**
      * Starts the main game loop.
      * From this moment forward, the engine will cyclically call

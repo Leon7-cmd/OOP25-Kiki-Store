@@ -4,7 +4,6 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Represents a single state or "screen" within the game.
- * 
  * Each class implementing this interface must define its own 
  * independent logic for initialization, updating, and rendering on screen.
  */

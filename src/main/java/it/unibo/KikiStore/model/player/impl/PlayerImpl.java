@@ -4,20 +4,22 @@ import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.player.api.Player;
 
-public class PlayerImpl implements Player {
+/**
+ * Implementation of Player.
+ */
+public final class PlayerImpl implements Player {
+    private static final double SPEED = 3.5;
+
+    // Hitbox dimensions: Defines the physical size of the player for collisions
+    private static final double HITBOX_WIDTH = 32; 
+    private static final double HITBOX_HEIGHT = 32; 
+
+    // Hitbox offsets: Positions the hitbox relative to the top-left corner of the sprite
+    private static final double HITBOX_OFFSET_X = 12; 
+    private static final double HITBOX_OFFSET_Y = 44; 
 
     private double x;
     private double y;
-    private final double speed = 3.5;
-    
-    // Hitbox dimensions: Defines the physical size of the player for collisions
-    private final double hitboxWidth = 32; 
-    private final double hitboxHeight = 32; 
-    
-    // Hitbox offsets: Positions the hitbox relative to the top-left corner of the sprite
-    private final double hitboxOffsetX = 12; 
-    private final double hitboxOffsetY = 44; 
-
     private String direction = "down"; 
     private String state = "idle";
     private CollisionHandler collisionHandler;
@@ -28,7 +30,7 @@ public class PlayerImpl implements Player {
      * @param startX Initial horizontal position.
      * @param startY Initial vertical position.
      */
-    public PlayerImpl(double startX, double startY) {
+    public PlayerImpl(final double startX, final double startY) {
         this.x = startX;
         this.y = startY;
     }
@@ -38,7 +40,7 @@ public class PlayerImpl implements Player {
      * 
      * @param handler The collision logic engine.
      */
-    public void setCollisionHandler(CollisionHandler handler) {
+    public void setCollisionHandler(final CollisionHandler handler) {
         this.collisionHandler = handler;
     }
 
@@ -49,30 +51,46 @@ public class PlayerImpl implements Player {
      * @param input The current state of the keyboard/controller.
      */
     @Override
-    public void update(InputHandler input) {
+    public void update(final InputHandler input) {
         boolean isMoving = false;
         double nextX = x;
         double nextY = y;
 
         // 1. Calculate the intended next position based on input
-        if (input.isUp()) { nextY -= speed; direction = "up"; isMoving = true; }
-        if (input.isDown()) { nextY += speed; direction = "down"; isMoving = true; }
-        if (input.isLeft()) { nextX -= speed; direction = "left"; isMoving = true; }
-        if (input.isRight()) { nextX += speed; direction = "right"; isMoving = true; }
+        if (input.isUp()) { 
+            nextY -= SPEED; 
+            direction = "up"; 
+            isMoving = true; 
+        }
+        if (input.isDown()) { 
+            nextY += SPEED; 
+            direction = "down"; 
+            isMoving = true; 
+        }
+        if (input.isLeft()) { 
+            nextX -= SPEED; 
+            direction = "left"; 
+            isMoving = true; 
+        }
+        if (input.isRight()) { 
+            nextX += SPEED; 
+            direction = "right"; 
+            isMoving = true; 
+        }
 
         // 2. Collision Resolution
         if (isMoving && collisionHandler != null) {
             // Check horizontal movement
-            double hitboxNextX = nextX + hitboxOffsetX;
-            double hitboxCurrentY = y + hitboxOffsetY;
-            if (collisionHandler.canMove(hitboxNextX, hitboxCurrentY, hitboxWidth, hitboxHeight)) {
+            final double hitboxNextX = nextX + HITBOX_OFFSET_X;
+            final double hitboxCurrentY = y + HITBOX_OFFSET_Y;
+            if (collisionHandler.canMove(hitboxNextX, hitboxCurrentY, HITBOX_WIDTH, HITBOX_HEIGHT)) {
                 this.x = nextX;
             }
-            
+
             // Check vertical movement
-            double hitboxCurrentX = x + hitboxOffsetX;
-            double hitboxNextY = nextY + hitboxOffsetY;
-            if (collisionHandler.canMove(hitboxCurrentX, hitboxNextY, hitboxWidth, hitboxHeight)) {
+            final double hitboxCurrentX = x + HITBOX_OFFSET_X;
+            final double hitboxNextY = nextY + HITBOX_OFFSET_Y;
+            if (collisionHandler.canMove(hitboxCurrentX, hitboxNextY, HITBOX_WIDTH, HITBOX_HEIGHT)) {
                 this.y = nextY;
             }
         }
@@ -81,10 +99,27 @@ public class PlayerImpl implements Player {
         this.state = isMoving ? "walk" : "idle";
     }
 
-    @Override public double getX() { return x; }
-    @Override public double getY() { return y; }
-    @Override public void setX(double newX) { x = newX; }
-    @Override public void setY(double newY) { y = newY; }
-    public String getDirection() { return direction; }
-    public String getState() { return state; }
+    @Override public double getX() { 
+        return x; 
+    }
+
+    @Override public double getY() { 
+        return y; 
+    }
+
+    @Override public void setX(final double newX) { 
+        x = newX; 
+    }
+
+    @Override public void setY(final double newY) { 
+        y = newY; 
+    }
+
+    @Override public String getDirection() { 
+        return direction; 
+    }
+
+    @Override public String getState() { 
+        return state; 
+    }
 }

@@ -23,42 +23,52 @@ import java.util.List;
  * Concrete implementation of GameState used to test the integration of 
  * player movement, dual-layered maps (visual/collision), and camera scrolling.
  */
-public class TestState implements GameState {
+public final class TestState implements GameState {
+    private static final int PLAYER_X = 1850;
+    private static final int PLAYER_Y = 2950;
+    private static final int[] TELEPORT1 = {2550, 1480};
+    private static final int[] TELEPORT2 = {1280, 2410};
 
     private final InputHandler input;
     private final PlayerImpl kiki; 
-    
+
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
     private final SpriteManager spriteManager;
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
-    
-    private Camera cam = new Camera();
-    private int frameCount = 0;
+
+    private final Camera cam = new Camera();
+    private int frameCount;
     private final int[][] groundGrid;
     private final int[][] decorationGrid;
     private final int[][] upperGrid;
     private final int[][] maskGrid;
 
-    public TestState(GameStateTransition transitionController ,InputHandler input) {
+    /**
+     * Constructs a TestState with the required controller systems and loads map resources.
+     * 
+     * @param transitionController is used to switch from one state to another
+     * @param input  controls every input from the player
+     */
+    public TestState(final GameStateTransition transitionController, final InputHandler input) {
         this.transitionController = transitionController;
         this.input = input;
-        
+
         // --- 1. RESOURCE LOADING ---
         this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
         this.decorationGrid = MapLoader.loadMap("maps/map0/testDecor.txt");
         this.upperGrid = MapLoader.loadMap("maps/map0/testUpper.txt");
         this.maskGrid = MapLoader.loadMap("maps/map0/col/testCol.txt");
-        
+
         // --- 2. MODEL INITIALIZATION ---
-        GameTile collisionMap = new TileMapImpl(maskGrid, 32);
+        final GameTile collisionMap = new TileMapImpl(maskGrid, 32);
         collisionHandler = new CollisionHandler(collisionMap);
-        
+
         // Initialize the player and inject the collision logic
-        this.kiki = new PlayerImpl(1850, 2950);
+        this.kiki = new PlayerImpl(PLAYER_X, PLAYER_Y);
         this.kiki.setCollisionHandler(collisionHandler); 
-        
+
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
         this.entityRenderer = new EntityRenderer(spriteManager);
@@ -66,31 +76,31 @@ public class TestState implements GameState {
     }
 
     @Override
-    public void init() {}
+    public void init() { }
 
     @Override
     public void update() {
         kiki.update(input);
         frameCount++;
-        int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
+        final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
-            kiki.setX(2550);
-            kiki.setY(1480);
+            kiki.setX(TELEPORT1[0]);
+            kiki.setY(TELEPORT1[1]);
         }
         if (tileId == 3 && input.isAction()) {
-            kiki.setX(1280);
-            kiki.setY(2410);
+            kiki.setX(TELEPORT2[0]);
+            kiki.setY(TELEPORT2[1]);
         }
-        if (tileId == 4 && input.isAction()){
+        if (tileId == 4 && input.isAction()) {
             transitionController.pushState(new TestTwoState(transitionController, input));
         }
     }
 
     @Override
-    public void render(GraphicsContext gc) {
-        double screenWidth = gc.getCanvas().getWidth(); 
-        double screenHeight = gc.getCanvas().getHeight();
-        
+    public void render(final GraphicsContext gc) {
+        final double screenWidth = gc.getCanvas().getWidth(); 
+        final double screenHeight = gc.getCanvas().getHeight();
+
         // Clear the screen with a solid background color
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, screenWidth, screenHeight);
@@ -103,7 +113,7 @@ public class TestState implements GameState {
         // --- WORLD RENDERING ---
         environmentRenderer.render(gc, new MapRenderData(groundGrid, 32));
         environmentRenderer.render(gc, new MapRenderData(decorationGrid, 32));
-        EntityRenderData kikiData = new EntityRenderData(
+        final EntityRenderData kikiData = new EntityRenderData(
             kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
         );
         entityRenderer.render(gc, List.of(kikiData), frameCount);

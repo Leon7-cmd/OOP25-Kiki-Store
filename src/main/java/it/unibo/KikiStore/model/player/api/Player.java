@@ -13,6 +13,11 @@ public interface Player {
      */
     double getX();
 
+    /**
+     * Set a new value for the X-coordinate.
+     * 
+     * @param newX new X-coordinate value of the player.
+     */
     void setX(double newX);
 
     /**
@@ -20,6 +25,11 @@ public interface Player {
      */
     double getY();
 
+    /**
+     * Set a new value for the Y-coordinate.
+     * 
+     * @param newY new Y-coordinate value of the player.
+     */
     void setY(double newY);
 
     /**

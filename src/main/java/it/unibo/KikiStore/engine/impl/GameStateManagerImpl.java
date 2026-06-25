@@ -14,17 +14,18 @@ import java.util.Deque;
  * It acts as the intermediary component between the GameEngine and individual states (e.g., Menu, Gameplay, Pause).
  * Ensures that exactly one active state handles the update and rendering logic at any given time.
  */
-public class GameStateManagerImpl implements GameStateManager, GameStateTransition {
-    
-    private final Deque<GameState> stateStack = new ArrayDeque();
+public final class GameStateManagerImpl implements GameStateManager, GameStateTransition {
 
     //TRANSITION VARIABLES
-    private boolean isTransitioning = false;
-    private double alpha = 0.0;
-    private double fadeSpeed = 0.05;
+    private static final double FADE_SPEED = 0.05;
+    private static final double FADE_OUT_UPDATE_THRESHOLD = 0.9;
+    private boolean isTransitioning;
+    private double alpha;
     private int fadeDirection = 1;
-    private GameState pendingState = null;
+    private GameState pendingState;
     private boolean isPushAction = true;
+
+    private final Deque<GameState> stateStack = new ArrayDeque<>();
 
     /**
      * Changes the active game state.
@@ -33,7 +34,7 @@ public class GameStateManagerImpl implements GameStateManager, GameStateTransiti
      * @param state The new state to activate.
      */
     @Override
-    public void setState(GameState state) {
+    public void setState(final GameState state) {
         if (!stateStack.isEmpty()) {
             stateStack.clear();
         }
@@ -41,8 +42,8 @@ public class GameStateManagerImpl implements GameStateManager, GameStateTransiti
     }
 
     @Override
-    public void pushState(GameState newState){
-        if(stateStack.isEmpty()){
+    public void pushState(final GameState newState) {
+        if (stateStack.isEmpty()) {
             stateStack.push(newState);
             newState.init();
         } else {
@@ -54,8 +55,8 @@ public class GameStateManagerImpl implements GameStateManager, GameStateTransiti
     }
 
     @Override
-    public void popState(){
-        if(stateStack.size() > 1){
+    public void popState() {
+        if (stateStack.size() > 1) {
             this.isTransitioning = true;
             this.fadeDirection = 1;
             this.isPushAction = false;
@@ -70,39 +71,39 @@ public class GameStateManagerImpl implements GameStateManager, GameStateTransiti
     @Override
     public void update() {
         if (isTransitioning) {
-            alpha += fadeSpeed * fadeDirection;
+            alpha += FADE_SPEED * fadeDirection;
             if (alpha >= 1.0) {
                 alpha = 1.0;
                 fadeDirection = -1;
-                if(isPushAction && pendingState != null){
+                if (isPushAction && pendingState != null) {
                     stateStack.push(pendingState);
                     pendingState.init();
                     pendingState = null;
-                } else if(!isPushAction){
+                } else if (!isPushAction) {
                     stateStack.pop();
                 }
-            }else if(alpha <= 0.0){
+            } else if (alpha <= 0.0) {
                 alpha = 0.0;
                 isTransitioning = false;
             }
         }
 
-        if (!stateStack.isEmpty() && alpha < 0.9) {
+        if (!stateStack.isEmpty() && alpha < FADE_OUT_UPDATE_THRESHOLD) {
             stateStack.peek().update();
         }
     }
 
     @Override
-    public void render(GraphicsContext gc) {
+    public void render(final GraphicsContext gc) {
         //1 Drawing the game
         if (!stateStack.isEmpty()) {
             stateStack.peek().render(gc);
         }
 
         //2 Drawing the black rectangle for the transition
-        if(alpha > 0){
-            double w = gc.getCanvas().getWidth();
-            double h = gc.getCanvas().getHeight();
+        if (alpha > 0) {
+            final double w = gc.getCanvas().getWidth();
+            final double h = gc.getCanvas().getHeight();
             gc.save();
             gc.setGlobalAlpha(alpha);
             gc.setFill(Color.BLACK);
