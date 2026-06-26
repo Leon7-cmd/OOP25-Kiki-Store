@@ -1,12 +1,14 @@
 package it.unibo.KikiStore.engine.state;
 
+import java.util.List;
+
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
+import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
-import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
@@ -16,18 +18,15 @@ import it.unibo.KikiStore.view.utility.Camera;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
-import java.util.List;
-
-/**
- * Concrete implementation of GameState used to test the integration of 
- * player movement, dual-layered maps (visual/collision), and camera scrolling.
- */
-public final class TestState implements GameState {
-    private static final int PLAYER_X = 1850;
-    private static final int PLAYER_Y = 2950;
-    private static final int[] TELEPORT1 = {2550, 1520};
-    private static final int[] TELEPORT2 = {1280, 2410};
+public final class MinigameFly implements GameState{
+    private static final int PLAYER_X = 300;
+    private static final int PLAYER_Y = 60;
+    private static final double CAMERA_SPEED = 3;
+    private double cameraStart;
+    private boolean gameStart;
+    private boolean gameEnd;
 
     private final InputHandler input;
     private final PlayerImpl kiki; 
@@ -42,7 +41,6 @@ public final class TestState implements GameState {
     private int frameCount;
     private final int[][] groundGrid;
     private final int[][] decorationGrid;
-    private final int[][] upperGrid;
     private final int[][] maskGrid;
 
     /**
@@ -51,15 +49,14 @@ public final class TestState implements GameState {
      * @param transitionController is used to switch from one state to another
      * @param input  controls every input from the player
      */
-    public TestState(final GameStateTransition transitionController, final InputHandler input) {
+    public MinigameFly(final GameStateTransition transitionController, final InputHandler input) {
         this.transitionController = transitionController;
         this.input = input;
 
         // --- 1. RESOURCE LOADING ---
-        this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
-        this.decorationGrid = MapLoader.loadMap("maps/map0/testDecor.txt");
-        this.upperGrid = MapLoader.loadMap("maps/map0/testUpper.txt");
-        this.maskGrid = MapLoader.loadMap("maps/map0/col/testCol.txt");
+        this.groundGrid = MapLoader.loadMap("maps/minigameFly/ground.txt");
+        this.decorationGrid = MapLoader.loadMap("maps/minigameFly/decor.txt");
+        this.maskGrid = MapLoader.loadMap("maps/minigameFly/col/col.txt");
 
         // --- 2. MODEL INITIALIZATION ---
         final GameTile collisionMap = new TileMapImpl(maskGrid, 32);
@@ -80,19 +77,20 @@ public final class TestState implements GameState {
 
     @Override
     public void update() {
-        kiki.update(input);
-        frameCount++;
         final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
-        if (tileId == 2 && input.isAction()) {
-            kiki.setX(TELEPORT1[0]);
-            kiki.setY(TELEPORT1[1]);
+        if (gameStart && !gameEnd) {
+            kiki.update(input);
         }
-        if (tileId == 3 && input.isAction()) {
-            kiki.setX(TELEPORT2[0]);
-            kiki.setY(TELEPORT2[1]);
+        frameCount++;
+        if (tileId == 2) {
+            gameEnd = true;
+            gameStart = false;
         }
-        if (tileId == 4 && input.isAction()) {
-            transitionController.pushState(new MinigameFly(transitionController, input));
+        if (kiki.getX() < (cam.getX()) || (gameEnd && input.isAction())) {
+            transitionController.popState();
+        }
+        if (input.isAction() && !gameEnd) {
+            gameStart = true;
         }
     }
 
@@ -100,6 +98,11 @@ public final class TestState implements GameState {
     public void render(final GraphicsContext gc) {
         final double screenWidth = gc.getCanvas().getWidth(); 
         final double screenHeight = gc.getCanvas().getHeight();
+        if (cameraStart == 0 ) {
+            cameraStart = screenWidth*0.50;
+        } else if (gameStart) {
+            cameraStart += CAMERA_SPEED;
+        }
 
         // Clear the screen with a solid background color
         gc.setFill(Color.BLACK);
@@ -107,7 +110,7 @@ public final class TestState implements GameState {
 
         // --- CAMERA LOGIC ---
         gc.save(); 
-        cam.update(kiki.getX(), kiki.getY(), screenWidth, screenHeight);
+        cam.update(cameraStart, screenHeight*0.50, screenWidth, screenHeight);
         gc.translate(-cam.getX(), -cam.getY()); 
 
         // --- WORLD RENDERING ---
@@ -117,7 +120,16 @@ public final class TestState implements GameState {
             kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
         );
         entityRenderer.render(gc, List.of(kikiData), frameCount);
-        environmentRenderer.render(gc, new MapRenderData(upperGrid, 32));
+
+        if (!gameStart && !gameEnd) {
+            gc.setGlobalAlpha(0.75);
+            gc.setFill(Color.BLACK);
+            gc.fillRect(32, 32, screenWidth, screenHeight);
+            gc.setGlobalAlpha(1);
+            gc.setFill(Color.GREEN);
+            gc.setFont(Font.font("Verdana"));
+            gc.fillText("Premi \"E\"", screenWidth*0.50, screenHeight*0.50);
+        }
 
         gc.restore(); 
     }
