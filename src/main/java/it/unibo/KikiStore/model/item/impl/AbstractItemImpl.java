@@ -3,15 +3,22 @@ package it.unibo.KikiStore.model.item.impl;
 import it.unibo.KikiStore.model.item.api.Item;
 import javafx.geometry.Rectangle2D;
 
-public abstract class ItemImpl implements Item{
+/**
+ * Abstrct class for Items.
+ */
+public abstract class AbstractItemImpl implements Item {
     private final String id;
     private final String name;
     private int quantity;
-    private final double x, y;     
-    private final double width, height; 
+    private final double x;
+    private final double y;
+    private final double width;
+    private final double height; 
     private final boolean animated; 
 
     /**
+     * @param quantity Quantity for the item.
+     * @param name     Name for the item.
      * @param id       Unique identifier for the item.
      * @param x        Initial X position in world coordinates.
      * @param y        Initial Y position in world coordinates.
@@ -20,7 +27,16 @@ public abstract class ItemImpl implements Item{
      * @param animated Whether the item should be treated as an animated sprite.
      */
 
-    public ItemImpl(String id, double x, double y, double width, double height, boolean animated, String name, int quantity) {
+    public AbstractItemImpl(
+        final String id, 
+        final double x, 
+        final double y, 
+        final double width, 
+        final double height, 
+        final boolean animated, 
+        final String name, 
+        final int quantity
+    ) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -30,19 +46,44 @@ public abstract class ItemImpl implements Item{
         this.name = name;
         this.quantity = quantity;
     }
- 
+
     // --- View Getters ---
-    public int getQuantity() { return quantity; }
-    public String getName() { return name; }
-    public String getId() { return id; }
-    public double getX() { return x; }
-    public double getY() { return y; }
-    public double getWidth() { return width; }
-    public double getHeight() { return height; }
-    public boolean isAnimated() { return animated; }
+    @Override public final int getQuantity() { 
+        return quantity; 
+    }
+
+    @Override public final String getName() { 
+        return name; 
+    }
+
+    @Override public final String getId() { 
+        return id; 
+    }
+
+    @Override public final double getX() { 
+        return x; 
+    }
+
+    @Override public final double getY() { 
+        return y; 
+    }
+
+    @Override public final double getWidth() { 
+        return width; 
+    }
+
+    @Override public final double getHeight() { 
+        return height; 
+    }
+
+    @Override public final boolean isAnimated() { 
+        return animated; 
+    }
 
     // --- Setters ---
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    @Override public final void setQuantity(final int quantity) { 
+        this.quantity = quantity; 
+    }
 
     /**
      * Returns the collision area (Hitbox) of the object.

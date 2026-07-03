@@ -6,7 +6,7 @@ import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
 import it.unibo.KikiStore.model.item.api.Item;
-import it.unibo.KikiStore.model.item.impl.ItemImpl;
+import it.unibo.KikiStore.model.item.impl.AbstractItemImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;

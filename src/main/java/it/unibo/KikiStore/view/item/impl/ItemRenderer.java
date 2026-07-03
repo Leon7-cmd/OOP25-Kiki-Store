@@ -13,10 +13,15 @@ import java.util.List;
  */
 public class ItemRenderer {
 
+    private static final int SPRITE_SIZE = 64; 
     private final SpriteManager spriteManager;
-    private final double SPRITE_SIZE = 64.0; 
 
-    public ItemRenderer(SpriteManager spriteManager) {
+    /**
+     * Constructor for ItemRenderer.
+     * 
+     * @param spriteManager class used to retrive specific sprites
+     */
+    public ItemRenderer(final SpriteManager spriteManager) {
         this.spriteManager = spriteManager;
     }
 
@@ -27,24 +32,24 @@ public class ItemRenderer {
      * @param items       The list of DTOs containing item position and metadata.
      * @param frameCount  The global engine frame counter used to synchronize animations.
      */
-    public void render(GraphicsContext gc, List<ItemRenderData> items, int frameCount) {
-        for (ItemRenderData data : items) {
-            
+    public void render(final GraphicsContext gc, final List<ItemRenderData> items, final int frameCount) {
+        for (final ItemRenderData data : items) {
+
             // --- ANIMATED ITEM LOGIC ---
             if (data.isAnimated()) {
                 // 1. Retrieve the horizontal sprite sheet from the cache
-                Image spriteSheet = spriteManager.getSpriteSheet(data.itemId());
-                
+                final Image spriteSheet = spriteManager.getSpriteSheet(data.itemId());
+
                 if (spriteSheet != null) {
                     // 2. Determine the total number of frames based on image width
-                    int totalFrames = (int) (spriteSheet.getWidth() / SPRITE_SIZE);
-                    
+                    final int totalFrames = (int) (spriteSheet.getWidth() / SPRITE_SIZE);
+
                     // 3. Calculate current frame using the frameCount (20 frames per second animation speed) 
-                    int currentFrame = (frameCount / 20) % totalFrames; 
-                    
+                    final int currentFrame = (frameCount / 20) % totalFrames; 
+
                     // 4. Find the starting point (X)
-                    double sourceX = currentFrame * SPRITE_SIZE;
-                    
+                    final double sourceX = currentFrame * SPRITE_SIZE;
+
                     // 5. Draw the specific 64x64 sub-rectangle of the image
                     gc.drawImage(
                         spriteSheet, 
@@ -54,13 +59,9 @@ public class ItemRenderer {
                 }
             // --- STATIC ITEM LOGIC ---
             } else {
-                Image sprite = spriteManager.getStaticSprite(data.itemId());
+                final Image sprite = spriteManager.getStaticSprite(data.itemId());
                 if (sprite != null) {
                     gc.drawImage(sprite, data.x(), data.y(), data.width(), data.height());
-                }
-                if (sprite == null) {
-                    // Optional: Draw a placeholder or log a warning if the sprite is missing
-                    System.err.println("Warning: Sprite not found for item ID: " + data.itemId());
                 }
             }
         }
