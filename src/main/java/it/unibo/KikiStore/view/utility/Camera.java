@@ -6,6 +6,8 @@ package it.unibo.KikiStore.view.utility;
 public class Camera {
     private double x;
     private double y;
+    private double cameraHeight;
+    private double cameraWidth;
 
     /**
      * Method used to calculate the center point for the camera every frame.
@@ -18,6 +20,8 @@ public class Camera {
     public void update(final double targetX, final double targetY, final double screenWidth, final double screenHeight) {
         this.x = targetX - (screenWidth / 2) + (64 / 2);
         this.y = targetY - (screenHeight / 2) + (64 / 2);
+        this.cameraHeight = screenHeight;
+        this.cameraWidth = screenWidth;
     }
 
     /**
@@ -32,5 +36,19 @@ public class Camera {
      */
     public double getY() {
         return y; 
+    }
+
+    /**
+     * @return The height of the camera
+     */
+    public double getH() {
+        return cameraHeight; 
+    }
+
+    /**
+     * @return The width of the camera
+     */
+    public double getW() {
+        return cameraWidth; 
     }
 }

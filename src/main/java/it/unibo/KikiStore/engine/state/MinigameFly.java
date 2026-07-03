@@ -20,10 +20,20 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public final class MinigameFly implements GameState{
-    private static final int PLAYER_X = 300;
-    private static final int PLAYER_Y = 60;
-    private static final double CAMERA_SPEED = 3;
+/**
+ * GameState implementation for the fly minigame.
+ * Handles side scrolling mechanics, camera progression, and win/loss conditions.
+ */
+public final class MinigameFly implements GameState {
+    private static final int PLAYER_X = 200;
+    private static final int PLAYER_Y = 180;
+    private static final double GAME_SPEED = 2;
+    private static final int TILE_SIZE = 32;
+    private static final int PLAYER_SIZE = 64;
+    private static final double ALPHA_OVERLAY = 0.75;
+    private static final int INTERACTABLE_END_TILE_ID = 2;
+    private static final int REWARD = 30;
+
     private double cameraStart;
     private boolean gameStart;
     private boolean gameEnd;
@@ -44,10 +54,10 @@ public final class MinigameFly implements GameState{
     private final int[][] maskGrid;
 
     /**
-     * Constructs a TestState with the required controller systems and loads map resources.
+     * Constructor for the MinigameFly state.
      * 
-     * @param transitionController is used to switch from one state to another
-     * @param input  controls every input from the player
+     * @param transitionController handles state popping and switching
+     * @param input manages player controls
      */
     public MinigameFly(final GameStateTransition transitionController, final InputHandler input) {
         this.transitionController = transitionController;
@@ -59,7 +69,7 @@ public final class MinigameFly implements GameState{
         this.maskGrid = MapLoader.loadMap("maps/minigameFly/col/col.txt");
 
         // --- 2. MODEL INITIALIZATION ---
-        final GameTile collisionMap = new TileMapImpl(maskGrid, 32);
+        final GameTile collisionMap = new TileMapImpl(maskGrid, TILE_SIZE);
         collisionHandler = new CollisionHandler(collisionMap);
 
         // Initialize the player and inject the collision logic
@@ -77,20 +87,32 @@ public final class MinigameFly implements GameState{
 
     @Override
     public void update() {
-        final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
+        final int tileId = collisionHandler.getInteractableTileId(
+            kiki.getX() + (TILE_SIZE / 2), kiki.getY() + TILE_SIZE, TILE_SIZE, TILE_SIZE
+        );
+        frameCount++;
+
+        // GAME END and START CHECK
         if (gameStart && !gameEnd) {
             kiki.update(input);
         }
-        frameCount++;
-        if (tileId == 2) {
-            gameEnd = true;
-            gameStart = false;
-        }
-        if (kiki.getX() < (cam.getX()) || (gameEnd && input.isAction())) {
-            transitionController.popState();
-        }
         if (input.isAction() && !gameEnd) {
             gameStart = true;
+        }
+
+        // WIN CONDITION CHECK
+        if (tileId == INTERACTABLE_END_TILE_ID) {
+            gameEnd = true;
+            gameStart = false;
+            kiki.setMoney(kiki.getMoney() + REWARD);
+        }
+
+        // OUT OF BOUNDS CHECK
+        if (kiki.getX() > cam.getX() + cam.getW() - TILE_SIZE) {
+            kiki.setX(cam.getX() + cam.getW() - TILE_SIZE);
+        }
+        if (kiki.getX() < cam.getX() - PLAYER_SIZE || gameEnd && input.isAction()) {
+            transitionController.popState();
         }
     }
 
@@ -98,39 +120,36 @@ public final class MinigameFly implements GameState{
     public void render(final GraphicsContext gc) {
         final double screenWidth = gc.getCanvas().getWidth(); 
         final double screenHeight = gc.getCanvas().getHeight();
-        if (cameraStart == 0 ) {
-            cameraStart = screenWidth*0.50;
+        if (cameraStart == 0) {
+            cameraStart = screenWidth * 0.50;
         } else if (gameStart) {
-            cameraStart += CAMERA_SPEED;
+            cameraStart += GAME_SPEED;
         }
-
-        // Clear the screen with a solid background color
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, screenWidth, screenHeight);
 
         // --- CAMERA LOGIC ---
         gc.save(); 
-        cam.update(cameraStart, screenHeight*0.50, screenWidth, screenHeight);
+        cam.update(cameraStart, screenHeight * 0.50, screenWidth, screenHeight);
         gc.translate(-cam.getX(), -cam.getY()); 
 
         // --- WORLD RENDERING ---
-        environmentRenderer.render(gc, new MapRenderData(groundGrid, 32));
-        environmentRenderer.render(gc, new MapRenderData(decorationGrid, 32));
+        environmentRenderer.render(gc, new MapRenderData(groundGrid, TILE_SIZE));
+        environmentRenderer.render(gc, new MapRenderData(decorationGrid, TILE_SIZE));
         final EntityRenderData kikiData = new EntityRenderData(
-            kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
+            kiki.getX(), kiki.getY(), PLAYER_SIZE, PLAYER_SIZE, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
         );
         entityRenderer.render(gc, List.of(kikiData), frameCount);
 
         if (!gameStart && !gameEnd) {
-            gc.setGlobalAlpha(0.75);
+            gc.setGlobalAlpha(ALPHA_OVERLAY);
             gc.setFill(Color.BLACK);
-            gc.fillRect(32, 32, screenWidth, screenHeight);
+            gc.fillRect(TILE_SIZE, TILE_SIZE, screenWidth, screenHeight);
             gc.setGlobalAlpha(1);
             gc.setFill(Color.GREEN);
             gc.setFont(Font.font("Verdana"));
-            gc.fillText("Premi \"E\"", screenWidth*0.50, screenHeight*0.50);
+            gc.fillText("Premi \"E\"", screenWidth * 0.50, screenHeight * 0.50);
         }
-
         gc.restore(); 
     }
 }

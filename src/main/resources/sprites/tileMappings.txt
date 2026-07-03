@@ -152,3 +152,4 @@ sprites/map/structure/stand32
 sprites/map/structure/stand33
 sprites/map/structure/stand34
 sprites/map/structure/stand35
+sprites/map/wall/wall

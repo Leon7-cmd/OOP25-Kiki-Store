@@ -18,6 +18,8 @@ public final class PlayerImpl implements Player {
     private static final double HITBOX_OFFSET_X = 12; 
     private static final double HITBOX_OFFSET_Y = 44; 
 
+    private int money;
+    private int energy;
     private double x;
     private double y;
     private String direction = "down"; 
@@ -33,6 +35,8 @@ public final class PlayerImpl implements Player {
     public PlayerImpl(final double startX, final double startY) {
         this.x = startX;
         this.y = startY;
+        money = 0;
+        energy = 10;
     }
 
     /**
@@ -121,5 +125,21 @@ public final class PlayerImpl implements Player {
 
     @Override public String getState() { 
         return state; 
+    }
+
+    @Override public int getMoney() {
+        return money;
+    }
+
+    @Override public void setMoney(final int newMoney) {
+        money = newMoney;
+    }
+
+    @Override public int getEnergy() {
+        return energy;
+    }
+
+    @Override public void setEnergy(final int newEnergy) {
+        energy = newEnergy;
     }
 }
