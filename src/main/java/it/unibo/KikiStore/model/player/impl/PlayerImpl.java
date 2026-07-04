@@ -9,6 +9,8 @@ import it.unibo.KikiStore.model.player.api.Player;
  */
 public final class PlayerImpl implements Player {
     private static final double SPEED = 3.5;
+    private static final int BASE_ENERGY = 5;
+    private static final int BASE_MONEY = 40;
 
     // Hitbox dimensions: Defines the physical size of the player for collisions
     private static final double HITBOX_WIDTH = 32; 
@@ -18,8 +20,8 @@ public final class PlayerImpl implements Player {
     private static final double HITBOX_OFFSET_X = 12; 
     private static final double HITBOX_OFFSET_Y = 44; 
 
-    private int money;
-    private int energy;
+    private static int money;
+    private static int energy;
     private double x;
     private double y;
     private String direction = "down"; 
@@ -35,8 +37,8 @@ public final class PlayerImpl implements Player {
     public PlayerImpl(final double startX, final double startY) {
         this.x = startX;
         this.y = startY;
-        money = 0;
-        energy = 10;
+        money = BASE_MONEY;
+        energy = BASE_ENERGY;
     }
 
     /**

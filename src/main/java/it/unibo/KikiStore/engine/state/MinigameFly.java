@@ -14,6 +14,8 @@ import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
 import it.unibo.KikiStore.view.environment.impl.MapRenderer;
+import it.unibo.KikiStore.view.hud.api.HUDRenderData;
+import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.utility.Camera;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -46,6 +48,7 @@ public final class MinigameFly implements GameState {
     private final SpriteManager spriteManager;
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
+    private final HUDRenderer hudRenderer;
 
     private final Camera cam = new Camera();
     private int frameCount;
@@ -78,8 +81,9 @@ public final class MinigameFly implements GameState {
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
-        this.entityRenderer = new EntityRenderer(spriteManager);
-        this.environmentRenderer = new MapRenderer(spriteManager);
+        this.entityRenderer = new EntityRenderer(this.spriteManager);
+        this.environmentRenderer = new MapRenderer(this.spriteManager);
+        this.hudRenderer = new HUDRenderer(this.spriteManager);
     }
 
     @Override
@@ -101,7 +105,7 @@ public final class MinigameFly implements GameState {
         }
 
         // WIN CONDITION CHECK
-        if (tileId == INTERACTABLE_END_TILE_ID) {
+        if (tileId == INTERACTABLE_END_TILE_ID && !gameEnd) {
             gameEnd = true;
             gameStart = false;
             kiki.setMoney(kiki.getMoney() + REWARD);
@@ -151,5 +155,9 @@ public final class MinigameFly implements GameState {
             gc.fillText("Premi \"E\"", screenWidth * 0.50, screenHeight * 0.50);
         }
         gc.restore(); 
+
+        // --- HUD ---
+        final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), 5, kiki.getMoney());
+        hudRenderer.render(gc, hudData);
     }
 }

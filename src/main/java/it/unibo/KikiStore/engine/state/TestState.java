@@ -12,6 +12,8 @@ import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
 import it.unibo.KikiStore.view.environment.impl.MapRenderer;
+import it.unibo.KikiStore.view.hud.api.HUDRenderData;
+import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.utility.Camera;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -37,6 +39,7 @@ public final class TestState implements GameState {
     private final SpriteManager spriteManager;
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
+    private final HUDRenderer hudRenderer;
 
     private final Camera cam = new Camera();
     private int frameCount;
@@ -71,8 +74,9 @@ public final class TestState implements GameState {
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
-        this.entityRenderer = new EntityRenderer(spriteManager);
-        this.environmentRenderer = new MapRenderer(spriteManager);
+        this.entityRenderer = new EntityRenderer(this.spriteManager);
+        this.environmentRenderer = new MapRenderer(this.spriteManager);
+        this.hudRenderer = new HUDRenderer(this.spriteManager);
     }
 
     @Override
@@ -120,5 +124,9 @@ public final class TestState implements GameState {
         environmentRenderer.render(gc, new MapRenderData(upperGrid, 32));
 
         gc.restore(); 
+
+        // --- HUD ---
+        final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), 5, kiki.getMoney());
+        hudRenderer.render(gc, hudData);
     }
 }
