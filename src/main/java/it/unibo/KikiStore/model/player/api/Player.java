@@ -9,14 +9,52 @@ import it.unibo.KikiStore.controller.api.InputHandler;
 public interface Player {
 
     /**
+     * @return the current ammount of money for the player.
+     */
+    int getMoney();
+
+    /**
+     * Set a new ammount of money.
+     * 
+     * @param newMoney new ammount of money for the player.
+     */
+    void setMoney(int newMoney);
+
+    /**
+     * @return the current ammount of money for the player.
+     */
+    int getEnergy();
+
+    /**
+     * Set a new ammount of energy.
+     * 
+     * @param newEnergy new ammount of energy for the player.
+     */
+    void setEnergy(int newEnergy);
+
+    /**
      * @return the current X-coordinate of the player.
      */
     double getX();
 
     /**
+     * Set a new value for the X-coordinate.
+     * 
+     * @param newX new X-coordinate value of the player.
+     */
+    void setX(double newX);
+
+    /**
      * @return the current Y-coordinate of the player.
      */
     double getY();
+
+    /**
+     * Set a new value for the Y-coordinate.
+     * 
+     * @param newY new Y-coordinate value of the player.
+     */
+    void setY(double newY);
 
     /**
      * Retrieves the current facing direction of the player.

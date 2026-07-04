@@ -3,12 +3,15 @@ package it.unibo.KikiStore.app;
 import it.unibo.KikiStore.controller.impl.InputHandlerImpl;
 import it.unibo.KikiStore.engine.api.GameEngine;
 import it.unibo.KikiStore.engine.api.GameStateManager;
+import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
 import it.unibo.KikiStore.engine.state.TestState;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -22,24 +25,24 @@ public class StageInitializer {
      * 
      * @param stage The primary window provided by JavaFX upon startup.
      */
-    public void init(Stage stage) {
-        javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
-        double screenWidth = screenBounds.getWidth() * 0.50;
-        double screenHeight = screenBounds.getHeight() * 0.60;
+    public void init(final Stage stage) {
+        final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        final double screenWidth = screenBounds.getWidth() * 0.50;
+        final double screenHeight = screenBounds.getHeight() * 0.60;
 
         // 1. Canvas setup
-        StackPane root = new StackPane();
-        Canvas canvas = new Canvas(screenWidth, screenHeight);
+        final StackPane root = new StackPane();
+        final Canvas canvas = new Canvas(screenWidth, screenHeight);
         root.getChildren().add(canvas);
-        Scene scene = new Scene(root);
-        InputHandlerImpl inputHandler = new InputHandlerImpl(scene);
+        final Scene scene = new Scene(root);
+        final InputHandlerImpl inputHandler = new InputHandlerImpl(scene);
 
         // 2. Initialization of the logical architecture
-        GameStateManager gsm = new GameStateManagerImpl();
-        gsm.setState(new TestState(inputHandler));
+        final GameStateManager gsm = new GameStateManagerImpl();
+        gsm.setState(new TestState((GameStateTransition) gsm, inputHandler));
 
         // 3. GameEngine creation
-        GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
+        final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
 
         // 4. Final configuration of the OS window
         stage.setTitle("Kiki's Store");

@@ -8,7 +8,6 @@ import javafx.scene.canvas.GraphicsContext;
  * are correctly delegated to the currently active state.
  */
 public interface GameStateManager {
-    
     /**
      * Sets and activates a new game state.
      * 
@@ -22,7 +21,7 @@ public interface GameStateManager {
      * @return The instance of the active GameState.
      */
     GameState getCurrentState();
-    
+
     /**
      * Delegates the logic update cycle to the current state.
      */

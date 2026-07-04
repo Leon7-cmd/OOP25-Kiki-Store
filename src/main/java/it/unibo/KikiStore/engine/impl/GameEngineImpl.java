@@ -6,11 +6,10 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- * Implementation of the Game Engine.
- * Manages the game's lifecycle using JavaFX's AnimationTimer,
- * allowing for logic updates and continuous frame rendering.
+ * Implementation of the GameEngine.
+ * Manages the game's lifecycle using JavaFX's AnimationTimer, allowing for logic updates and continuous frame rendering.
  */
-public class GameEngineImpl implements GameEngine {
+public final class GameEngineImpl implements GameEngine {
 
     private final GameStateManager gsm;
     private final GraphicsContext gc;
@@ -27,7 +26,7 @@ public class GameEngineImpl implements GameEngine {
      * @param width  The dynamic width of the game screen.
      * @param height The dynamic height of the game screen.
      */
-    public GameEngineImpl(GameStateManager gsm, GraphicsContext gc, double width, double height) {
+    public GameEngineImpl(final GameStateManager gsm, final GraphicsContext gc, final double width, final double height) {
         this.gsm = gsm;
         this.gc = gc;
         this.width = width;
@@ -42,7 +41,7 @@ public class GameEngineImpl implements GameEngine {
     private void initLoop() {
         this.loop = new AnimationTimer() {
             @Override
-            public void handle(long now) {
+            public void handle(final long now) {
                 gsm.update();
                 gc.clearRect(0, 0, width, height);
                 gsm.render(gc);
