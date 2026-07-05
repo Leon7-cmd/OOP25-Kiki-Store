@@ -31,7 +31,7 @@ public class InitialScreenViewImpl implements InitialScreenView {
         System.out.println("New Game - Starting new game...");
         // starting a new game (resetting the game state)
         StageInitializer stageInitializer = new StageInitializer();
-        stageInitializer.initGameScreen(primaryStage);
+        stageInitializer.init(primaryStage);    
     }
 
     @FXML

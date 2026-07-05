@@ -22,7 +22,7 @@ java {
 }
 
 javafx {
-    version = "21" // Aggiornato per allinearsi al JDK 21 installato
+    version = "21.0.2" 
     modules = listOf("javafx.controls", "javafx.graphics", "javafx.media", "javafx.fxml")
 }
 
