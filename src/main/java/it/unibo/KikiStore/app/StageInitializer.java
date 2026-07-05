@@ -22,7 +22,7 @@ public class StageInitializer {
 
     /**
      * Configures and displays menu (FXML).
-     * Carica il file store.fxml e lo mostra come prima schermata.
+     * Carica il file e lo mostra come prima schermata.
      * 
      * @param stage The primary window provided by JavaFX upon startup.
      */
