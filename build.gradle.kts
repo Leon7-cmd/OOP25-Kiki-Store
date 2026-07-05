@@ -15,9 +15,15 @@ plugins {
     id("org.danilopianini.gradle-java-qa") version "1.172.0"
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 javafx {
-    version = "17" // Inserisci la versione del JDK che state usando (solitamente 17 o 21 per i progetti universitari)
-    modules = listOf("javafx.controls", "javafx.graphics", "javafx.media") 
+    version = "21" // Aggiornato per allinearsi al JDK 21 installato
+    modules = listOf("javafx.controls", "javafx.graphics", "javafx.media", "javafx.fxml")
 }
 
 repositories { // Where to search for dependencies
@@ -54,7 +60,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.sampleapp.RateAMovie")
+    mainClass.set("it.unibo.KikiStore.app.Main")
 }
 
 tasks.withType<Test>().configureEach {
