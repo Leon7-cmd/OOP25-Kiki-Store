@@ -7,7 +7,9 @@ import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
 import it.unibo.KikiStore.engine.state.TestState;
+import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.menu.impl.InitialScreenViewImpl;
+import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -70,10 +72,15 @@ public class StageInitializer {
         final Canvas canvas = new Canvas(screenWidth, screenHeight);
         root.getChildren().add(canvas);
         final Scene scene = new Scene(root);
-        final InputHandlerImpl inputHandler = new InputHandlerImpl(scene);
+        
 
         // 2. Initialization of the logical architecture
         final GameStateManager gsm = new GameStateManagerImpl();
+        final SpriteManager spriteManager = new SpriteManager();
+        final HUDRenderer hudRenderer = new HUDRenderer(spriteManager);
+        final InputHandlerImpl inputHandler = new InputHandlerImpl(scene, hudRenderer, gsm, (GameStateTransition) gsm, canvas);
+    
+
         gsm.setState(new TestState((GameStateTransition) gsm, inputHandler));
 
         // 3. GameEngine creation

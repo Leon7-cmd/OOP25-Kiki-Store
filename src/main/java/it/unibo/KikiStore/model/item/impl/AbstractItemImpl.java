@@ -92,7 +92,7 @@ public abstract class AbstractItemImpl implements Item {
      * 
      * @return A new Rectangle2D based on current position and dimensions.
      */
-    public Rectangle2D getHitbox() {
+    @Override public Rectangle2D getHitbox() {
         return new Rectangle2D(x, y, width, height);
     }
 }

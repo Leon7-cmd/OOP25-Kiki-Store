@@ -10,7 +10,7 @@ public final class Main extends Application {
 
     @Override public void start(final Stage stage) {
         final StageInitializer initializer = new StageInitializer();
-        initializer.init(stage);
+        initializer.initMenu(stage);
     }
 
     /**

@@ -2,11 +2,12 @@ package it.unibo.KikiStore.view.hud.impl;
 
 import it.unibo.KikiStore.view.hud.api.HUDRenderData;
 import it.unibo.KikiStore.view.utility.SpriteManager;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 /**
  * Class used to display HUD for energy and money.
@@ -25,10 +26,16 @@ public final class HUDRenderer {
     private static final int TEXT_COIN_OFFSET_X = 24;
     private static final int TEXT_COIN_OFFSET_Y = 12;
 
+    // Menu/Settings variables
+    private static final int MENU_START_X = 70;
+    private static final int MENU_START_Y = 18;
+
+
     // Utility variables
     private static final int FONT_SIZE = 12;
     private static final int ICON_SIZE = 16;
-
+    private static final int PADDING = 4;
+    private Rectangle2D menuBounds = new Rectangle2D(MENU_START_X - PADDING, MENU_START_Y - PADDING, ICON_SIZE + PADDING * 2, ICON_SIZE + PADDING * 2);
     private final SpriteManager spriteManager;
 
     /**
@@ -72,6 +79,22 @@ public final class HUDRenderer {
         gc.setFont(Font.font("Helvetica", FontWeight.BOLD, FONT_SIZE));
         gc.fillText("x " + data.coins(), COIN_START_X + TEXT_COIN_OFFSET_X, COIN_START_Y + TEXT_COIN_OFFSET_Y);
 
+        
+
+        // --------- MENU ICON ---------
+        final Image menuSprite = spriteManager.getSpriteSheet("sprites/hud/setting");
+        if (menuSprite != null) {
+            gc.drawImage(menuSprite, MENU_START_X, MENU_START_Y, ICON_SIZE, ICON_SIZE);
+        } else {
+            gc.setFill(Color.WHITE);
+            gc.fillText("⚙", MENU_START_X, MENU_START_Y + TEXT_COIN_OFFSET_Y);
+        }
+        menuBounds = new Rectangle2D(MENU_START_X - PADDING, MENU_START_Y - PADDING, ICON_SIZE + PADDING * 2, ICON_SIZE + PADDING * 2);
+
         gc.restore();
+    }
+
+    public boolean isMenuClicked(final double x, final double y) {
+        return menuBounds != null && menuBounds.contains(x, y);
     }
 }
