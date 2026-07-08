@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Sleepy Hollow Potion",
+    "imagePath": "assets/potions/sleepy_hollow",
+    "description": "Smells of lavender and old books, perfect for restless nights",
+    "effect": "sleep"
+  },
+  {
+    "name": "Sunrise Fizz Potion",
+    "imagePath": "assets/potions/sunrise_fizz",
+    "description": "Tingles like mint on a cold morning, wakes up even the grumpiest witch",
+    "effect": "energy"
+  },
+  {
+    "name": "Calm Waters Potion",
+    "imagePath": "assets/potions/calm_waters",
+    "description": "Tastes like rain on a quiet afternoon, melts worries away",
+    "effect": "anxiety"
+  },
+  {
+    "name": "Foxfire Focus Potion",
+    "imagePath": "assets/potions/foxfire_focus",
+    "description": "Smells faintly of pine and makes everything oddly clear",
+    "effect": "focus"
+  },
+  {
+    "name": "Lucky Clover Potion",
+    "imagePath": "assets/potions/lucky_clover",
+    "description": "Suspiciously green and smells like a garden after rain",
+    "effect": "luck"
+  },
+  {
+    "name": "Warm Hug Potion",
+    "imagePath": "assets/potions/warm_hug",
+    "description": "Feels like a blanket on a cold day, soothes aching joints",
+    "effect": "pain"
+  },
+  {
+    "name": "Chatterbox Potion",
+    "imagePath": "assets/potions/chatterbox",
+    "description": "Tastes like honey and makes words flow like a river",
+    "effect": "confidence"
+  },
+  {
+    "name": "Moonbeam Memory Potion",
+    "imagePath": "assets/potions/moonbeam_memory",
+    "description": "Glows faintly silver and smells like something you almost remember",
+    "effect": "memory"
+  },
+  {
+    "name": "Swiftwing Potion",
+    "imagePath": "assets/potions/swiftwing",
+    "description": "Fizzes like sparks and makes your feet feel lighter than air",
+    "effect": "speed"
+  },
+  {
+    "name": "Iron Bark Potion",
+    "imagePath": "assets/potions/iron_bark",
+    "description": "Tastes like soil and oak, makes you feel surprisingly sturdy",
+    "effect": "strength"
+  },
+  {
+    "name": "Sunbeam Potion",
+    "imagePath": "assets/potions/sunbeam",
+    "description": "Bright yellow and smells like summer, chases away the gloom",
+    "effect": "mood"
+  },
+  {
+    "name": "Tummy Trouble Potion",
+    "imagePath": "assets/potions/tummy_trouble",
+    "description": "Smells like peppermint and fixes a grumpy stomach right up",
+    "effect": "digestion"
+  },
+  {
+    "name": "Dewdrop Clarity Potion",
+    "imagePath": "assets/potions/dewdrop_clarity",
+    "description": "Clear as water and tastes like nothing, clears a foggy head",
+    "effect": "headache"
+  },
+  {
+    "name": "Bramble Shield Potion",
+    "imagePath": "assets/potions/bramble_shield",
+    "description": "Dark green and prickly smelling, keeps sneezes at bay",
+    "effect": "immunity"
+  },
+  {
+    "name": "Stargazer Potion",
+    "imagePath": "assets/potions/stargazer",
+    "description": "Deep blue and smells like midnight, perfect for vivid dreams",
+    "effect": "dreams"
+  },
+  {
+    "name": "Wanderer Potion",
+    "imagePath": "assets/potions/wanderer",
+    "description": "Smells like pine and adventure, makes your heart feel brave",
+    "effect": "courage"
+  },
+  {
+    "name": "Whisper Potion",
+    "imagePath": "assets/potions/whisper",
+    "description": "Barely there, like a secret, helps you listen more carefully",
+    "effect": "perception"
+  },
+  {
+    "name": "Hearthfire Potion",
+    "imagePath": "assets/potions/hearthfire",
+    "description": "Warm and spicy, smells like home, perfect for cold rainy days",
+    "effect": "warmth"
+  },
+  {
+    "name": "Petal Soft Potion",
+    "imagePath": "assets/potions/petal_soft",
+    "description": "Smells like a flower shop and leaves skin feeling like velvet",
+    "effect": "skin"
+  },
+  {
+    "name": "Tanglewood Potion",
+    "imagePath": "assets/potions/tanglewood",
+    "description": "Muddy brown and earthy, mysteriously good for sore muscles",
+    "effect": "recovery"
+  }
+]

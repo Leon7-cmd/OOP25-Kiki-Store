@@ -1,0 +1,127 @@
+[
+  {
+    "name": "Lavender",
+    "imagePath": "assets/ingredients/lavender",
+    "type": "flower"
+  },
+  {
+    "name": "Chamomile",
+    "imagePath": "assets/ingredients/chamomile",
+    "type": "flower"
+  },
+  {
+    "name": "Mint",
+    "imagePath": "assets/ingredients/mint",
+    "type": "plant"
+  },
+  {
+    "name": "Rosemary",
+    "imagePath": "assets/ingredients/rosemary",
+    "type": "plant"
+  },
+  {
+    "name": "Ginger Root",
+    "imagePath": "assets/ingredients/ginger_root",
+    "type": "root"
+  },
+  {
+    "name": "Dandelion",
+    "imagePath": "assets/ingredients/dandelion",
+    "type": "flower"
+  },
+  {
+    "name": "Sage",
+    "imagePath": "assets/ingredients/sage",
+    "type": "plant"
+  },
+  {
+    "name": "Blue Lotus",
+    "imagePath": "assets/ingredients/blue_lotus",
+    "type": "flower"
+  },
+  {
+    "name": "Moon Petal",
+    "imagePath": "assets/ingredients/moon_petal",
+    "type": "flower"
+  },
+  {
+    "name": "Crystal Mushroom",
+    "imagePath": "assets/ingredients/crystal_mushroom",
+    "type": "mushroom"
+  },
+  {
+    "name": "Nettle",
+    "imagePath": "assets/ingredients/nettle",
+    "type": "plant"
+  },
+  {
+    "name": "Willow Bark",
+    "imagePath": "assets/ingredients/willow_bark",
+    "type": "bark"
+  },
+  {
+    "name": "Oak Bark",
+    "imagePath": "assets/ingredients/oak_bark",
+    "type": "bark"
+  },
+  {
+    "name": "Elderflower",
+    "imagePath": "assets/ingredients/elderflower",
+    "type": "flower"
+  },
+  {
+    "name": "Rosehip",
+    "imagePath": "assets/ingredients/rosehip",
+    "type": "berry"
+  },
+  {
+    "name": "Lemon Balm",
+    "imagePath": "assets/ingredients/lemon_balm",
+    "type": "plant"
+  },
+  {
+    "name": "Fennel",
+    "imagePath": "assets/ingredients/fennel",
+    "type": "plant"
+  },
+  {
+    "name": "Cinnamon Bark",
+    "imagePath": "assets/ingredients/cinnamon_bark",
+    "type": "bark"
+  },
+  {
+    "name": "Star Anise",
+    "imagePath": "assets/ingredients/star_anise",
+    "type": "spice"
+  },
+  {
+    "name": "Rose Petal",
+    "imagePath": "assets/ingredients/rose_petal",
+    "type": "flower"
+  },
+  {
+    "name": "Wind Grass",
+    "imagePath": "assets/ingredients/wind_grass",
+    "type": "plant"
+  },
+  {
+    "name": "Feather Fern",
+    "imagePath": "assets/ingredients/feather_fern",
+    "type": "plant"
+  },
+  {
+    "name": "Four Leaf Clover",
+    "imagePath": "assets/ingredients/four_leaf_clover",
+    "type": "plant"
+  },
+  {
+    "name": "Yellow Iris",
+    "imagePath": "assets/ingredients/yellow_iris",
+    "type": "flower"
+  },
+  {
+    "name": "Honeysuckle",
+    "imagePath": "assets/ingredients/honeysuckle",
+    "type": "flower"
+  }
+]
