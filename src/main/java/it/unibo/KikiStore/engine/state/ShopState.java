@@ -14,8 +14,6 @@ import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
 import it.unibo.KikiStore.view.environment.impl.MapRenderer;
-import it.unibo.KikiStore.view.hud.api.HUDRenderData;
-import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.utility.Camera;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -25,12 +23,9 @@ import javafx.scene.paint.Color;
  * Concrete implementation of GameState used to test the integration of 
  * player movement, dual-layered maps (visual/collision), and camera scrolling.
  */
-public final class TestState implements GameState {
-    private static final int PLAYER_X = 1850;
-    private static final int PLAYER_Y = 2950;
-    private static final int[] TELEPORT1 = {2550, 1520};
-    private static final int[] TELEPORT2 = {1280, 2410};
-
+public final class ShopState implements GameState {
+    private static final int PLAYER_X = 870;
+    private static final int PLAYER_Y = 920;
     private final InputHandler input;
     private final PlayerImpl kiki; 
 
@@ -39,13 +34,11 @@ public final class TestState implements GameState {
     private final SpriteManager spriteManager;
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
-    private final HUDRenderer hudRenderer;
 
     private final Camera cam = new Camera();
     private int frameCount;
     private final int[][] groundGrid;
     private final int[][] decorationGrid;
-    private final int[][] upperGrid;
     private final int[][] maskGrid;
 
     /**
@@ -54,15 +47,14 @@ public final class TestState implements GameState {
      * @param transitionController is used to switch from one state to another
      * @param input  controls every input from the player
      */
-    public TestState(final GameStateTransition transitionController, final InputHandler input) {
+    public ShopState(final GameStateTransition transitionController, final InputHandler input) {
         this.transitionController = transitionController;
         this.input = input;
 
         // --- 1. RESOURCE LOADING ---
-        this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
-        this.decorationGrid = MapLoader.loadMap("maps/map0/testDecor.txt");
-        this.upperGrid = MapLoader.loadMap("maps/map0/testUpper.txt");
-        this.maskGrid = MapLoader.loadMap("maps/map0/col/testCol.txt");
+        this.groundGrid = MapLoader.loadMap("maps/shop/shopGround.txt");
+        this.decorationGrid = MapLoader.loadMap("maps/shop/shopDecor.txt");
+        this.maskGrid = MapLoader.loadMap("maps/shop/col/col.txt");
 
         // --- 2. MODEL INITIALIZATION ---
         final GameTile collisionMap = new TileMapImpl(maskGrid, 32);
@@ -74,9 +66,8 @@ public final class TestState implements GameState {
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
-        this.entityRenderer = new EntityRenderer(this.spriteManager);
-        this.environmentRenderer = new MapRenderer(this.spriteManager);
-        this.hudRenderer = new HUDRenderer(this.spriteManager);
+        this.entityRenderer = new EntityRenderer(spriteManager);
+        this.environmentRenderer = new MapRenderer(spriteManager);
     }
 
     @Override
@@ -86,21 +77,16 @@ public final class TestState implements GameState {
     public void update() {
         kiki.update(input);
         frameCount++;
+
         final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
-            kiki.setX(TELEPORT1[0]);
-            kiki.setY(TELEPORT1[1]);
+            transitionController.popState();
         }
         if (tileId == 3 && input.isAction()) {
-            kiki.setX(TELEPORT2[0]);
-            kiki.setY(TELEPORT2[1]);
+            System.out.println("Interacting with the book!");
         }
         if (tileId == 4 && input.isAction()) {
-            transitionController.pushState(new MinigameFly(transitionController, input));
-        }
-        if (tileId == 5 && input.isAction()) {
-            System.err.println("heyyyyyy");
-            transitionController.pushState(new ShopState(transitionController, input));
+            System.out.println("Interacting with the shopkeeper!");
         }
     }
 
@@ -125,12 +111,7 @@ public final class TestState implements GameState {
             kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
         );
         entityRenderer.render(gc, List.of(kikiData), frameCount);
-        environmentRenderer.render(gc, new MapRenderData(upperGrid, 32));
 
         gc.restore(); 
-
-        // --- HUD ---
-        final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), 5, kiki.getMoney());
-        hudRenderer.render(gc, hudData);
     }
 }
