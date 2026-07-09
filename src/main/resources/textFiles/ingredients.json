@@ -2,91 +2,109 @@
   {
     "name": "Aloe",
     "imagePath": "sprites/ingredients/aloe",
+    "price": 3,
     "type": "plant"
   },
   {
     "name": "Basil",
     "imagePath": "sprites/ingredients/basil",
+    "price": 2,
     "type": "plant"
   },
   {
     "name": "Black Elder",
     "imagePath": "sprites/ingredients/black_elder",
+    "price": 5,
     "type": "plant"
   },
   {
     "name": "Blue Mushroom",
     "imagePath": "sprites/ingredients/blue_mushroom",
+    "price": 4,
     "type": "mushroom"
   },
   {
     "name": "Toadstool",
     "imagePath": "sprites/ingredients/toadstool",
+    "price": 6,
     "type": "mushroom"
   },
   {
     "name": "Blue Berries",
     "imagePath": "sprites/ingredients/blue_berries",
+    "price": 7,
     "type": "berry"
   },
   {
     "name": "Blue Lotus",
     "imagePath": "sprites/ingredients/blue_lotus",
+    "price": 10,
     "type": "flower"
   },
   {
     "name": "Calendula",
     "imagePath": "sprites/ingredients/calendula",
+    "price": 9,
     "type": "flower"
   },
   {
     "name": "Chamomile",
     "imagePath": "sprites/ingredients/chamomile",
+    "price": 3,
     "type": "flower"
   },
   {
     "name": "Clover",
     "imagePath": "sprites/ingredients/clover",
+    "price": 12,
     "type": "plant"
   },
   {
     "name": "Dandelion",
     "imagePath": "sprites/ingredients/dandelion",
+    "price": 7,
     "type": "flower"
   },
   {
     "name": "Fly Agaric",
     "imagePath": "sprites/ingredients/fly_agaric",
+    "price": 6,
     "type": "mushroom"
   },
   {
     "name": "Turmeric",
     "imagePath": "sprites/ingredients/turmeric",
+    "price": 8,
     "type": "root"
   },
   {
     "name": "Sage",
     "imagePath": "sprites/ingredients/sage",
+    "price": 6,
     "type": "plant"
   },
   {
     "name": "Olive Leaf",
     "imagePath": "sprites/ingredients/olive_leaf",
+    "price": 1,
     "type": "plant"
   },
   {
     "name": "Milk Thistle",
     "imagePath": "sprites/ingredients/milk_thistle",
+    "price": 12,
     "type": "plant"
   },
   {
     "name": "Echinacea",
     "imagePath": "sprites/ingredients/echinacea",
+    "price": 7,
     "type": "flower"
   },
   {
     "name": "Senna",
     "imagePath": "sprites/ingredients/senna",
+    "price": 11,
     "type": "plant"
   }
 ]
