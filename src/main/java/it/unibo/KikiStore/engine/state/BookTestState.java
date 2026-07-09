@@ -49,16 +49,16 @@ public class BookTestState implements GameState {
             final InventoryController inventoryController = new InventoryControllerImpl(recipeBook);
             final RecipeBookController recipeBookController =
                 new RecipeBookControllerImpl(recipeBook, inventoryController);
-            final GameCatalog catalog = new GameCatalogImpl("ingredients.json", "potions.json");
+            final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
             final SpriteManager spriteManager = new SpriteManager();
 
             // Item di test — appariranno colorati, il resto grigio
             inventoryController.addIngredient(
-                "Lavender", "assets/ingredients/lavender", 3, "flower");
+                "Chamomile", "sprites/ingredients/chamomile", 3, "flower");
             inventoryController.addIngredient(
-                "Mint", "assets/ingredients/mint", 2, "plant");
+                "Clover", "sprites/ingredients/clover", 2, "plant");
             inventoryController.addPotion(
-                "Sleepy Hollow Potion", "assets/potions/sleepy_hollow",
+                "Shieldberry Potion", "sprites/potions/shieldberry",
                 1, "Smells of lavender and old books, perfect for restless nights", "sleep", false);
 
             final GameState bookState = new BookState(
