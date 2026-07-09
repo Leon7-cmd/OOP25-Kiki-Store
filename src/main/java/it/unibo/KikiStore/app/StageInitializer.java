@@ -5,6 +5,7 @@ import it.unibo.KikiStore.engine.api.GameEngine;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
+import it.unibo.KikiStore.engine.state.BookTestState;
 import it.unibo.KikiStore.engine.state.InventoryTestState;
 import it.unibo.KikiStore.engine.state.TestState;
 import javafx.scene.Scene;
@@ -17,6 +18,7 @@ import it.unibo.KikiStore.engine.state.InventoryTestState;
  * Manages the initialization of the main JavaFX window (Stage).
  * Assembles the basic graphical components (Canvas) and starts the GameEngine.
  */
+
 public class StageInitializer {
 
     /**
@@ -26,9 +28,10 @@ public class StageInitializer {
      */
     public void init(Stage stage) {
         javafx.geometry.Rectangle2D screenBounds = javafx.stage.Screen.getPrimary().getVisualBounds();
-        double screenWidth = screenBounds.getWidth() * 0.50;
-        double screenHeight = screenBounds.getHeight() * 0.60;
-
+        //double screenWidth = screenBounds.getWidth() * 0.50;
+        //double screenHeight = screenBounds.getHeight() * 0.60;
+        double screenWidth = screenBounds.getWidth();
+        double screenHeight = screenBounds.getHeight();
         // 1. Canvas setup
         StackPane root = new StackPane();
         Canvas canvas = new Canvas(screenWidth, screenHeight);
@@ -39,14 +42,17 @@ public class StageInitializer {
         // 2. Initialization of the logical architecture
         GameStateManager gsm = new GameStateManagerImpl();
         //gsm.setState(new TestState(inputHandler));
-        gsm.setState(new InventoryTestState(inputHandler, gsm));
+        gsm.setState(new BookTestState(inputHandler, gsm));
         // 3. GameEngine creation
         GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
 
         // 4. Final configuration of the OS window
         stage.setTitle("Kiki's Store");
         stage.setScene(scene);
-        stage.setResizable(false);
+        //stage.setResizable(false);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
+        
         stage.show();
 
         // 5. GameLoop startup

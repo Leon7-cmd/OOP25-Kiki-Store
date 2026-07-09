@@ -1,127 +1,92 @@
 [
   {
-    "name": "Lavender",
-    "imagePath": "assets/ingredients/lavender",
+    "name": "Aloe",
+    "imagePath": "sprites/ingredients/aloe",
+    "type": "plant"
+  },
+  {
+    "name": "Basil",
+    "imagePath": "sprites/ingredients/basil",
+    "type": "plant"
+  },
+  {
+    "name": "Black Elder",
+    "imagePath": "sprites/ingredients/black_elder",
+    "type": "plant"
+  },
+  {
+    "name": "Blue Mushroom",
+    "imagePath": "sprites/ingredients/blue_mushroom",
+    "type": "mushroom"
+  },
+  {
+    "name": "Toadstool",
+    "imagePath": "sprites/ingredients/toadstool",
+    "type": "mushroom"
+  },
+  {
+    "name": "Blue Berries",
+    "imagePath": "sprites/ingredients/blue_berries",
+    "type": "berry"
+  },
+  {
+    "name": "Blue Lotus",
+    "imagePath": "sprites/ingredients/blue_lotus",
+    "type": "flower"
+  },
+  {
+    "name": "Calendula",
+    "imagePath": "sprites/ingredients/calendula",
     "type": "flower"
   },
   {
     "name": "Chamomile",
-    "imagePath": "assets/ingredients/chamomile",
+    "imagePath": "sprites/ingredients/chamomile",
     "type": "flower"
   },
   {
-    "name": "Mint",
-    "imagePath": "assets/ingredients/mint",
+    "name": "Clover",
+    "imagePath": "sprites/ingredients/clover",
     "type": "plant"
-  },
-  {
-    "name": "Rosemary",
-    "imagePath": "assets/ingredients/rosemary",
-    "type": "plant"
-  },
-  {
-    "name": "Ginger Root",
-    "imagePath": "assets/ingredients/ginger_root",
-    "type": "root"
   },
   {
     "name": "Dandelion",
-    "imagePath": "assets/ingredients/dandelion",
+    "imagePath": "sprites/ingredients/dandelion",
     "type": "flower"
   },
   {
-    "name": "Sage",
-    "imagePath": "assets/ingredients/sage",
-    "type": "plant"
-  },
-  {
-    "name": "Blue Lotus",
-    "imagePath": "assets/ingredients/blue_lotus",
-    "type": "flower"
-  },
-  {
-    "name": "Moon Petal",
-    "imagePath": "assets/ingredients/moon_petal",
-    "type": "flower"
-  },
-  {
-    "name": "Crystal Mushroom",
-    "imagePath": "assets/ingredients/crystal_mushroom",
+    "name": "Fly Agaric",
+    "imagePath": "sprites/ingredients/fly_agaric",
     "type": "mushroom"
   },
   {
-    "name": "Nettle",
-    "imagePath": "assets/ingredients/nettle",
+    "name": "Turmeric",
+    "imagePath": "sprites/ingredients/turmeric",
+    "type": "root"
+  },
+  {
+    "name": "Sage",
+    "imagePath": "sprites/ingredients/sage",
     "type": "plant"
   },
   {
-    "name": "Willow Bark",
-    "imagePath": "assets/ingredients/willow_bark",
-    "type": "bark"
+    "name": "Olive Leaf",
+    "imagePath": "sprites/ingredients/olive_leaf",
+    "type": "plant"
   },
   {
-    "name": "Oak Bark",
-    "imagePath": "assets/ingredients/oak_bark",
-    "type": "bark"
+    "name": "Milk Thistle",
+    "imagePath": "sprites/ingredients/milk_thistle",
+    "type": "plant"
   },
   {
-    "name": "Elderflower",
-    "imagePath": "assets/ingredients/elderflower",
+    "name": "Echinacea",
+    "imagePath": "sprites/ingredients/echinacea",
     "type": "flower"
   },
   {
-    "name": "Rosehip",
-    "imagePath": "assets/ingredients/rosehip",
-    "type": "berry"
-  },
-  {
-    "name": "Lemon Balm",
-    "imagePath": "assets/ingredients/lemon_balm",
+    "name": "Senna",
+    "imagePath": "sprites/ingredients/senna",
     "type": "plant"
-  },
-  {
-    "name": "Fennel",
-    "imagePath": "assets/ingredients/fennel",
-    "type": "plant"
-  },
-  {
-    "name": "Cinnamon Bark",
-    "imagePath": "assets/ingredients/cinnamon_bark",
-    "type": "bark"
-  },
-  {
-    "name": "Star Anise",
-    "imagePath": "assets/ingredients/star_anise",
-    "type": "spice"
-  },
-  {
-    "name": "Rose Petal",
-    "imagePath": "assets/ingredients/rose_petal",
-    "type": "flower"
-  },
-  {
-    "name": "Wind Grass",
-    "imagePath": "assets/ingredients/wind_grass",
-    "type": "plant"
-  },
-  {
-    "name": "Feather Fern",
-    "imagePath": "assets/ingredients/feather_fern",
-    "type": "plant"
-  },
-  {
-    "name": "Four Leaf Clover",
-    "imagePath": "assets/ingredients/four_leaf_clover",
-    "type": "plant"
-  },
-  {
-    "name": "Yellow Iris",
-    "imagePath": "assets/ingredients/yellow_iris",
-    "type": "flower"
-  },
-  {
-    "name": "Honeysuckle",
-    "imagePath": "assets/ingredients/honeysuckle",
-    "type": "flower"
   }
 ]
