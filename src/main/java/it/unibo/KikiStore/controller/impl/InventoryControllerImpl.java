@@ -79,7 +79,7 @@ public class InventoryControllerImpl implements InventoryController {
                 
                 // Creo un nuovo ingrediente con la quantità mancante.
                 // Se IngredientImpl ha un costruttore diverso, adattalo qui.
-                missing.add(new IngredientImpl(reqIngredient.getName(),null, missingQty, null)); 
+                missing.add(new IngredientImpl(reqIngredient.getName(),null, missingQty, 0, null)); 
             }
         }
         return missing;

@@ -5,11 +5,13 @@ public abstract class GameItemImpl implements GameItem {
     private String name;
     private String imagePath;
     private int quantity;
+    private int price;
 
-    public GameItemImpl(String name, String imagePath, int quantity) {
+    public GameItemImpl(String name, String imagePath, int quantity, int price) {
         this.name = name;
         this.imagePath = imagePath;
         this.quantity = quantity;
+        this.price = price;
     }
 
     @Override public String getName() {
@@ -24,6 +26,10 @@ public abstract class GameItemImpl implements GameItem {
         return quantity;
     }
 
+    @Override public int getPrice() {
+        return price;
+    }
+
     @Override public void setName(String name) {
         this.name = name;
     }
@@ -34,5 +40,9 @@ public abstract class GameItemImpl implements GameItem {
 
     @Override public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override public void setPrice(final int price) {
+        this.price = price;
     }
 }

@@ -3,7 +3,8 @@
     "name": "Dreamglow Potion",
     "description": "A soft glowing mixture that brings peaceful and vivid dreams.",
     "effect": "sleep",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "price": 25,
     "ingredients": [
         "starlavender",
         "milkflower",
@@ -14,7 +15,8 @@
     "name": "Bloomheart Tonic",
     "description": "A sweet rosy potion that lifts the spirit and brightens gloomy days.",
     "effect": "joy",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "price": 30,
     "ingredients": [
       "rosebud",
       "sunberry",
@@ -25,7 +27,8 @@
     "name": "Moonwhisper Tea",
     "description": "Silvery potion that fills the drinker with quiet focus under the moonlight.",
     "effect": "focus",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "price": 20,
     "ingredients": [
       "moonpetal",
       "silvermint",
@@ -36,7 +39,8 @@
     "name": "Wanderer Potion",
     "description": "Smells like pine and adventure, makes your heart feel brave",
     "effect": "courage",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "price": 40,
     "ingredients": [
         "Wind Grass",
         "Dandelion",
@@ -47,7 +51,8 @@
     "name": "Tummy Trouble Potion",
     "description": "Smells like peppermint and fixes a grumpy stomach right up",
     "effect": "digestion",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "price": 15,
     "ingredients": [
         "Mint",
         "Ginger Root",
@@ -58,7 +63,8 @@
     "name": "Lucky Clover Potion",
     "description": "Suspiciously green and smells like a garden after rain",
     "effect": "luck",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png", 
+    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "price": 10,
     "ingredients": [
         "Four_Leaf_Clover",
         "Mint",

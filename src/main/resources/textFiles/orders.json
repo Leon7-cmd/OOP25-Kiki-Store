@@ -1,0 +1,42 @@
+[
+  {
+    "customer": "Mario",
+    "problem": "sleep"
+  },
+  {
+    "customer": "Luna",
+    "problem": "joy"
+  },
+  {
+    "customer": "Edoardo",
+    "problem": "focus"
+  },
+  {
+    "customer": "Sofia",
+    "problem": "courage"
+  },
+  {
+    "customer": "Giulia",
+    "problem": "digestion"
+  },
+  {
+    "customer": "Marco",
+    "problem": "luck"
+  },
+  {
+    "customer": "Elisa",
+    "problem": "sleep"
+  },
+  {
+    "customer": "Tom",
+    "problem": "focus"
+  },
+  {
+    "customer": "Nina",
+    "problem": "joy"
+  },
+  {
+    "customer": "Leo",
+    "problem": "courage"
+  }
+]

@@ -6,9 +6,9 @@ public class PotionImpl extends GameItemImpl implements Potion {
     private String description;
     private String effect; // effects provided by the potion, e.g. "help sleeping", "energizing", "help with digestion"
     private boolean isBlack; //TO BE CHANGED - it describes a wrong combination used to create a potion
-    
-    public PotionImpl (String name, String imagePath, int quantity, String description, String effect, boolean isBlack) {
-        super(name, imagePath, quantity);
+
+    public PotionImpl (String name, String imagePath, int quantity, int price, String description, String effect, boolean isBlack) {
+        super(name, imagePath, quantity, price);
         this.description = description;
         this.effect = effect;
         this.isBlack = isBlack;

@@ -6,8 +6,8 @@ import it.unibo.KikiStore.model.item.impl.GameItemImpl;
 public class IngredientImpl extends GameItemImpl implements Ingredient {
     private String type; // e.g. it could be a plant, flower, type of wood or a specific root
 
-    public IngredientImpl (String name, String imagePath, int quantity, String type) {
-        super(name, imagePath, quantity);
+    public IngredientImpl (String name, String imagePath, int quantity, int price, String type) {
+        super(name, imagePath, quantity, price);
         this.type = type;
     }
 

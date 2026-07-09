@@ -1,18 +1,18 @@
 package it.unibo.KikiStore.model.inventory.impl;
-import it.unibo.KikiStore.model.inventory.api.RecipeBook;
-import it.unibo.KikiStore.model.inventory.api.Ingredient;
-import it.unibo.KikiStore.model.inventory.api.Potion;
-import it.unibo.KikiStore.model.inventory.api.Recipe;
-import java.util.List;
-import java.util.ArrayList;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import it.unibo.KikiStore.model.inventory.api.Ingredient;
+import it.unibo.KikiStore.model.inventory.api.Potion;
+import it.unibo.KikiStore.model.inventory.api.Recipe;
+import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 
 public class RecipeBookImpl implements RecipeBook {
     private List<Recipe> allRecipes;
@@ -40,9 +40,10 @@ public class RecipeBookImpl implements RecipeBook {
 
             for (JsonElement ing : ingredientsArray) {
                 String ingName = ing.getAsString();
-                ingredients.add(new IngredientImpl(ingName, "", 0, "ingredient"));
+                ingredients.add(new IngredientImpl(ingName, "", 0, 0, "ingredient"));
             }
-            Potion potion = new PotionImpl(name, id, 0, description, effect, false);
+            final int price = recipeData.has("price") ? recipeData.get("price").getAsInt() : 0;
+            Potion potion = new PotionImpl(name, id, 0, price, description, effect, false);
             Recipe recipe = new RecipeImpl(ingredients, potion, false);
             allRecipes.add(recipe);
         }
