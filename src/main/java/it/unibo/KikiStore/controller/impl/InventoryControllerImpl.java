@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InventoryController;
-import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
-import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
-import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
 import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
+import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
+import it.unibo.KikiStore.model.item.api.GameItem;
 
 public class InventoryControllerImpl implements InventoryController {
     private static final int MAX_CAPACITY = 50;
@@ -80,7 +78,7 @@ public class InventoryControllerImpl implements InventoryController {
             item.setQuantity(item.getQuantity() + quantity);
             return;
         }
-        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, type));
+        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, 0, type));
         return;
     }
 
@@ -95,7 +93,7 @@ public class InventoryControllerImpl implements InventoryController {
             item.setQuantity(item.getQuantity() + quantity);
             return;
         }
-        inventory.addPotion(new PotionImpl(name, imagePath, quantity, description, effect, isBlack));
+        inventory.addPotion(new PotionImpl(name, imagePath, quantity, 0, description, effect, isBlack));
         return;
     }
 

@@ -63,6 +63,33 @@ public class RecipeBookImpl implements RecipeBook {
         return unlockedRecipes;
     }
 
+    @Override public List<Recipe> findByEffect(final String effect) {
+        final List<Recipe> matchingRecipes = new ArrayList<>();
+        if (effect == null) {
+            return matchingRecipes;
+        }
+        for (final Recipe recipe : allRecipes) {
+            if (recipe.getPotion() != null && recipe.getPotion().getEffect() != null
+                    && recipe.getPotion().getEffect().toLowerCase().contains(effect.toLowerCase())) {
+                matchingRecipes.add(recipe);
+            }
+        }
+        return matchingRecipes;
+    }
+
+    @Override public Recipe findByIngredients(final List<Ingredient> ingredients) {
+        if (ingredients == null) {
+            return null;
+        }
+        for (final Recipe recipe : allRecipes) {
+            if (recipe.getIngredients().containsAll(ingredients)
+                    && recipe.getIngredients().size() == ingredients.size()) {
+                return recipe;
+            }
+        }
+        return null;
+    }
+
     
 
     

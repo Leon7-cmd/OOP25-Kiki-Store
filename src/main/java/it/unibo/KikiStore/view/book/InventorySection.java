@@ -1,12 +1,15 @@
 package it.unibo.KikiStore.view.book;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
-import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Potion;
 import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
 import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
+import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
@@ -14,8 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Inventory grid section — shown as two fixed facing pages inside the book:
@@ -77,14 +78,14 @@ public class InventorySection implements BookSection {
         ingredientSlots = new ArrayList<>();
         for (final Ingredient ing : gameCatalog.getAllIngredients()) {
             final int qty = inventoryController.getIngredientQuantity(ing.getName());
-            ingredientSlots.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getType()));
+            ingredientSlots.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getPrice(), ing.getType()));
         }
 
         potionSlots = new ArrayList<>();
         for (final Potion pot : gameCatalog.getAllPotions()) {
             final int qty = inventoryController.getPotionQuantity(pot.getName());
             potionSlots.add(new PotionImpl(pot.getName(), pot.getImagePath(), qty,
-                pot.getDescription(), pot.getEffect(), false));
+                pot.getPrice(), pot.getDescription(), pot.getEffect(), pot.isBlack()));
         }
     }
 

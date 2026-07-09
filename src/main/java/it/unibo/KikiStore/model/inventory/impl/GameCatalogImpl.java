@@ -1,17 +1,19 @@
 package it.unibo.KikiStore.model.inventory.impl;
 
-import it.unibo.KikiStore.model.inventory.api.GameCatalog;
-import it.unibo.KikiStore.model.inventory.api.Ingredient;
-import it.unibo.KikiStore.model.inventory.api.Potion;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import it.unibo.KikiStore.model.inventory.api.GameCatalog;
+import it.unibo.KikiStore.model.inventory.api.Ingredient;
+import it.unibo.KikiStore.model.inventory.api.Potion;
 
 /**
  * Loads all possible ingredients and potions from JSON files.
@@ -48,7 +50,8 @@ public class GameCatalogImpl implements GameCatalog {
             final String name      = obj.get("name").getAsString();
             final String imagePath = obj.get("imagePath").getAsString();
             final String type      = obj.get("type").getAsString();
-            allIngredients.add(new IngredientImpl(name, imagePath, 0, type));
+            final int price        = obj.has("price") ? obj.get("price").getAsInt() : 0;
+            allIngredients.add(new IngredientImpl(name, imagePath, 0, price, type));
         }
     }
 
@@ -68,7 +71,8 @@ public class GameCatalogImpl implements GameCatalog {
             final String imagePath   = obj.get("imagePath").getAsString();
             final String description = obj.get("description").getAsString();
             final String effect      = obj.get("effect").getAsString();
-            allPotions.add(new PotionImpl(name, imagePath, 0, description, effect, false));
+            final int price          = obj.has("price") ? obj.get("price").getAsInt() : 0;
+            allPotions.add(new PotionImpl(name, imagePath, 0, price, description, effect, false));
         }
     }
 
