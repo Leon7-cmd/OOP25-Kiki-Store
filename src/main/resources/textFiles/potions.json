@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Giggling Toadstool Potion",
+    "imagePath": "sprites/potions/giggling_toadstool",
+    "description": "Bubbles on its own and smells of toasted mushrooms, sparks laughter for no reason at all",
+    "effect": "laughter"
+  },
+  {
+    "name": "Starlit Slumber Potion",
+    "imagePath": "sprites/potions/starlit_slumber",
+    "description": "Glimmers faintly blue and smells like a silent night, lulls you into deep dreams",
+    "effect": "sleep"
+  },
+  {
+    "name": "Thistledown Detox Potion",
+    "imagePath": "sprites/potions/thistledown_detox",
+    "description": "Bitter and earthy, sweeps the body and mind clean like a spring breeze",
+    "effect": "detox"
+  },
+  {
+    "name": "Turmeric Blaze Potion",
+    "imagePath": "sprites/potions/turmeric_blaze",
+    "description": "Tingles like live embers, makes you feel rooted and tireless",
+    "effect": "stamina"
+  },
+  {
+    "name": "Cloverfield Fortune Potion",
+    "imagePath": "sprites/potions/cloverfield_fortune",
+    "description": "Bright green and fizzy, tastes like a meadow kissed by luck",
+    "effect": "luck"
+  },
+  {
+    "name": "Windrunner Potion",
+    "imagePath": "sprites/potions/windrunner",
+    "description": "Light as a feather on the breeze, keeps your legs running without tiring",
+    "effect": "speed"
+  },
+  {
+    "name": "Shieldberry Potion",
+    "imagePath": "sprites/potions/shieldberry",
+    "description": "Smells of dark berries and white blossoms, keeps colds and coughs at bay",
+    "effect": "immunity"
+  },
+  {
+    "name": "Velvet Bloom Potion",
+    "imagePath": "sprites/potions/velvet_bloom",
+    "description": "Thick and petal-scented, leaves skin as soft as silk",
+    "effect": "skin"
+  },
+  {
+    "name": "Ember Spice Potion",
+    "imagePath": "sprites/potions/ember_spice",
+    "description": "Warm and spiced, heats you from the inside like a lit hearth",
+    "effect": "warmth"
+  },
+  {
+    "name": "Serene Iris Potion",
+    "imagePath": "sprites/potions/serene_iris",
+    "description": "Smells of fresh herbs and a dawn garden, melts away every restless thought",
+    "effect": "anxiety"
+  }
+]

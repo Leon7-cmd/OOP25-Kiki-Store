@@ -1,75 +1,130 @@
 [
-{
-    "name": "Dreamglow Potion",
-    "description": "A soft glowing mixture that brings peaceful and vivid dreams.",
+  {
+    "name": "Giggling Toadstool Potion",
+    "description": "Bubbles on its own and smells of toasted mushrooms, sparks laughter for no reason at all",
+    "effect": "laughter",
+    "id": "sprites/potions/giggling_toadstool",
+    "ingredients": [
+        "toadstool",
+        "fly_agaric",
+        "blue_mushroom"
+    ]
+    
+  },
+  {
+    "name": "Starlit Slumber Potion",
+    "description": "Glimmers faintly blue and smells like a silent night, lulls you into deep dreams",
     "effect": "sleep",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
-    "price": 25,
-    "ingredients": [
-        "starlavender",
-        "milkflower",
-        "blue_lotus"
-    ]
-},
-{
-    "name": "Bloomheart Tonic",
-    "description": "A sweet rosy potion that lifts the spirit and brightens gloomy days.",
-    "effect": "joy",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
-    "price": 30,
-    "ingredients": [
-      "rosebud",
-      "sunberry",
-      "honey"
-    ]
-},
-{
-    "name": "Moonwhisper Tea",
-    "description": "Silvery potion that fills the drinker with quiet focus under the moonlight.",
-    "effect": "focus",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
-    "price": 20,
-    "ingredients": [
-      "moonpetal",
-      "silvermint",
-      "dewberry"
-    ]
-},
-{
-    "name": "Wanderer Potion",
-    "description": "Smells like pine and adventure, makes your heart feel brave",
-    "effect": "courage",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
-    "price": 40,
-    "ingredients": [
-        "Wind Grass",
-        "Dandelion",
-        "Feather Fern"
-    ]
-},
-{
-    "name": "Tummy Trouble Potion",
-    "description": "Smells like peppermint and fixes a grumpy stomach right up",
-    "effect": "digestion",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
+    "id": "sprites/potions/starlit_slumber",
     "price": 15,
     "ingredients": [
-        "Mint",
-        "Ginger Root",
-        "Fennel"
+        "blue_lotus",
+        "chamomile",
+        "sage"
     ]
-},
-{
-    "name": "Lucky Clover Potion",
-    "description": "Suspiciously green and smells like a garden after rain",
-    "effect": "luck",
-    "id": "D:/progetto_oop/OOP25-Kiki-Store/src/main/resources/sprites/sprite.png",
-    "price": 10,
+  },
+  {
+    "name": "Thistledown Detox Potion",
+    "description": "Bitter and earthy, sweeps the body and mind clean like a spring breeze",
+    "effect": "detox",
+    "id": "sprites/potions/thistledown_detox",
+    "price": 20,
     "ingredients": [
-        "Four_Leaf_Clover",
-        "Mint",
-        "Dandelion"
+        "milk_thistle",
+        "dandelion",
+        "senna"
     ]
-}
-
+    
+  },
+  {
+    "name": "Turmeric Blaze Potion",
+    "description": "Tingles like live embers, makes you feel rooted and tireless",
+    "effect": "stamina",
+    "id": "sprites/potions/turmeric_blaze",
+    "price": 25,
+    "ingredients": [
+        "turmeric",
+        "olive_leaf",
+        "echinacea"
+    ]
+    
+  },
+  {
+    "name": "Cloverfield Fortune Potion",
+    "description": "Bright green and fizzy, tastes like a meadow kissed by luck",
+    "effect": "luck",
+    "id": "sprites/potions/cloverfield_fortune",
+    "price": 30,
+    "ingredients": [
+        "clover",
+        "calendula",
+        "blue_berries"
+    ]
+    
+  },
+  {
+    "name": "Windrunner Potion",
+    "description": "Light as a feather on the breeze, keeps your legs running without tiring",
+    "effect": "speed",
+    "id": "sprites/potions/windrunner",
+    "price": 25,
+    "ingredients": [
+        "basil",
+        "dandelion",
+        "sage"
+    ]
+    
+  },
+  {
+    "name": "Shieldberry Potion",
+    "description": "Smells of dark berries and white blossoms, keeps colds and coughs at bay",
+    "effect": "immunity",
+    "id": "sprites/potions/shieldberry",
+    "price": 20,
+    "ingredients": [
+        "echinacea",
+        "black_elder",
+        "blue_berries"
+    ]
+        
+  },
+  {
+    "name": "Velvet Bloom Potion",
+    "description": "Thick and petal-scented, leaves skin as soft as silk",
+    "effect": "skin",
+    "id": "sprites/potions/velvet_bloom",
+    "price": 15,
+    "ingredients": [
+        "aloe",
+        "calendula",
+        "chamomile"
+    ]
+    
+  },
+  {
+    "name": "Ember Spice Potion",
+    "description": "Warm and spiced, heats you from the inside like a lit hearth",
+    "effect": "warmth",
+    "id": "sprites/potions/ember_spice",
+    "price": 20,
+    "ingredients": [
+        "turmeric",
+        "basil",
+        "black_elder"
+    ]
+    
+  },
+  {
+    "name": "Serene Iris Potion",
+    "description": "Smells of fresh herbs and a dawn garden, melts away every restless thought",
+    "effect": "anxiety",
+    "id": "sprites/potions/serene_iris",
+    "price": 25,
+    "ingredients": [
+        "aloe",
+        "olive_leaf",
+        "sage"
+    ]
+    
+  }
 ]

@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Aloe",
+    "imagePath": "sprites/ingredients/aloe",
+    "type": "plant"
+  },
+  {
+    "name": "Basil",
+    "imagePath": "sprites/ingredients/basil",
+    "type": "plant"
+  },
+  {
+    "name": "Black Elder",
+    "imagePath": "sprites/ingredients/black_elder",
+    "type": "plant"
+  },
+  {
+    "name": "Blue Mushroom",
+    "imagePath": "sprites/ingredients/blue_mushroom",
+    "type": "mushroom"
+  },
+  {
+    "name": "Toadstool",
+    "imagePath": "sprites/ingredients/toadstool",
+    "type": "mushroom"
+  },
+  {
+    "name": "Blue Berries",
+    "imagePath": "sprites/ingredients/blue_berries",
+    "type": "berry"
+  },
+  {
+    "name": "Blue Lotus",
+    "imagePath": "sprites/ingredients/blue_lotus",
+    "type": "flower"
+  },
+  {
+    "name": "Calendula",
+    "imagePath": "sprites/ingredients/calendula",
+    "type": "flower"
+  },
+  {
+    "name": "Chamomile",
+    "imagePath": "sprites/ingredients/chamomile",
+    "type": "flower"
+  },
+  {
+    "name": "Clover",
+    "imagePath": "sprites/ingredients/clover",
+    "type": "plant"
+  },
+  {
+    "name": "Dandelion",
+    "imagePath": "sprites/ingredients/dandelion",
+    "type": "flower"
+  },
+  {
+    "name": "Fly Agaric",
+    "imagePath": "sprites/ingredients/fly_agaric",
+    "type": "mushroom"
+  },
+  {
+    "name": "Turmeric",
+    "imagePath": "sprites/ingredients/turmeric",
+    "type": "root"
+  },
+  {
+    "name": "Sage",
+    "imagePath": "sprites/ingredients/sage",
+    "type": "plant"
+  },
+  {
+    "name": "Olive Leaf",
+    "imagePath": "sprites/ingredients/olive_leaf",
+    "type": "plant"
+  },
+  {
+    "name": "Milk Thistle",
+    "imagePath": "sprites/ingredients/milk_thistle",
+    "type": "plant"
+  },
+  {
+    "name": "Echinacea",
+    "imagePath": "sprites/ingredients/echinacea",
+    "type": "flower"
+  },
+  {
+    "name": "Senna",
+    "imagePath": "sprites/ingredients/senna",
+    "type": "plant"
+  }
+]

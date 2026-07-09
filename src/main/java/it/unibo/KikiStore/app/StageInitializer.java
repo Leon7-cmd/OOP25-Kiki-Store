@@ -6,6 +6,7 @@ import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
+import it.unibo.KikiStore.engine.state.BookTestState;
 import it.unibo.KikiStore.engine.state.TestState;
 import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.menu.impl.InitialScreenViewImpl;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
  * Manages the initialization of the main JavaFX window (Stage).
  * Assembles the basic graphical components (Canvas) and starts the GameEngine.
  */
+
 public class StageInitializer {
 
     /**
@@ -64,8 +66,8 @@ public class StageInitializer {
      */
     public void init(final Stage stage) {
         final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        final double screenWidth = screenBounds.getWidth() * 0.50;
-        final double screenHeight = screenBounds.getHeight() * 0.60;
+        final double screenWidth = screenBounds.getWidth();
+        final double screenHeight = screenBounds.getHeight();
 
         // 1. Canvas setup
         final StackPane root = new StackPane();
@@ -83,18 +85,22 @@ public class StageInitializer {
 
         gsm.setState(new TestState((GameStateTransition) gsm, inputHandler));
 
+        //gsm.setState(new TestState(inputHandler));
+        gsm.setState(new BookTestState(inputHandler, gsm));
         // 3. GameEngine creation
         final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
 
         // 4. Final configuration of the OS window
         stage.setTitle("Kiki's Store - Game");
         stage.setScene(scene);
-        stage.setResizable(true);
-        stage.setWidth(screenWidth);
-        stage.setHeight(screenHeight);
+        //stage.setResizable(false);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
+        
         stage.show();
 
         // 5. GameLoop startup
         engine.start();
     }
 }
+

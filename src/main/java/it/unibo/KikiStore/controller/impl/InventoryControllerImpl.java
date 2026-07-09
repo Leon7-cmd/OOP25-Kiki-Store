@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InventoryController;
+import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
+import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
+import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
+import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
@@ -21,72 +25,124 @@ public class InventoryControllerImpl implements InventoryController {
     }
     
     @Override public boolean isFull(){
-        if((inventory.getIngredients().size() + inventory.getPotions().size()) == MAX_CAPACITY) {
-            return true;
-        }else 
-            return false;
+        return (inventory.getIngredients().size() + inventory.getPotions().size()) == MAX_CAPACITY;
     }
 
-    @Override public boolean hasIngredient(Ingredient ingredient){
-        for (Ingredient ing : inventory.getIngredients()) {
-            if(ing.getName().equals(ingredient.getName())) {
-                return true;
+    private GameItem findItem(String name, List<? extends GameItem> list) {//da modificare, magari con un hashmap per ottimizzare la ricerca, e usare filter invece di un ciclo for
+        for (GameItem inventoryItem : list) {
+            if(inventoryItem.getName().equalsIgnoreCase(name)) {
+                return inventoryItem;
             }
         }
-        return false;
-
+        return null;
         //return inventory.getIngredients().contains(ingredient); ----alternative
     }
 
-    @Override public boolean hasEnoughIngredient(String name, int quantity) {//da modificare
-        
-        return getIngredientQuantity(name) >= quantity;
-    }
-     // NUOVO METODO AGGIUNTO PER RISOLVERE L'ERRORE
-    @Override public int getIngredientQuantity(String name) {
-        for (Ingredient ing : inventory.getIngredients()) {
-            if (ing.getName().equals(name)) {
-                // Presumo che l'oggetto Ingredient abbia un metodo getQuantity(). 
-                // Se si chiama in un altro modo (es. getAmount()), cambialo qui sotto.
-                return ing.getQuantity(); 
-            }
-        }
-        return 0; // Ritorna 0 se l'ingrediente non viene trovato nell'inventario
-    }
-     // METODO AGGIUNTO ORA PER RESTITUIRE L'INVENTARIO
-    @Override public Inventory getInventory() {
-        return this.inventory;
-    }
-    // CORRETTO: Usa getIngredients() della ricetta
-    @Override
-    public boolean canCraftPotion(Recipe recipe) {
-        for (Ingredient reqIngredient : recipe.getIngredients()) {
-            if (!hasEnoughIngredient(reqIngredient.getName(), reqIngredient.getQuantity())) {
-                return false; 
-            }
-        }
-        return true; 
+    @Override public boolean hasIngredient(String name){
+        return findItem(name, inventory.getIngredients()) != null;
     }
 
-     // CORRETTO: Adesso restituisce una List<Ingredient> come richiesto
-    @Override
-    public List<Ingredient> getMissingIngredients(Recipe recipe) {
+    @Override public boolean hasPotion(String name){
+        return findItem(name, inventory.getPotions()) != null;
+    }
+
+    @Override public int getIngredientQuantity(String name) {
+        GameItem item = findItem(name, inventory.getIngredients());
+        return item != null ? item.getQuantity() : 0;
+    }
+
+    @Override public int getPotionQuantity(String name) {
+        GameItem item = findItem(name, inventory.getPotions());
+        return item != null ? item.getQuantity() : 0;
+    }
+
+
+    @Override public boolean hasEnoughIngredient(String name, int quantity) {//da modificare
+        return getIngredientQuantity(name) >= quantity;
+    }
+
+    @Override public boolean hasEnoughPotion(String name, int quantity) {//da modificare
+        return getPotionQuantity(name) >= quantity;
+    }
+
+    @Override public Inventory getInventory(){
+        return inventory;
+    }
+
+    @Override public void addIngredient(String name, String imagePath, int quantity, String type) {
+        if (isFull()) {
+            System.out.println("Cannot add " + name + ", inventory is full");
+            return;
+        }
+        GameItem item = findItem(name, inventory.getIngredients());
+        
+        if (item != null) {
+            item.setQuantity(item.getQuantity() + quantity);
+            return;
+        }
+        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, type));
+        return;
+    }
+
+    @Override public void addPotion(String name, String imagePath, int quantity, String description, String effect, boolean isBlack) {
+        if (isFull()) {
+            System.out.println("Cannot add " + name + ", inventory is full");
+            return;
+        }
+        GameItem item = findItem(name, inventory.getPotions());
+        
+        if (item != null) {
+            item.setQuantity(item.getQuantity() + quantity);
+            return;
+        }
+        inventory.addPotion(new PotionImpl(name, imagePath, quantity, description, effect, isBlack));
+        return;
+    }
+
+
+    @Override public void removeIngredient(String name, int quantity) {
+        if(hasEnoughIngredient(name, quantity)) {
+            GameItem item = findItem(name, inventory.getIngredients());
+        
+            if (item != null) {
+                item.setQuantity(item.getQuantity() - quantity);
+                return;
+            }
+        }
+        return;
+    }
+
+    @Override public void removePotion(String name, int quantity) {
+        if(hasEnoughPotion(name, quantity)) {
+            GameItem item = findItem(name, inventory.getPotions());
+        
+            if (item != null) {
+                item.setQuantity(item.getQuantity() - quantity);
+                return;
+            }
+        }
+        return;
+    }
+
+    @Override public boolean canCraftPotion(Recipe recipe) {
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (!hasEnoughIngredient(ingredient.getName(), ingredient.getQuantity())) {
+                return false;
+            }
+        }
+        return true;
+        // or otherwise to implement DRY concept -> return getMissingIngredients(recipe).isEmpty();
+    }
+
+    @Override public List<Ingredient> getMissingIngredients(Recipe recipe) {
         List<Ingredient> missing = new ArrayList<>();
-        for (Ingredient reqIngredient : recipe.getIngredients()) {
-            int currentQty = getIngredientQuantity(reqIngredient.getName());
-            if (currentQty < reqIngredient.getQuantity()) {
-                int missingQty = reqIngredient.getQuantity() - currentQty;
-                
-                // Creo un nuovo ingrediente con la quantità mancante.
-                // Se IngredientImpl ha un costruttore diverso, adattalo qui.
-                missing.add(new IngredientImpl(reqIngredient.getName(),null, missingQty, 0, null)); 
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (!hasEnoughIngredient(ingredient.getName(), ingredient.getQuantity())) {
+                missing.add(ingredient);
             }
         }
         return missing;
-
     }
-
-      
 
 
 }
