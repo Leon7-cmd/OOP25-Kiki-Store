@@ -3,8 +3,18 @@ package it.unibo.KikiStore.engine.state;
 import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
+import it.unibo.KikiStore.controller.api.InventoryController;
+import it.unibo.KikiStore.controller.api.RecipeBookController;
+import it.unibo.KikiStore.controller.impl.InventoryControllerImpl;
+import it.unibo.KikiStore.controller.impl.RecipeBookControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
+import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
+import it.unibo.KikiStore.engine.impl.BookState;
+import it.unibo.KikiStore.model.inventory.api.GameCatalog;
+import it.unibo.KikiStore.model.inventory.api.RecipeBook;
+import it.unibo.KikiStore.model.inventory.impl.GameCatalogImpl;
+import it.unibo.KikiStore.model.inventory.impl.RecipeBookImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
@@ -83,7 +93,17 @@ public final class ShopState implements GameState {
             transitionController.popState();
         }
         if (tileId == 3 && input.isAction()) {
-            System.out.println("Interacting with the book!");
+            // Open the real BookState and return to this ShopState when closed
+            final RecipeBook recipeBook = new RecipeBookImpl("recipes.json");
+            final InventoryController inventoryController = new InventoryControllerImpl(recipeBook);
+            final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook, inventoryController);
+            final GameCatalog catalog = new GameCatalogImpl("ingredients.json", "potions.json");
+            final GameStateManager gsm = (GameStateManager) this.transitionController;
+            final BookState bookState = new BookState(
+                inventoryController, recipeBookController, catalog,
+                spriteManager, gsm, this, input
+            );
+            transitionController.pushState(bookState);
         }
         if (tileId == 4 && input.isAction()) {
             System.out.println("Interacting with the shopkeeper!");

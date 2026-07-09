@@ -6,7 +6,6 @@ import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
-import it.unibo.KikiStore.engine.state.BookTestState;
 import it.unibo.KikiStore.engine.state.TestState;
 import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.menu.impl.InitialScreenViewImpl;
@@ -85,8 +84,8 @@ public class StageInitializer {
 
         gsm.setState(new TestState((GameStateTransition) gsm, inputHandler));
 
-        //gsm.setState(new TestState(inputHandler));
-        gsm.setState(new BookTestState(inputHandler, gsm));
+        // Use TestState as initial game state. BookTestState was used for testing
+        // and would replace the TestState causing the book to open on New Game.
         // 3. GameEngine creation
         final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
 
