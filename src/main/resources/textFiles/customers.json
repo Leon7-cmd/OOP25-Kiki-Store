@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Mario",
+    "possibleNeeds": [
+      "sleep",
+      "focus"
+    ],
+    "possibleIngredients": [
+      "milkflower"
+    ]
+  },
+  {
+    "name": "Luna",
+    "possibleNeeds": [
+      "joy"
+    ],
+    "possibleIngredients": [
+      "rosebud",
+      "Basil",
+      "Blue Berries"
+    ]
+  },
+  {
+    "name": "Sofia",
+    "possibleNeeds": [
+      "courage"
+    ],
+    "possibleIngredients": [
+      "dandelion"
+    ]
+  }
+]
