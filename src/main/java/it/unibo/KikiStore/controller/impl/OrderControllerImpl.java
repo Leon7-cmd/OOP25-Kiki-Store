@@ -60,7 +60,8 @@ public class OrderControllerImpl implements OrderController{
 
         inventory.removePotion(inventoryPotion);
 
-        player.setMoney(player.getMoney() + requestedPotion.getPrice());
+        // TODO: Potion prices not yet implemented in the catalog
+        // player.setMoney(player.getMoney() + requestedPotion.getPrice());
 
         orderBook.removeOrder(order);
         return true;

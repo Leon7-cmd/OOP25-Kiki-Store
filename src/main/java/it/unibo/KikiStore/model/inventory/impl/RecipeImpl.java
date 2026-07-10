@@ -1,12 +1,13 @@
 package it.unibo.KikiStore.model.inventory.impl;
-import it.unibo.KikiStore.model.inventory.api.Recipe;
-import it.unibo.KikiStore.model.inventory.api.Potion;
-import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import java.util.List;
 
+import it.unibo.KikiStore.model.inventory.api.Ingredient;
+import it.unibo.KikiStore.model.inventory.api.Potion;
+import it.unibo.KikiStore.model.inventory.api.Recipe;
+
 public class RecipeImpl implements Recipe{
-    private List<Ingredient> ingredients;
-    private Potion resultingPotion;
+    private final List<Ingredient> ingredients;
+    private final Potion resultingPotion;
     private boolean isUnlocked = false;
 
     public RecipeImpl(List<Ingredient> ingredients, Potion resultingPotion, boolean isUnlocked) {

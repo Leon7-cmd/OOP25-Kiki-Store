@@ -78,7 +78,7 @@ public class InventoryControllerImpl implements InventoryController {
             item.setQuantity(item.getQuantity() + quantity);
             return;
         }
-        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, 0, type));
+        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, type));
         return;
     }
 
@@ -93,7 +93,7 @@ public class InventoryControllerImpl implements InventoryController {
             item.setQuantity(item.getQuantity() + quantity);
             return;
         }
-        inventory.addPotion(new PotionImpl(name, imagePath, quantity, 0, description, effect, isBlack));
+        inventory.addPotion(new PotionImpl(name, imagePath, quantity, description, effect, isBlack));
         return;
     }
 

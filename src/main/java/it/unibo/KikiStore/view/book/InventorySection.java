@@ -78,14 +78,14 @@ public class InventorySection implements BookSection {
         ingredientSlots = new ArrayList<>();
         for (final Ingredient ing : gameCatalog.getAllIngredients()) {
             final int qty = inventoryController.getIngredientQuantity(ing.getName());
-            ingredientSlots.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getPrice(), ing.getType()));
+            ingredientSlots.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getType()));
         }
 
         potionSlots = new ArrayList<>();
         for (final Potion pot : gameCatalog.getAllPotions()) {
             final int qty = inventoryController.getPotionQuantity(pot.getName());
             potionSlots.add(new PotionImpl(pot.getName(), pot.getImagePath(), qty,
-                pot.getPrice(), pot.getDescription(), pot.getEffect(), pot.isBlack()));
+                pot.getDescription(), pot.getEffect(), pot.isBlack()));
         }
     }
 

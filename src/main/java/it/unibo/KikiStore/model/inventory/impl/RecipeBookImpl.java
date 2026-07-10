@@ -15,7 +15,7 @@ import it.unibo.KikiStore.model.inventory.api.Recipe;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 
 public class RecipeBookImpl implements RecipeBook {
-    private List<Recipe> allRecipes;
+    private final List<Recipe> allRecipes;
     public RecipeBookImpl(String jsonFile){
         allRecipes = new ArrayList<>();
         loadFromJson(jsonFile);
@@ -40,10 +40,9 @@ public class RecipeBookImpl implements RecipeBook {
 
             for (JsonElement ing : ingredientsArray) {
                 String ingName = ing.getAsString();
-                ingredients.add(new IngredientImpl(ingName, "", 0, 0, "ingredient"));
+                ingredients.add(new IngredientImpl(ingName, "", 0, "ingredient"));
             }
-            final int price = recipeData.has("price") ? recipeData.get("price").getAsInt() : 0;
-            Potion potion = new PotionImpl(name, id, 0, price, description, effect, false);
+            Potion potion = new PotionImpl(name, id, 0, description, effect, false);
             Recipe recipe = new RecipeImpl(ingredients, potion, false);
             allRecipes.add(recipe);
         }

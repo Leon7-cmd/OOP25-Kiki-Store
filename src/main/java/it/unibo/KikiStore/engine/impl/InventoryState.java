@@ -137,12 +137,12 @@ public class InventoryState implements GameState {
         for (final Ingredient ing : gameCatalog.getAllIngredients()) {
             final int qty = inventoryController.getIngredientQuantity(ing.getName());
             allSlots.add(new IngredientImpl(
-                ing.getName(), ing.getImagePath(), qty, ing.getPrice(), ing.getType()));
+                ing.getName(), ing.getImagePath(), qty, ing.getType()));
         }
         for (final Potion pot : gameCatalog.getAllPotions()) {
             final int qty = inventoryController.getPotionQuantity(pot.getName());
             allSlots.add(new PotionImpl(
-                pot.getName(), pot.getImagePath(), qty, pot.getPrice(),
+                pot.getName(), pot.getImagePath(), qty,
                 pot.getDescription(), pot.getEffect(), pot.isBlack()));
         }
     }

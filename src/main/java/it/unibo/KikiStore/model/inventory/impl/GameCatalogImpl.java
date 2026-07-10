@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -23,6 +25,7 @@ public class GameCatalogImpl implements GameCatalog {
 
     private final List<Ingredient> allIngredients;
     private final List<Potion> allPotions;
+    private final Map<String, Integer> ingredientPrices;
 
     /**
      * @param ingredientsJson path to ingredients.json in resources
@@ -31,6 +34,8 @@ public class GameCatalogImpl implements GameCatalog {
     public GameCatalogImpl(final String ingredientsJson, final String potionsJson) {
         allIngredients = new ArrayList<>();
         allPotions = new ArrayList<>();
+        ingredientPrices = new HashMap<>();
+
         loadIngredients(ingredientsJson);
         loadPotions(potionsJson);
     }
@@ -50,8 +55,11 @@ public class GameCatalogImpl implements GameCatalog {
             final String name      = obj.get("name").getAsString();
             final String imagePath = obj.get("imagePath").getAsString();
             final String type      = obj.get("type").getAsString();
-            final int price        = obj.has("price") ? obj.get("price").getAsInt() : 0;
-            allIngredients.add(new IngredientImpl(name, imagePath, 0, price, type));
+            final int price = obj.get("price").getAsInt();
+
+            ingredientPrices.put(name, price);
+
+            allIngredients.add(new IngredientImpl(name, imagePath, 0, type));
         }
     }
 
@@ -71,8 +79,7 @@ public class GameCatalogImpl implements GameCatalog {
             final String imagePath   = obj.get("imagePath").getAsString();
             final String description = obj.get("description").getAsString();
             final String effect      = obj.get("effect").getAsString();
-            final int price          = obj.has("price") ? obj.get("price").getAsInt() : 0;
-            allPotions.add(new PotionImpl(name, imagePath, 0, price, description, effect, false));
+            allPotions.add(new PotionImpl(name, imagePath, 0, description, effect, false));
         }
     }
 
@@ -82,5 +89,9 @@ public class GameCatalogImpl implements GameCatalog {
 
     @Override public List<Potion> getAllPotions() {
         return Collections.unmodifiableList(allPotions);
+    }
+
+    @Override public int getIngredientPrice(final String ingredientName) {
+        return ingredientPrices.getOrDefault(ingredientName, 0);
     }
 }
