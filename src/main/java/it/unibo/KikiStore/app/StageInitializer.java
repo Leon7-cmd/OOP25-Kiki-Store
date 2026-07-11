@@ -6,13 +6,11 @@ import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
 import it.unibo.KikiStore.engine.state.BookTestState;
-import it.unibo.KikiStore.engine.state.InventoryTestState;
 import it.unibo.KikiStore.engine.state.TestState;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import it.unibo.KikiStore.engine.state.InventoryTestState;
 
 /**
  * Manages the initialization of the main JavaFX window (Stage).
