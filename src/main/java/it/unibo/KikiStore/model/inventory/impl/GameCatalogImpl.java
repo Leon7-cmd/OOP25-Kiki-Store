@@ -59,7 +59,7 @@ public class GameCatalogImpl implements GameCatalog {
 
             ingredientPrices.put(name, price);
 
-            allIngredients.add(new IngredientImpl(name, imagePath, 0, type));
+            allIngredients.add(new IngredientImpl(name, imagePath, 0, type, price));
         }
     }
 
@@ -91,7 +91,5 @@ public class GameCatalogImpl implements GameCatalog {
         return Collections.unmodifiableList(allPotions);
     }
 
-    @Override public int getIngredientPrice(final String ingredientName) {
-        return ingredientPrices.getOrDefault(ingredientName, 0);
-    }
+   
 }

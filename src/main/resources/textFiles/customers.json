@@ -1,32 +1,36 @@
 [
   {
     "name": "Mario",
-    "possibleNeeds": [
-      "sleep",
-      "focus"
-    ],
     "possibleIngredients": [
-      "milkflower"
+      "Senna"
     ]
   },
   {
     "name": "Luna",
-    "possibleNeeds": [
-      "joy"
-    ],
     "possibleIngredients": [
-      "rosebud",
+      "Echinacea",
       "Basil",
       "Blue Berries"
     ]
   },
   {
     "name": "Sofia",
-    "possibleNeeds": [
-      "courage"
-    ],
     "possibleIngredients": [
-      "dandelion"
+      "Dandelion"
     ]
-  }
+  },
+  {
+    "name": "Luca",
+    "possibleIngredients": [
+      "Chamomile",
+      "Calendula"
+    ]
+  },
+  {
+    "name": "Giulia",
+    "possibleIngredients": [
+      "Toadstool",
+      "Blue Mushroom"
+    ]
+  } 
 ]

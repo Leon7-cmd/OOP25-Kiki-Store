@@ -1,0 +1,52 @@
+[
+  {
+    "name": "laughter",
+    "rarity": "COMMON",
+    "dialogue": "Everything feels so heavy lately... I could use a reason to laugh again."
+  },
+  {
+    "name": "sleep",
+    "rarity": "COMMON",
+    "dialogue": "I haven't slept well in days. My mind just won't quiet down."
+  },
+  {
+    "name": "detox",
+    "rarity": "UNCOMMON",
+    "dialogue": "I feel sluggish and foggy, like I'm carrying something I need to let go of."
+  },
+  {
+    "name": "stamina",
+    "rarity": "UNCOMMON",
+    "dialogue": "I have so much to do and no energy left to do it."
+  },
+  {
+    "name": "luck",
+    "rarity": "RARE",
+    "dialogue": "Nothing's been going my way lately... could a little luck really be bottled?"
+  },
+  {
+    "name": "speed",
+    "rarity": "UNCOMMON",
+    "dialogue": "I'm always the last one to arrive. I wish my legs could keep up with my mind."
+  },
+  {
+    "name": "immunity",
+    "rarity": "COMMON",
+    "dialogue": "Every cold in town seems to find me first. I need something to keep it away."
+  },
+  {
+    "name": "skin",
+    "rarity": "UNCOMMON",
+    "dialogue": "The wind up here is harsh. My skin's been dry and tired for weeks."
+  },
+  {
+    "name": "warmth",
+    "rarity": "COMMON",
+    "dialogue": "The cold's been creeping into my bones. I just want to feel warm again."
+  },
+  {
+    "name": "anxiety",
+    "rarity": "RARE",
+    "dialogue": "My thoughts won't stop racing. I need something to help me feel steady."
+  }
+]

@@ -18,13 +18,5 @@ public interface GameCatalog {
      */
     List<Potion> getAllPotions();
 
-    /**
-     * @return the price of an ingredient by its name.
-     */
-    int getIngredientPrice(String ingredientName);
-
-    /**
-     * return the price of a potion by its name.
-     */
-    //int getPotionPrice(String potionName);// o forse no essendo da calcolare in base agli ingredienti, ma per ora lo lascio cosi
+    
 }

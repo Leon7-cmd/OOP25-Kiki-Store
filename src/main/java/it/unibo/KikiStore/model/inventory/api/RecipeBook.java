@@ -3,7 +3,7 @@ import java.util.List;
 public interface RecipeBook {
     public List<Recipe> getRecipes();
     public List<Recipe> getUnlockedRecipes();
-    public List<Recipe> findByEffect(String effect);
+    public List<Recipe> findByEffect(String effect);//es. per recipeBook.findEffect(order.getNeed()) per trovare le ricette che soddisfano il bisogno del cliente
     public Recipe findByIngredients(List<Ingredient> ingredients);
     
 }
