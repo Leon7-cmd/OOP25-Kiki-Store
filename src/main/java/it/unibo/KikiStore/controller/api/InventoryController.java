@@ -7,7 +7,7 @@ import it.unibo.KikiStore.model.inventory.api.Recipe;
 
 public interface InventoryController {
 
-    public void addIngredient(String name, String imagePath, int quantity, String type);
+    public void addIngredient(String name, String imagePath, int quantity, String type, int price);
     public void addPotion(String name, String imagePath, int quantity, String description, String effect, boolean isBlack);
 
     public void removeIngredient(String name, int quantity);

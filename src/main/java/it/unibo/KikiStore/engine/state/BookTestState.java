@@ -57,9 +57,9 @@ public class BookTestState implements GameState {
 
             // Item di test — appariranno colorati, il resto grigio
             inventoryController.addIngredient(
-                "Chamomile", "sprites/ingredients/chamomile", 3, "flower");
+                "Chamomile", "sprites/ingredients/chamomile", 3, "flower", 2);
             inventoryController.addIngredient(
-                "Clover", "sprites/ingredients/clover", 2, "plant");
+                "Clover", "sprites/ingredients/clover", 2, "plant", 1);
             inventoryController.addPotion(
                 "Shieldberry Potion", "sprites/potions/shieldberry",
                 1, "Smells of lavender and old books, perfect for restless nights", "sleep", false);

@@ -67,7 +67,7 @@ public class InventoryControllerImpl implements InventoryController {
         return inventory;
     }
 
-    @Override public void addIngredient(String name, String imagePath, int quantity, String type) {
+    @Override public void addIngredient(String name, String imagePath, int quantity, String type, int price) {
         if (isFull()) {
             System.out.println("Cannot add " + name + ", inventory is full");
             return;
@@ -78,7 +78,7 @@ public class InventoryControllerImpl implements InventoryController {
             item.setQuantity(item.getQuantity() + quantity);
             return;
         }
-        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, type));
+        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, type, price));
         return;
     }
 
