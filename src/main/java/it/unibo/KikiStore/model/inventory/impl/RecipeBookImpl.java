@@ -22,7 +22,7 @@ public class RecipeBookImpl implements RecipeBook {
     }
 
     private void loadFromJson(String jsonFile) {
-        InputStream stream = getClass().getClassLoader().getResourceAsStream("recipes.json");
+        InputStream stream = getClass().getClassLoader().getResourceAsStream("textFiles/recipes.json");
         if (stream == null) {
             return;
         }

@@ -67,7 +67,7 @@
   },
   {
     "name": "Fly Agaric",
-    "imagePath": "sprites/ingredients/fly_agaric",
+    "imagePath": "sprites/ingredients/tofly_agaric",
     "price": 6,
     "type": "mushroom"
   },

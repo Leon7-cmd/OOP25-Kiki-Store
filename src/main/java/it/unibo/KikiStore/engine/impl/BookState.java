@@ -30,21 +30,20 @@ public class BookState implements GameState {
 
     private enum Phase { OPENING, OPEN, CLOSING, CLOSED }
 
-    // TODO calibra questi valori in base ai tuoi sprite reali-> da modificare in scala per dimensione spritesheets e frames
     private static final int OPEN_COLS = 4;
     private static final int OPEN_ROWS = 3;
     private static final int TURN_COLS = 4;
-    private static final int TURN_ROWS = 2;
-    private static final int BOOKMARK_SHEET_COLS = 4;
+    private static final int TURN_ROWS = 4;
+    private static final int BOOKMARK_SHEET_COLS = 2;
     private static final int BOOKMARK_SHEET_ROWS = 3;
 
     private static final double BOOK_WIDTH_RATIO = 0.75;
     private static final double BOOK_HEIGHT_RATIO = 0.85;
-    private static final double BOOKMARK_WIDTH = 40.0;
-    private static final double BOOKMARK_HEIGHT = 90.0;
-    private static final double BOOKMARK_GAP = 10.0;
-    private static final double CONTENT_MARGIN_X = 35.0;
-    private static final double CONTENT_MARGIN_Y = 55.0;
+    private static final double BOOKMARK_X_FRAC = 245.0 / 272.0;
+    private static final double BOOKMARK_HEIGHT_FRAC = 21.0 / 272.0;
+    private static final double BOOKMARK_INV_Y_FRAC = 100.0 / 272.0;
+    private static final double BOOKMARK_RCP_Y_FRAC = 120.0 / 272.0;
+    private static final double BOOKMARK_ORD_Y_FRAC = 140.0 / 272.0;
 
     private final GameStateManager gsm;
     private final GameState previousState;
@@ -74,6 +73,10 @@ public class BookState implements GameState {
     private boolean escWasPressed;
     private boolean rightWasPressed;
     private boolean leftWasPressed;
+
+    //DA TOGLIERE
+    private boolean upWasPressed;
+    private boolean downWasPressed;
 
     /**
      * @param inventoryController inventory controller
@@ -108,8 +111,8 @@ public class BookState implements GameState {
 
         this.openAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Open_book", OPEN_COLS, OPEN_ROWS);
         this.closeAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Close_book", OPEN_COLS, OPEN_ROWS);
-        this.turnLeftAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_left", TURN_COLS, TURN_ROWS);
-        this.turnRightAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_right", TURN_COLS, TURN_ROWS);
+        this.turnLeftAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_right", TURN_COLS, TURN_ROWS);
+        this.turnRightAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_left", TURN_COLS, TURN_ROWS);
 
         this.inventorySection = new InventorySection(
             inventoryController, gameCatalog, spriteManager, pixelFontSmall);
@@ -120,7 +123,7 @@ public class BookState implements GameState {
 
     @Override
     public void init() {
-        currentSection = Section.INVENTORY;
+        currentSection = Section.RECIPES;
         phase = Phase.OPENING;
         turningPage = false;
         openAnimator.play();
@@ -211,7 +214,29 @@ public class BookState implements GameState {
 
         // TO-DO: click sui bookmark per cambiare sezione, quando aggiungo mouse click a inputhandler
         // if (input.isMouseClicked()) { ... currentSection = ... }
-    }
+
+        //SOLUZIONE TEMP DA TOGLIEREEEEEE
+        // Cambia sezione con UP/DOWN (temporaneo, finché non c'è il mouse)
+        final boolean upNow = input.isUp();
+        if (upNow && !upWasPressed) {
+            currentSection = switch (currentSection) {
+                case RECIPES -> Section.INVENTORY;
+                case ORDERS -> Section.RECIPES;
+                case INVENTORY -> Section.INVENTORY; // per ora non arriva a Orders, disabilitata
+            };
+        }
+        upWasPressed = upNow;
+
+        final boolean downNow = input.isDown();
+        if (downNow && !downWasPressed) {
+            currentSection = switch (currentSection) {
+                case INVENTORY -> Section.RECIPES;
+                case RECIPES -> Section.RECIPES; // per ora non arriva a Orders, disabilitata
+                case ORDERS -> Section.ORDERS;
+            };
+        }
+        downWasPressed = downNow;
+}
 
     @Override
     public void render(final GraphicsContext gc) {
@@ -227,8 +252,8 @@ public class BookState implements GameState {
         final double bookX = (screenW - bookW) / 2;
         final double bookY = (screenH - bookH) / 2;
 
-        System.out.println("screenW=" + screenW + " screenH=" + screenH
-            + " bookW=" + bookW + " bookH=" + bookH + " bookY=" + bookY);
+        //System.out.println("screenW=" + screenW + " screenH=" + screenH
+        //    + " bookW=" + bookW + " bookH=" + bookH + " bookY=" + bookY);
         switch (phase) {
             case OPENING:
                 openAnimator.render(gc, bookX, bookY, bookW, bookH);
@@ -246,36 +271,32 @@ public class BookState implements GameState {
         }
     }
 
-    /**
-     * Renders the fully open book: background, bookmarks, and the active
-     * section's content spread across both facing pages.
-     *
-     * @param gc graphics context
-     * @param x book left x
-     * @param y book top y
-     * @param w book width
-     * @param h book height
-     */
     private void renderOpenBook(final GraphicsContext gc, final double x, final double y,
-                                 final double w, final double h) {
+                             final double w, final double h) {
         openAnimator.render(gc, x, y, w, h);
-        //tutto da rifare il render dei bookmark, crea sprite nuovi con diversa risoluzione
-        renderBookmark(gc, x + w - 8, y + 20, 0, 0, Section.INVENTORY);
-        renderBookmark(gc, x + w - 8, y + 20 + BOOKMARK_HEIGHT + BOOKMARK_GAP, 0, 1, Section.RECIPES);
-        renderBookmark(gc, x + w - 8, y + 20 + (BOOKMARK_HEIGHT + BOOKMARK_GAP) * 2, 0, 2, Section.ORDERS);
+        final double bookmarkAspect = 27.5 / 26.67;
+        final double bookSize = w;
+        final double bookmarkX = x + BOOKMARK_X_FRAC * bookSize;
+        final double bookmarkH = BOOKMARK_HEIGHT_FRAC * bookSize;
+        final double bookmarkW = bookmarkH * bookmarkAspect;
 
+        renderBookmark(gc, bookmarkX, y + BOOKMARK_INV_Y_FRAC * bookSize,
+            bookmarkW, bookmarkH, 0, Section.INVENTORY);
+        renderBookmark(gc, bookmarkX, y + BOOKMARK_RCP_Y_FRAC * bookSize,
+            bookmarkW, bookmarkH, 1, Section.RECIPES);
+        renderBookmark(gc, bookmarkX, y + BOOKMARK_ORD_Y_FRAC * bookSize,
+            bookmarkW, bookmarkH, 2, Section.ORDERS);
         if (turningPage) {
             final BookAnimator activeTurn = turningRight ? turnRightAnimator : turnLeftAnimator;
             activeTurn.render(gc, x, y, w, h);
             return;
         }
 
-        // Tutte le sezioni occupano l'intero spread a due pagine —
-        // ogni sezione gestisce internamente la divisione sinistra/destra
-        final double contentX = x + CONTENT_MARGIN_X;
-        final double contentY = y + CONTENT_MARGIN_Y;
-        final double contentW = w - CONTENT_MARGIN_X * 2 - BOOKMARK_WIDTH;
-        final double contentH = h - CONTENT_MARGIN_Y * 2;
+        
+        final double contentX = x;
+        final double contentY = y;
+        final double contentW = w;
+        final double contentH = h;
 
         getActiveSection().render(gc, contentX, contentY, contentW, contentH);
     }
@@ -292,7 +313,8 @@ public class BookState implements GameState {
      * @param section which section this bookmark represents
      */
     private void renderBookmark(final GraphicsContext gc, final double x, final double y,
-                                 final int spriteCol, final int spriteRow, final Section section) {
+                                final double w, final double h,
+                                final int spriteRow, final Section section) {
         final boolean isActive = currentSection == section;
         final boolean isEnabled = section != Section.ORDERS;
 
@@ -300,29 +322,18 @@ public class BookState implements GameState {
         if (sheet != null) {
             final double frameW = sheet.getWidth() / BOOKMARK_SHEET_COLS;
             final double frameH = sheet.getHeight() / BOOKMARK_SHEET_ROWS;
+            final int spriteCol = isActive ? 0 : 1; // colonna destra se selezionato
             final double sourceX = spriteCol * frameW;
             final double sourceY = spriteRow * frameH;
 
             if (!isEnabled) {
                 gc.setEffect(grayscaleBookmark);
             }
-            gc.drawImage(sheet, sourceX, sourceY, frameW, frameH,
-                x, y, BOOKMARK_WIDTH, BOOKMARK_HEIGHT);
+            gc.drawImage(sheet, sourceX, sourceY, frameW, frameH, x, y, w, h);
             gc.setEffect(null);
-
-            if (isActive) {
-                gc.setStroke(Color.web("#FFD700"));
-                gc.setLineWidth(2);
-                gc.strokeRect(x, y, BOOKMARK_WIDTH, BOOKMARK_HEIGHT);
-            }
         } else {
             gc.setFill(isEnabled ? Color.web("#5C3A1E") : Color.web("#8B7355"));
-            gc.fillRect(x, y, BOOKMARK_WIDTH, BOOKMARK_HEIGHT);
-            gc.setFill(Color.WHITE);
-            gc.setFont(pixelFontSmall);
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.fillText(section.name().substring(0, 3),
-                x + BOOKMARK_WIDTH / 2, y + BOOKMARK_HEIGHT / 2);
+            gc.fillRect(x, y, w, h);
         }
     }
 

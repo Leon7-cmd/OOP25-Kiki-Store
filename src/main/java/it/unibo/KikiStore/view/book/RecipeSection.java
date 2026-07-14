@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class RecipeSection implements BookSection {
 
-    private static final double PAGE_GAP = 20.0;
     private static final double IMAGE_SIZE_RATIO = 0.5;
     private static final double TEXT_LINE_HEIGHT = 13.0;
     private static final double CHAR_WIDTH_ESTIMATE = 6.5; // TO-DO calibra con Press Start 2P
@@ -27,6 +26,12 @@ public class RecipeSection implements BookSection {
     private static final Color COL_TEXT = Color.web("#3B2006");
     private static final Color COL_EMPTY_MSG = Color.web("#5C4A3A");
     private static final Color COL_IMG_FALLBACK = Color.web("#C8A96E");
+
+    private static final double PAGE_TOP_FRAC = 105.0 / 272.0;
+    private static final double PAGE_BOTTOM_FRAC = 244.0 / 272.0;
+    private static final double PAGE_LEFT_FRAC = 26.0 / 272.0;
+    private static final double PAGE_CENTER_FRAC = 135.5 / 272.0;
+    private static final double PAGE_RIGHT_FRAC = 270.0 / 272.0; 
 
     private final RecipeBookController recipeBookController;
     private final SpriteManager spriteManager;
@@ -76,15 +81,26 @@ public class RecipeSection implements BookSection {
             return;
         }
 
-        final double sideW = (w - PAGE_GAP) / 2;
+        // x,y,w,h qui sono l'intero quadrato del libro (w == h)
+        final double bookSize = w;
+
+        final double leftPageX = x + PAGE_LEFT_FRAC * bookSize;
+        final double leftPageY = y + PAGE_TOP_FRAC * bookSize;
+        final double leftPageW = (PAGE_CENTER_FRAC - PAGE_LEFT_FRAC) * bookSize;
+        final double leftPageH = (PAGE_BOTTOM_FRAC - PAGE_TOP_FRAC) * bookSize;
+
+        final double rightPageX = x + PAGE_CENTER_FRAC * bookSize;
+        final double rightPageY = leftPageY;
+        final double rightPageW = (PAGE_RIGHT_FRAC - PAGE_CENTER_FRAC) * bookSize;
+        final double rightPageH = leftPageH;
 
         // Pagina sinistra — sempre presente se ci sono ricette
-        renderRecipePage(gc, unlockedRecipes.get(leftIndex), x, y, sideW, h);
+        renderRecipePage(gc, unlockedRecipes.get(leftIndex), leftPageX, leftPageY, leftPageW, leftPageH);
 
         // Pagina destra — solo se esiste una ricetta successiva nella lista
         final int rightIndex = leftIndex + 1;
         if (rightIndex < unlockedRecipes.size()) {
-            renderRecipePage(gc, unlockedRecipes.get(rightIndex), x + sideW + PAGE_GAP, y, sideW, h);
+            renderRecipePage(gc, unlockedRecipes.get(rightIndex), rightPageX, rightPageY, rightPageW, rightPageH);
         }
     }
 
@@ -98,7 +114,7 @@ public class RecipeSection implements BookSection {
      * @param w page area width
      * @param h page area height
      */
-    private void renderRecipePage(final GraphicsContext gc, final Recipe recipe,// TO-DO DA MODIFICARE UNA VOLTA VISUALIZZATO
+    private void renderRecipePage(final GraphicsContext gc, final Recipe recipe,
                                    final double x, final double y,
                                    final double w, final double h) {
         final double imgSize = w * IMAGE_SIZE_RATIO;
@@ -128,7 +144,7 @@ public class RecipeSection implements BookSection {
     /**
      * Draws text wrapped to fit within maxWidth, breaking on word boundaries.
      *
-     * @param gc graphics context (font/fill must already be set by the caller)
+     * @param gc graphics context
      * @param text the text to draw
      * @param x left x position
      * @param y starting y position (top of first line)
