@@ -1,22 +1,23 @@
 package it.unibo.KikiStore.model.order.impl;
+import it.unibo.KikiStore.model.order.api.Customer;
+import it.unibo.KikiStore.model.order.api.CustomerRequest;
 import it.unibo.KikiStore.model.order.api.Order;
-
 public class OrderImpl implements Order {
-    private final String customer;
-    private final String need;
+    private final Customer customer;
+    private final CustomerRequest request;
 
-    public OrderImpl(String customer, String need) {
+    public OrderImpl(final Customer customer, final CustomerRequest request) {
         this.customer = customer;
-        this.need = need;
+        this.request = request;
     }
 
     @Override   
-    public String getCustomer() {
+    public Customer getCustomer() {
         return customer;
     }
 
     @Override
-    public String getNeed() {
-        return need;
+    public CustomerRequest getRequest() {
+        return request;
     }
 }
