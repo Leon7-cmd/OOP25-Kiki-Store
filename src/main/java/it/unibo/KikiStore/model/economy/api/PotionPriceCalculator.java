@@ -6,8 +6,5 @@ public interface PotionPriceCalculator {
     int calculatePrice(Recipe recipe, CustomerRequest request);
 
     double getProfitMargin();
-    /*
- * TODO: If the customer provides some ingredients for the recipe,their value should be subtracted from the final reward.
- */
 
 }
