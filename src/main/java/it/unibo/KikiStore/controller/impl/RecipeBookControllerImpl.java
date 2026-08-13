@@ -26,11 +26,30 @@ public class RecipeBookControllerImpl implements RecipeBookController{
 
     @Override public Recipe findByIngredients(List<Ingredient> ingredients) {
         for (Recipe recipe : recipeBook.getRecipes()) {
-            if (recipe.getIngredients().containsAll(ingredients) && (recipe.getIngredients().size() == ingredients.size())) {
+            if (matchesIngredients(recipe.getIngredients(), ingredients)) {
                 return recipe;
             }
         }
         return null;
+    }
+
+    private boolean matchesIngredients(List<Ingredient> recipeIngredients, List<Ingredient> selected) {
+        if (recipeIngredients.size() != selected.size()) {
+            return false;
+        }
+        for (Ingredient required : recipeIngredients) {
+            boolean found = false;
+            for (Ingredient chosen : selected) {
+                if (required.getName().equalsIgnoreCase(chosen.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override public List<Recipe> findByEffect(String effect) {

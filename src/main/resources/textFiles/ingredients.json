@@ -42,7 +42,7 @@
   {
     "name": "Chamomile",
     "imagePath": "sprites/ingredients/chamomile",
-    "type": "flower"
+    "type": "plant"
   },
   {
     "name": "Clover",
@@ -52,7 +52,7 @@
   {
     "name": "Dandelion",
     "imagePath": "sprites/ingredients/dandelion",
-    "type": "flower"
+    "type": "plant"
   },
   {
     "name": "Fly Agaric",

@@ -6,6 +6,7 @@ import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
 import it.unibo.KikiStore.engine.state.BookTestState;
+import it.unibo.KikiStore.engine.state.CraftingTestState;
 import it.unibo.KikiStore.engine.state.TestState;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -40,7 +41,8 @@ public class StageInitializer {
         // 2. Initialization of the logical architecture
         GameStateManager gsm = new GameStateManagerImpl();
         //gsm.setState(new TestState(inputHandler));
-        gsm.setState(new BookTestState(inputHandler, gsm));
+        //gsm.setState(new BookTestState(inputHandler, gsm));
+        gsm.setState(new CraftingTestState(inputHandler, gsm));
         // 3. GameEngine creation
         GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
 
