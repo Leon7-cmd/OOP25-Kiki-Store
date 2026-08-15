@@ -17,14 +17,14 @@ import java.util.List;
  * Loads all possible ingredients and potions from JSON files.
  * Returns unmodifiable lists to protect catalog integrity.
  */
-public class GameCatalogImpl implements GameCatalog {
+public final class GameCatalogImpl implements GameCatalog {
 
     private final List<Ingredient> allIngredients;
     private final List<Potion> allPotions;
 
     /**
      * @param ingredientsJson path to ingredients.json in resources
-     * @param potionsJson path to potions.json in resources
+     * @param potionsJson     path to potions.json in resources
      */
     public GameCatalogImpl(final String ingredientsJson, final String potionsJson) {
         allIngredients = new ArrayList<>();
@@ -35,48 +35,50 @@ public class GameCatalogImpl implements GameCatalog {
 
     private void loadIngredients(final String path) {
         final InputStream stream = getClass()
-            .getClassLoader()
-            .getResourceAsStream(path);
+                .getClassLoader()
+                .getResourceAsStream(path);
         if (stream == null) {
             System.err.println("Ingredients JSON not found: " + path);
             return;
         }
         final JsonArray array = new Gson()
-            .fromJson(new InputStreamReader(stream), JsonArray.class);
+                .fromJson(new InputStreamReader(stream), JsonArray.class);
         for (final JsonElement el : array) {
             final JsonObject obj = el.getAsJsonObject();
-            final String name      = obj.get("name").getAsString();
+            final String name = obj.get("name").getAsString();
             final String imagePath = obj.get("imagePath").getAsString();
-            final String type      = obj.get("type").getAsString();
+            final String type = obj.get("type").getAsString();
             allIngredients.add(new IngredientImpl(name, imagePath, 0, type));
         }
     }
 
     private void loadPotions(final String path) {
         final InputStream stream = getClass()
-            .getClassLoader()
-            .getResourceAsStream(path);
+                .getClassLoader()
+                .getResourceAsStream(path);
         if (stream == null) {
             System.err.println("Potions JSON not found: " + path);
             return;
         }
         final JsonArray array = new Gson()
-            .fromJson(new InputStreamReader(stream), JsonArray.class);
+                .fromJson(new InputStreamReader(stream), JsonArray.class);
         for (final JsonElement el : array) {
             final JsonObject obj = el.getAsJsonObject();
-            final String name        = obj.get("name").getAsString();
-            final String imagePath   = obj.get("imagePath").getAsString();
+            final String name = obj.get("name").getAsString();
+            final String imagePath = obj.get("imagePath").getAsString();
             final String description = obj.get("description").getAsString();
-            final String effect      = obj.get("effect").getAsString();
+            final String effect = obj.get("effect").getAsString();
             allPotions.add(new PotionImpl(name, imagePath, 0, description, effect, false));
         }
     }
 
-    @Override public List<Ingredient> getAllIngredients() {
+    @Override
+    public List<Ingredient> getAllIngredients() {
         return Collections.unmodifiableList(allIngredients);
     }
 
-    @Override public List<Potion> getAllPotions() {
+    @Override
+    public List<Potion> getAllPotions() {
         return Collections.unmodifiableList(allPotions);
     }
 }

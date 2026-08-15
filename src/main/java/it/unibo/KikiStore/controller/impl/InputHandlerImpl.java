@@ -14,29 +14,58 @@ public class InputHandlerImpl implements InputHandler {
      * 
      * @param scene The JavaFX Scene to monitor for keyboard events.
      */
-    public InputHandlerImpl(Scene scene) {
+    public InputHandlerImpl(final Scene scene) {
         scene.setOnKeyPressed(event -> {
-            KeyCode code = event.getCode();
-            if (code == KeyCode.W || code == KeyCode.UP) up = true;
-            if (code == KeyCode.S || code == KeyCode.DOWN) down = true;
-            if (code == KeyCode.A || code == KeyCode.LEFT) left = true;
-            if (code == KeyCode.D || code == KeyCode.RIGHT) right = true;
-            if (code == KeyCode.E) action = true;
+            final KeyCode code = event.getCode();
+            if (code == KeyCode.W || code == KeyCode.UP)
+                up = true;
+            if (code == KeyCode.S || code == KeyCode.DOWN)
+                down = true;
+            if (code == KeyCode.A || code == KeyCode.LEFT)
+                left = true;
+            if (code == KeyCode.D || code == KeyCode.RIGHT)
+                right = true;
+            if (code == KeyCode.E)
+                action = true;
         });
 
         scene.setOnKeyReleased(event -> {
-            KeyCode code = event.getCode();
-            if (code == KeyCode.W || code == KeyCode.UP) up = false;
-            if (code == KeyCode.S || code == KeyCode.DOWN) down = false;
-            if (code == KeyCode.A || code == KeyCode.LEFT) left = false;
-            if (code == KeyCode.D || code == KeyCode.RIGHT) right = false;
-            if (code == KeyCode.E) action = false;
+            final KeyCode code = event.getCode();
+            if (code == KeyCode.W || code == KeyCode.UP)
+                up = false;
+            if (code == KeyCode.S || code == KeyCode.DOWN)
+                down = false;
+            if (code == KeyCode.A || code == KeyCode.LEFT)
+                left = false;
+            if (code == KeyCode.D || code == KeyCode.RIGHT)
+                right = false;
+            if (code == KeyCode.E)
+                action = false;
         });
     }
 
-    @Override public boolean isUp() { return up; }
-    @Override public boolean isDown() { return down; }
-    @Override public boolean isLeft() { return left; }
-    @Override public boolean isRight() { return right; }
-    @Override public boolean isAction() { return action; }
+    @Override
+    public boolean isUp() {
+        return up;
+    }
+
+    @Override
+    public boolean isDown() {
+        return down;
+    }
+
+    @Override
+    public boolean isLeft() {
+        return left;
+    }
+
+    @Override
+    public boolean isRight() {
+        return right;
+    }
+
+    @Override
+    public boolean isAction() {
+        return action;
+    }
 }

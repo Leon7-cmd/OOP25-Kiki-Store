@@ -25,9 +25,11 @@ import java.util.List;
  * slots on the right. States: SELECTING (pick ingredients, confirm brew),
  * BREWING (closed cauldron, timer), RESULT (potion or black potion + retry).
  */
-public class CraftingState implements GameState {
+public final class CraftingState implements GameState {
 
-    private enum Phase { SELECTING, BREWING, RESULT }
+    private enum Phase {
+        SELECTING, BREWING, RESULT
+    }
 
     private static final int COLUMNS = 3;
     private static final int ROWS = 6;
@@ -45,6 +47,36 @@ public class CraftingState implements GameState {
     private static final Color COL_TEXT_DIM = Color.web("#5C4A3A");
     private static final Color COL_CURSOR = Color.web("#FFD700");
     private static final Color COL_SELECTED_BORDER = Color.web("#1D9E75");
+
+    private static final double TITLE_FONT_SIZE = 24.0;
+    private static final double SMALL_FONT_SIZE = 20.0;
+
+    private static final double BACKPACK_X = 20.0;
+    private static final double BACKPACK_Y = 40.0;
+    private static final double BACKPACK_WIDTH_MARGIN = 40.0;
+    private static final double BACKPACK_HEIGHT_MARGIN = 80.0;
+    private static final double OVERLAY_OPACITY = 0.6;
+
+    private static final double ITEM_QTY_BOTTOM_SPACE = 12.0;
+    private static final double QTY_TEXT_OFFSET_X = 3.0;
+    private static final double QTY_TEXT_OFFSET_Y = 2.0;
+    private static final double BORDER_WIDTH = 3.0;
+    private static final double BORDER_INSET = 1.0;
+    private static final double BORDER_SIZE_REDUCTION = 2.0;
+
+    private static final double CAULDRON_MARGIN = 40.0;
+    private static final double CAULDRON_TITLE_OFFSET_Y = 30.0;
+    private static final double CAULDRON_SLOT_GAP = 16.0;
+    private static final double CAULDRON_SLOTS_TOP_OFFSET = 60.0;
+    private static final double CAULDRON_BELOW_OFFSET = 40.0;
+    private static final double CAULDRON_ITEM_INSET = 10.0;
+    private static final double CAULDRON_ITEM_SIZE_REDUCTION = 20.0;
+
+    private static final double RESULT_IMAGE_SIZE = 80.0;
+    private static final double RESULT_TEXT_OFFSET_Y = 20.0;
+
+    private static final double PROMPT_OFFSET_X = 40.0;
+    private static final double PROMPT_OFFSET_Y = 26.0;
 
     private final InventoryController inventoryController;
     private final CraftingController craftingController;
@@ -79,25 +111,24 @@ public class CraftingState implements GameState {
     private boolean escWasPressed;
 
     /**
-     * @param inventoryController inventory controller
-     * @param craftingController crafting controller
+     * @param inventoryController  inventory controller
+     * @param craftingController   crafting controller
      * @param recipeBookController recipe book controller
-     * @param gameCatalog full item catalog
-     * @param spriteManager sprite manager
-     * @param gsm game state manager
-     * @param previousState state to return to on close
-     * @param input input handler
+     * @param gameCatalog          full item catalog
+     * @param spriteManager        sprite manager
+     * @param gsm                  game state manager
+     * @param previousState        state to return to on close
+     * @param input                input handler
      */
     public CraftingState(
-        final InventoryController inventoryController,
-        final CraftingController craftingController,
-        final RecipeBookController recipeBookController,
-        final GameCatalog gameCatalog,
-        final SpriteManager spriteManager,
-        final GameStateManager gsm,
-        final GameState previousState,
-        final InputHandler input
-    ) {
+            final InventoryController inventoryController,
+            final CraftingController craftingController,
+            final RecipeBookController recipeBookController,
+            final GameCatalog gameCatalog,
+            final SpriteManager spriteManager,
+            final GameStateManager gsm,
+            final GameState previousState,
+            final InputHandler input) {
         this.inventoryController = inventoryController;
         this.craftingController = craftingController;
         this.recipeBookController = recipeBookController;
@@ -109,11 +140,11 @@ public class CraftingState implements GameState {
         this.grayscale.setSaturation(-1.0);
 
         final Font loadedTitle = Font.loadFont(
-            getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), 24);
-        this.pixelFont = loadedTitle != null ? loadedTitle : Font.font("Monospace", 24);
+                getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), TITLE_FONT_SIZE);
+        this.pixelFont = loadedTitle != null ? loadedTitle : Font.font("Monospace", TITLE_FONT_SIZE);
         final Font loadedSmall = Font.loadFont(
-            getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), 20);
-        this.pixelFontSmall = loadedSmall != null ? loadedSmall : Font.font("Monospace", 20);
+                getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), SMALL_FONT_SIZE);
+        this.pixelFontSmall = loadedSmall != null ? loadedSmall : Font.font("Monospace", SMALL_FONT_SIZE);
     }
 
     @Override
@@ -153,16 +184,18 @@ public class CraftingState implements GameState {
 
     private void updateSelecting() {
         final boolean escNow = false; // TO-DO: input.isEsc() quando disponibile
-        /*if (escNow && !escWasPressed) {
-            gsm.setState(previousState);
-            return;
-        }*/
+        /*
+         * if (escNow && !escWasPressed) {
+         * gsm.setState(previousState);
+         * return;
+         * }
+         */
         escWasPressed = escNow;
 
         if (askingBrewConfirm) {
             final boolean leftNow = input.isLeft();
             final boolean rightNow = input.isRight();
-            if ((leftNow && !leftWasPressed) || (rightNow && !rightWasPressed)) {
+            if (leftNow && !leftWasPressed || rightNow && !rightWasPressed) {
                 brewYesSelected = !brewYesSelected;
             }
             leftWasPressed = leftNow;
@@ -251,13 +284,15 @@ public class CraftingState implements GameState {
         return -1;
     }
 
-    /** Locks in the craft result now (before the brewing wait) and starts the timer. */
+    /**
+     * Locks in the craft result now (before the brewing wait) and starts the timer.
+     */
     private void startBrewing() {
         final Recipe matchedRecipe = recipeBookController.findByIngredients(selectedIngredients);
         lastCraftSucceeded = matchedRecipe != null;
         lastResultImagePath = lastCraftSucceeded
-            ? matchedRecipe.getPotion().getImagePath()
-            : "sprites/potions/black_potion";
+                ? matchedRecipe.getPotion().getImagePath()
+                : "sprites/potions/black_potion";
         craftingController.craftPotion(selectedIngredients);
         phase = Phase.BREWING;
         brewTimer = 0;
@@ -275,7 +310,7 @@ public class CraftingState implements GameState {
     private void updateResult() {
         final boolean leftNow = input.isLeft();
         final boolean rightNow = input.isRight();
-        if ((leftNow && !leftWasPressed) || (rightNow && !rightWasPressed)) {
+        if (leftNow && !leftWasPressed || rightNow && !rightWasPressed) {
             brewYesSelected = !brewYesSelected;
         }
         leftWasPressed = leftNow;
@@ -301,7 +336,7 @@ public class CraftingState implements GameState {
         final double screenH = gc.getCanvas().getHeight();
         gc.setImageSmoothing(false);
 
-        gc.setFill(Color.rgb(0, 0, 0, 0.6));
+        gc.setFill(Color.rgb(0, 0, 0, OVERLAY_OPACITY));
         gc.fillRect(0, 0, screenW, screenH);
 
         gc.setFill(COL_BG);
@@ -310,7 +345,8 @@ public class CraftingState implements GameState {
         final double backpackW = screenW * BACKPACK_WIDTH_RATIO;
         final boolean interactive = phase == Phase.SELECTING;
 
-        renderBackpack(gc, 20, 40, backpackW - 40, screenH - 80, interactive);
+        renderBackpack(gc, BACKPACK_X, BACKPACK_Y, backpackW - BACKPACK_WIDTH_MARGIN,
+                screenH - BACKPACK_HEIGHT_MARGIN, interactive);
         renderCauldronArea(gc, backpackW, 0, screenW - backpackW, screenH);
     }
 
@@ -319,21 +355,22 @@ public class CraftingState implements GameState {
      * fitted inside the available space (aspect ratio preserved), then
      * the ingredient sprites drawn on top of it.
      *
-     * @param gc graphics context
-     * @param x backpack area x
-     * @param y backpack area y
-     * @param w backpack area width
-     * @param h backpack area height
+     * @param gc          graphics context
+     * @param x           backpack area x
+     * @param y           backpack area y
+     * @param w           backpack area width
+     * @param h           backpack area height
      * @param interactive whether cursor/selection borders are shown
      */
     private void renderBackpack(final GraphicsContext gc, final double x, final double y,
-                                final double w, final double h, final boolean interactive) {
+            final double w, final double h, final boolean interactive) {
         final Image cubeSprite = spriteManager.getStaticSprite("sprites/ui_book/sells_full");
         if (cubeSprite == null) {
             return;
         }
 
-        // Mantiene il rapporto originale dello sprite (96:144) dentro l'area disponibile
+        // Mantiene il rapporto originale dello sprite (96:144) dentro l'area
+        // disponibile
         final double spriteAspect = cubeSprite.getWidth() / cubeSprite.getHeight();
         double drawW = w;
         double drawH = drawW / spriteAspect;
@@ -353,15 +390,15 @@ public class CraftingState implements GameState {
      * Draws only the ingredient sprites, cursor, and selection borders
      * inside the exact area where the cube background was drawn.
      *
-     * @param gc graphics context
-     * @param x exact drawn background x
-     * @param y exact drawn background y
-     * @param w exact drawn background width
-     * @param h exact drawn background height
+     * @param gc          graphics context
+     * @param x           exact drawn background x
+     * @param y           exact drawn background y
+     * @param w           exact drawn background width
+     * @param h           exact drawn background height
      * @param interactive whether cursor/selection borders are shown
      */
     private void renderItemsOnly(final GraphicsContext gc, final double x, final double y,
-                                final double w, final double h, final boolean interactive) {
+            final double w, final double h, final boolean interactive) {
         final double slotW = (w - SLOT_PADDING * (COLUMNS - 1)) / COLUMNS;
         final double slotH = (h - SLOT_PADDING * (ROWS - 1)) / ROWS;
 
@@ -379,7 +416,7 @@ public class CraftingState implements GameState {
             final double spriteX = sx + ITEM_PADDING;
             final double spriteY = sy + ITEM_PADDING;
             final double spriteW = slotW - ITEM_PADDING * 2;
-            final double spriteH = slotH - ITEM_PADDING * 2 - 12;
+            final double spriteH = slotH - ITEM_PADDING * 2 - ITEM_QTY_BOTTOM_SPACE;
 
             if (sprite != null) {
                 final double spriteAspect = sprite.getWidth() / sprite.getHeight();
@@ -402,18 +439,21 @@ public class CraftingState implements GameState {
             gc.setFill(isEmpty ? COL_TEXT_DIM : COL_TEXT);
             gc.setFont(pixelFontSmall);
             gc.setTextAlign(TextAlignment.RIGHT);
-            gc.fillText(String.valueOf(item.getQuantity()), sx + slotW - 3, sy + slotH - 2);
+            gc.fillText(String.valueOf(item.getQuantity()), sx + slotW - QTY_TEXT_OFFSET_X,
+                    sy + slotH - QTY_TEXT_OFFSET_Y);
 
             if (interactive && isSelected) {
                 gc.setStroke(COL_SELECTED_BORDER);
-                gc.setLineWidth(3);
-                gc.strokeRect(sx + 1, sy + 1, slotW - 2, slotH - 2);
+                gc.setLineWidth(BORDER_WIDTH);
+                gc.strokeRect(sx + BORDER_INSET, sy + BORDER_INSET, slotW - BORDER_SIZE_REDUCTION,
+                        slotH - BORDER_SIZE_REDUCTION);
             }
 
             if (interactive && i == cursorIndex) {
                 gc.setStroke(COL_CURSOR);
-                gc.setLineWidth(3);
-                gc.strokeRect(sx + 1, sy + 1, slotW - 2, slotH - 2);
+                gc.setLineWidth(BORDER_WIDTH);
+                gc.strokeRect(sx + BORDER_INSET, sy + BORDER_INSET, slotW - BORDER_SIZE_REDUCTION,
+                        slotH - BORDER_SIZE_REDUCTION);
             }
         }
     }
@@ -423,34 +463,33 @@ public class CraftingState implements GameState {
      * content below it (Brew Potion? / brewing timer / result).
      *
      * @param gc graphics context
-     * @param x area x
-     * @param y area y
-     * @param w area width
-     * @param h area height
+     * @param x  area x
+     * @param y  area y
+     * @param w  area width
+     * @param h  area height
      */
     private void renderCauldronArea(final GraphicsContext gc, final double x, final double y,
-                                    final double w, final double h) {
+            final double w, final double h) {
         final double centerX = x + w / 2;
-        final double margin = 40.0;
 
-        final double cauldronX = x + margin;
-        final double cauldronY = y + margin;
-        final double cauldronW = w - margin * 2;
-        final double cauldronH = h - margin * 2;
+        final double cauldronX = x + CAULDRON_MARGIN;
+        final double cauldronY = y + CAULDRON_MARGIN;
+        final double cauldronW = w - CAULDRON_MARGIN * 2;
+        final double cauldronH = h - CAULDRON_MARGIN * 2;
 
         renderCauldronSprite(gc, cauldronX, cauldronY, cauldronW, cauldronH);
 
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFont);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("Cauldron", centerX, cauldronY + 30);
+        gc.fillText("Cauldron", centerX, cauldronY + CAULDRON_TITLE_OFFSET_Y);
 
-        final double slotsTotalW = CAULDRON_SLOT_SIZE * 3 + 16 * 2;
+        final double slotsTotalW = CAULDRON_SLOT_SIZE * REQUIRED_INGREDIENTS + CAULDRON_SLOT_GAP * 2;
         final double slotsX = centerX - slotsTotalW / 2;
-        final double slotsY = cauldronY + 60;
+        final double slotsY = cauldronY + CAULDRON_SLOTS_TOP_OFFSET;
 
         for (int i = 0; i < REQUIRED_INGREDIENTS; i++) {
-            final double sx = slotsX + i * (CAULDRON_SLOT_SIZE + 16);
+            final double sx = slotsX + i * (CAULDRON_SLOT_SIZE + CAULDRON_SLOT_GAP);
 
             gc.setEffect(null);
             gc.setFill(Color.web("#a09482"));
@@ -460,12 +499,14 @@ public class CraftingState implements GameState {
                 final Ingredient chosen = selectedIngredients.get(i);
                 final Image sprite = spriteManager.getStaticSprite(chosen.getImagePath());
                 if (sprite != null) {
-                    gc.drawImage(sprite, sx + 10, slotsY + 10, CAULDRON_SLOT_SIZE - 20, CAULDRON_SLOT_SIZE - 20);
+                    gc.drawImage(sprite, sx + CAULDRON_ITEM_INSET, slotsY + CAULDRON_ITEM_INSET,
+                            CAULDRON_SLOT_SIZE - CAULDRON_ITEM_SIZE_REDUCTION,
+                            CAULDRON_SLOT_SIZE - CAULDRON_ITEM_SIZE_REDUCTION);
                 }
             }
         }
 
-        final double belowY = slotsY + CAULDRON_SLOT_SIZE + 40;
+        final double belowY = slotsY + CAULDRON_SLOT_SIZE + CAULDRON_BELOW_OFFSET;
 
         switch (phase) {
             case SELECTING:
@@ -491,14 +532,14 @@ public class CraftingState implements GameState {
      * Draws the cauldron sprite filling the given area.
      * Falls back to a plain fill if the sprite is missing.
      *
-     * @param gc graphics context
+     * @param gc    graphics context
      * @param areaX cauldron area x
      * @param areaY cauldron area y
      * @param areaW cauldron area width
      * @param areaH cauldron area height
      */
     private void renderCauldronSprite(final GraphicsContext gc, final double areaX, final double areaY,
-                                    final double areaW, final double areaH) {
+            final double areaW, final double areaH) {
         final Image cauldronSprite = spriteManager.getStaticSprite("sprites/items/cauldron");
 
         if (cauldronSprite != null) {
@@ -509,45 +550,43 @@ public class CraftingState implements GameState {
         }
     }
 
-
     /**
-     * @param gc graphics context
+     * @param gc      graphics context
      * @param centerX cauldron center x
-     * @param slotsY top of the ingredient slots (used to place the potion image)
-     * @param belowY y for the outcome text and retry prompt
+     * @param slotsY  top of the ingredient slots (used to place the potion image)
+     * @param belowY  y for the outcome text and retry prompt
      */
     private void renderResult(final GraphicsContext gc, final double centerX,
-                                final double slotsY, final double belowY) {
+            final double slotsY, final double belowY) {
         final Image resultSprite = spriteManager.getStaticSprite(lastResultImagePath);
-        final double size = 80.0;
 
         if (resultSprite != null) {
-            gc.drawImage(resultSprite, centerX - size / 2, slotsY, size, size);
+            gc.drawImage(resultSprite, centerX - RESULT_IMAGE_SIZE / 2, slotsY, RESULT_IMAGE_SIZE, RESULT_IMAGE_SIZE);
         } else {
             gc.setFill(lastCraftSucceeded ? Color.web("#9AD1E8") : Color.web("#2A2A2A"));
-            gc.fillRect(centerX - size / 2, slotsY, size, size);
+            gc.fillRect(centerX - RESULT_IMAGE_SIZE / 2, slotsY, RESULT_IMAGE_SIZE, RESULT_IMAGE_SIZE);
         }
 
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFontSmall);
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(
-            lastCraftSucceeded ? "Potion added to inventory" : "Potion failed",
-            centerX, belowY - 20);
+                lastCraftSucceeded ? "Potion added to inventory" : "Potion failed",
+                centerX, belowY - RESULT_TEXT_OFFSET_Y);
 
         renderYesNoPrompt(gc, centerX, belowY, "Continue brewing?");
     }
 
     /**
-     * Draws a "question / Yes  No" prompt with the current selection highlighted.
+     * Draws a "question / Yes No" prompt with the current selection highlighted.
      *
-     * @param gc graphics context
-     * @param centerX horizontal center for the prompt
-     * @param y y position of the question line
+     * @param gc       graphics context
+     * @param centerX  horizontal center for the prompt
+     * @param y        y position of the question line
      * @param question the question text
      */
     private void renderYesNoPrompt(final GraphicsContext gc, final double centerX, final double y,
-                                    final String question) {
+            final String question) {
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFontSmall);
         gc.setTextAlign(TextAlignment.CENTER);
@@ -555,8 +594,8 @@ public class CraftingState implements GameState {
 
         gc.setFont(pixelFont);
         gc.setFill(brewYesSelected ? COL_SELECTED_BORDER : COL_TEXT_DIM);
-        gc.fillText("Yes", centerX - 40, y + 26);
+        gc.fillText("Yes", centerX - PROMPT_OFFSET_X, y + PROMPT_OFFSET_Y);
         gc.setFill(!brewYesSelected ? COL_SELECTED_BORDER : COL_TEXT_DIM);
-        gc.fillText("No", centerX + 40, y + 26);
+        gc.fillText("No", centerX + PROMPT_OFFSET_X, y + PROMPT_OFFSET_Y);
     }
 }

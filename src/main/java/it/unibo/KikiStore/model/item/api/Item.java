@@ -10,26 +10,28 @@ public interface Item {
     /**
      * @return The unique identifier of the item (used for sprite lookup and logic).
      */
-    public String getId();
+    String getId();
 
     /**
-    * @return The display name of the item (used for UI and inventory).
-    */
-    public String getName();
+     * @return The display name of the item (used for UI and inventory).
+     */
+    String getName();
 
     /**
-    * @return The quantity of this item (useful for stackable items in inventory).
-    */
-    public int getQuantity();
+     * @return The quantity of this item (useful for stackable items in inventory).
+     */
+    int getQuantity();
+
     /**
-    * @param quantity The new quantity for the item.
-    */
-    public void setQuantity(int quantity);
-    
+     * @param quantity The new quantity for the item.
+     */
+    void setQuantity(int quantity);
+
     /**
      * @return The X-coordinate of the item in the game world.
      */
-    public double getX();
+    double getX();
+
     /**
      * @return The Y-coordinate of the item in the game world.
      */
@@ -38,23 +40,24 @@ public interface Item {
     /**
      * @return The visual width of the item.
      */
-    public double getWidth();
+    double getWidth();
+
     /**
      * @return The visual height of the item.
      */
     double getHeight();
-    
+
     /**
-     * Indicates whether the item requires frame-based animation 
+     * Indicates whether the item requires frame-based animation
      * 
      * @return true if the item is animated, false otherwise.
      */
-    public boolean isAnimated();
+    boolean isAnimated();
 
     /**
      * Returns the physical boundary used for collision detection and interaction.
      * 
      * @return A Rectangle2D representing the item's hitbox.
      */
-    public Rectangle2D getHitbox();
+    Rectangle2D getHitbox();
 }

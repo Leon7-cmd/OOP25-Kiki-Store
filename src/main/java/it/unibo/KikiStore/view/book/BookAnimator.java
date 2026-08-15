@@ -21,12 +21,12 @@ public class BookAnimator {
 
     /**
      * @param spriteManager sprite manager used to load the sheet
-     * @param spriteId path to the spritesheet (no extension)
-     * @param cols number of columns in the frame grid
-     * @param rows number of rows in the frame grid
+     * @param spriteId      path to the spritesheet (no extension)
+     * @param cols          number of columns in the frame grid
+     * @param rows          number of rows in the frame grid
      */
     public BookAnimator(final SpriteManager spriteManager, final String spriteId,
-                         final int cols, final int rows) {
+            final int cols, final int rows) {
         this.sheet = spriteManager.getStaticSprite(spriteId);
         this.cols = cols;
         if (sheet != null) {
@@ -58,7 +58,11 @@ public class BookAnimator {
         playing = false;
     }
 
-    /** @return true if playback finished (reached last frame) */
+    /**
+     * Checks whether the animation has finished playing.
+     *
+     * @return true if playback finished (reached last frame)
+     */
     public boolean isFinished() {
         return !playing;
     }
@@ -82,13 +86,13 @@ public class BookAnimator {
      * Draws the current frame at the given screen position.
      *
      * @param gc graphics context
-     * @param x destination x
-     * @param y destination y
-     * @param w destination width
-     * @param h destination height
+     * @param x  destination x
+     * @param y  destination y
+     * @param w  destination width
+     * @param h  destination height
      */
     public void render(final GraphicsContext gc, final double x, final double y,
-                        final double w, final double h) {
+            final double w, final double h) {
         if (sheet == null) {
             return; // fallback
         }

@@ -6,8 +6,12 @@ package it.unibo.KikiStore.controller.api;
  */
 public interface InputHandler {
     boolean isUp();
+
     boolean isDown();
+
     boolean isLeft();
+
     boolean isRight();
+
     boolean isAction();
 }
