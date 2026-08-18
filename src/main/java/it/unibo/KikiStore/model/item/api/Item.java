@@ -48,7 +48,7 @@ public interface Item {
     double getHeight();
 
     /**
-     * Indicates whether the item requires frame-based animation
+     * Indicates whether the item requires frame-based animation. 
      * 
      * @return true if the item is animated, false otherwise.
      */

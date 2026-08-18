@@ -9,5 +9,5 @@ package it.unibo.KikiStore.view.environment.api;
  */
 public record MapRenderData(
     int[][] grid, 
-    int tileSize  
-) {}
+    int tileSize
+) { }

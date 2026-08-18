@@ -16,8 +16,8 @@ plugins {
 }
 
 javafx {
-    version = "17" // Inserisci la versione del JDK che state usando (solitamente 17 o 21 per i progetti universitari)
-    modules = listOf("javafx.controls", "javafx.graphics", "javafx.media") 
+    version = "21.0.2" 
+    modules = listOf("javafx.controls", "javafx.graphics", "javafx.media")
 }
 
 java {
