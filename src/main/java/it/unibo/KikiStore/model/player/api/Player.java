@@ -9,6 +9,11 @@ import it.unibo.KikiStore.controller.api.InputHandler;
 public interface Player {
 
     /**
+     * @return the player's name.
+     */
+    String getName();   
+
+    /**
      * @return the current ammount of money for the player.
      */
     int getMoney();

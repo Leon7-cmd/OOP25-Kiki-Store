@@ -2,6 +2,7 @@ package it.unibo.KikiStore.engine.impl;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.controller.api.InventoryController;
+import it.unibo.KikiStore.controller.api.OrderController;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
@@ -89,6 +90,7 @@ public class BookState implements GameState {
     public BookState(
         final InventoryController inventoryController,
         final RecipeBookController recipeBookController,
+        final OrderController orderController,
         final GameCatalog gameCatalog,
         final SpriteManager spriteManager,
         final GameStateManager gsm,
@@ -117,7 +119,7 @@ public class BookState implements GameState {
             inventoryController, gameCatalog, spriteManager, pixelFontSmall);
         this.recipeSection = new RecipeSection(
             recipeBookController, spriteManager, pixelFont, pixelFontSmall);
-        this.ordersSection = null;//new OrdersSection(pixelFontSmall);
+        this.ordersSection = new OrdersSection(orderController, input, pixelFontSmall);//new OrdersSection(pixelFontSmall);
     }
 
     @Override
@@ -128,6 +130,7 @@ public class BookState implements GameState {
         openAnimator.play();
         inventorySection.refresh();
         recipeSection.refresh();
+        ordersSection.refresh();
     }
 
     @Override
@@ -221,7 +224,7 @@ public class BookState implements GameState {
             currentSection = switch (currentSection) {
                 case RECIPES -> Section.INVENTORY;
                 case ORDERS -> Section.RECIPES;
-                case INVENTORY -> Section.INVENTORY; // per ora non arriva a Orders, disabilitata
+                case INVENTORY -> Section.INVENTORY; 
             };
         }
         upWasPressed = upNow;
@@ -230,7 +233,7 @@ public class BookState implements GameState {
         if (downNow && !downWasPressed) {
             currentSection = switch (currentSection) {
                 case INVENTORY -> Section.RECIPES;
-                case RECIPES -> Section.RECIPES; // per ora non arriva a Orders, disabilitata
+                case RECIPES -> Section.ORDERS; 
                 case ORDERS -> Section.ORDERS;
             };
         }
@@ -315,7 +318,7 @@ public class BookState implements GameState {
                                 final double w, final double h,
                                 final int spriteRow, final Section section) {
         final boolean isActive = currentSection == section;
-        final boolean isEnabled = section != Section.ORDERS;
+        final boolean isEnabled = true;
 
         final Image sheet = spriteManager.getStaticSprite("sprites/ui_book/bookmarks");
         if (sheet != null) {
@@ -342,7 +345,7 @@ public class BookState implements GameState {
             case RECIPES:
                 return recipeSection;
             case ORDERS:
-                //return ordersSection;
+                return ordersSection;
             case INVENTORY:
             default:
                 return inventorySection;

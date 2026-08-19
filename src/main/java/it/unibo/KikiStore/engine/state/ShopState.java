@@ -4,17 +4,23 @@ import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.controller.api.InventoryController;
+import it.unibo.KikiStore.controller.api.OrderController;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
 import it.unibo.KikiStore.controller.impl.InventoryControllerImpl;
+import it.unibo.KikiStore.controller.impl.OrderControllerImpl;
 import it.unibo.KikiStore.controller.impl.OrderSpawnerImpl;
 import it.unibo.KikiStore.controller.impl.RecipeBookControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.BookState;
+import it.unibo.KikiStore.model.economy.api.PotionPriceCalculator;
+import it.unibo.KikiStore.model.economy.impl.PotionPriceCalculatorImpl;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
+import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 import it.unibo.KikiStore.model.inventory.impl.GameCatalogImpl;
+import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
 import it.unibo.KikiStore.model.inventory.impl.RecipeBookImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
@@ -124,12 +130,16 @@ public final class ShopState implements GameState {
         }
         if (tileId == 3 && input.isAction()) {
             // Open the real BookState and return to this ShopState when closed
+            final OrderBook orderBook = new OrderBookImpl();
             final RecipeBook recipeBook = new RecipeBookImpl("recipes.json");
+            final PotionPriceCalculator priceCalculator=new PotionPriceCalculatorImpl(5);
+            final Inventory inventory = new InventoryImpl();
             final InventoryController inventoryController = new InventoryControllerImpl(recipeBook);
             final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook, inventoryController);
+            final OrderController orderController = new OrderControllerImpl(orderBook, recipeBook, inventory, kiki, priceCalculator);
             final GameStateManager gsm = (GameStateManager) this.transitionController;
             final BookState bookState = new BookState(
-                inventoryController, recipeBookController, catalog,
+                inventoryController, recipeBookController, orderController, catalog,
                 spriteManager, gsm, this, input
             );
             transitionController.pushState(bookState);

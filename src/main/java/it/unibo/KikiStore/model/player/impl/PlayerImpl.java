@@ -105,6 +105,10 @@ public final class PlayerImpl implements Player {
         this.state = isMoving ? "walk" : "idle";
     }
 
+    @Override public String getName(){
+        return "Kiki"; //the player is Kiki.He/she doesn't choose the name
+    }
+
     @Override public double getX() { 
         return x; 
     }
