@@ -39,4 +39,26 @@ public interface InputHandler {
      * @return the Action boolean
      */
     boolean isAction();
+
+    /**
+     * Checks whether the mouse was clicked since the last time this was checked.
+     * Applies the click - returns true only once per click.
+     *
+     * @return true if a click happened and hasn't been aaplied yet
+     */
+    boolean isMouseClicked();
+
+    /**
+     * Returns the x coordinate of the last mouse click.
+     *
+     * @return the mouse click x position
+     */
+    double getMouseX();
+
+    /**
+     * Returns the y coordinate of the last mouse click.
+     *
+     * @return the mouse click y position
+     */
+    double getMouseY();
 }
