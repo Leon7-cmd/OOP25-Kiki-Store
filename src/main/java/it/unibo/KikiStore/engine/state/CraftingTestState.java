@@ -63,13 +63,13 @@ public final class CraftingTestState implements GameState {
                         // sia il caso "successo" che il caso "fallimento" scegliendo
                         // combinazioni diverse
                         inventoryController.addIngredient(
-                                        "Dandelion", "sprites/ingredients/dandelion", 3, "flower");
+                                        "Dandelion", "sprites/ingredients/dandelion", 3, "flower",7);
                         inventoryController.addIngredient(
-                                        "Chamomile", "sprites/ingredients/chamomile", 3, "flower");
+                                        "Chamomile", "sprites/ingredients/chamomile", 3, "flower",3);
                         inventoryController.addIngredient(
-                                        "basil", "sprites/ingredients/basil", 3, "plant");
+                                        "basil", "sprites/ingredients/basil", 3, "plant",2);
                         inventoryController.addIngredient(
-                                        "sage", "sprites/ingredients/sage", 3, "plant");
+                                        "sage", "sprites/ingredients/sage", 3, "plant",6);
 
                         final GameState craftingState = new CraftingState(
                                         inventoryController,

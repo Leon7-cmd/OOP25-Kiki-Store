@@ -134,7 +134,7 @@ public final class ShopState implements GameState {
             final RecipeBook recipeBook = new RecipeBookImpl("recipes.json");
             final PotionPriceCalculator priceCalculator=new PotionPriceCalculatorImpl(5);
             final Inventory inventory = new InventoryImpl();
-            final InventoryController inventoryController = new InventoryControllerImpl(recipeBook);
+            final InventoryController inventoryController = new InventoryControllerImpl();
             final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook, inventoryController);
             final OrderController orderController = new OrderControllerImpl(orderBook, recipeBook, inventory, kiki, priceCalculator);
             final GameStateManager gsm = (GameStateManager) this.transitionController;

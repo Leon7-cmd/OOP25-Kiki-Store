@@ -1,5 +1,8 @@
 package it.unibo.KikiStore.engine.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unibo.KikiStore.controller.api.CraftingController;
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.controller.api.InventoryController;
@@ -17,8 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Crafting screen — backpack grid on the left, cauldron with 3 ingredient
@@ -161,7 +162,7 @@ public final class CraftingState implements GameState {
         allIngredients = new ArrayList<>();
         for (final Ingredient ing : gameCatalog.getAllIngredients()) {
             final int qty = inventoryController.getIngredientQuantity(ing.getName());
-            allIngredients.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getType()));
+            allIngredients.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getType(),ing.getPrice()));
         }
     }
 
