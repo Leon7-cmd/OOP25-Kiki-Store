@@ -12,12 +12,12 @@ package it.unibo.KikiStore.view.entity.api;
  * @param state     The current animation state (e.g., "idle", "walk").
  * @param direction The current facing direction (e.g., "up", "down", "left", "right").
  */
-public record EntityRenderData(
+public record EntityRenderData (
     double x, 
     double y, 
     double width, 
     double height, 
     String entityId, 
-    String state,
-    String direction
-) { }
+    String state,     
+    String direction  
+){}

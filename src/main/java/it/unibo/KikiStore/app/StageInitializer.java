@@ -12,11 +12,11 @@ import it.unibo.KikiStore.view.menu.impl.InitialScreenViewImpl;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -92,10 +92,10 @@ public class StageInitializer {
         // 4. Final configuration of the OS window
         stage.setTitle("Kiki's Store - Game");
         stage.setScene(scene);
-        //stage.setResizable(false);
+        // stage.setResizable(false);
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
-        
+
         stage.show();
 
         // 5. GameLoop startup

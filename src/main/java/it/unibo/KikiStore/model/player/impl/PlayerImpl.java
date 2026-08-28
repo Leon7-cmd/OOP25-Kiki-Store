@@ -11,6 +11,7 @@ public final class PlayerImpl implements Player {
     private static final double SPEED = 3.5;
     private static final int BASE_ENERGY = 5;
     private static final int BASE_MONEY = 40;
+    private static final String NAME = "Kiki";
 
     // Hitbox dimensions: Defines the physical size of the player for collisions
     private static final double HITBOX_WIDTH = 32; 
@@ -22,6 +23,15 @@ public final class PlayerImpl implements Player {
 
     private static int money;
     private static int energy;
+    private static String playerName;
+
+    public static String getPlayerName() {
+        return playerName;
+    }
+
+    public static void setPlayerName(String playerName) {
+        PlayerImpl.playerName = playerName;
+    }
     private double x;
     private double y;
     private String direction = "down"; 
@@ -39,6 +49,7 @@ public final class PlayerImpl implements Player {
         this.y = startY;
         money = BASE_MONEY;
         energy = BASE_ENERGY;
+        playerName = NAME;
     }
 
     /**
@@ -106,7 +117,7 @@ public final class PlayerImpl implements Player {
     }
 
     @Override public String getName(){
-        return "Kiki"; //the player is Kiki.He/she doesn't choose the name
+        return playerName; //the player is Kiki.He/she doesn't choose the name
     }
 
     @Override public double getX() { 

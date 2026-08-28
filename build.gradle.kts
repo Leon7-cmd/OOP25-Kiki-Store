@@ -26,6 +26,12 @@ javafx {
     modules = listOf("javafx.controls", "javafx.graphics", "javafx.media", "javafx.fxml")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 repositories { // Where to search for dependencies
     mavenCentral()
 }

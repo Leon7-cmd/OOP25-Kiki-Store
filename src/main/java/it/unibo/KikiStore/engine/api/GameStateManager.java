@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
  * are correctly delegated to the currently active state.
  */
 public interface GameStateManager {
+
     /**
      * Sets and activates a new game state.
      * 

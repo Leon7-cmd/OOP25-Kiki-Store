@@ -1,15 +1,12 @@
 package it.unibo.KikiStore.view.book;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
+import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Potion;
 import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
 import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
-import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
@@ -17,13 +14,15 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Inventory grid section — shown as two fixed facing pages inside the book:
  * left page = all 18 ingredients, right page = the 10 potions
  * (remaining slots on the right page stay empty and gray).
  */
-public class InventorySection implements BookSection {
+public final class InventorySection implements BookSection {
 
     private static final int COLUMNS = 3;
     private static final int ROWS = 6;
@@ -53,14 +52,14 @@ public class InventorySection implements BookSection {
 
     /**
      * @param inventoryController the inventory controller
-     * @param gameCatalog the full item catalog — 18 ingredients, 10 potions
-     * @param spriteManager the sprite manager
-     * @param pixelFontSmall small pixel font for quantity text
+     * @param gameCatalog         the full item catalog — 18 ingredients, 10 potions
+     * @param spriteManager       the sprite manager
+     * @param pixelFontSmall      small pixel font for quantity text
      */
     public InventorySection(final InventoryController inventoryController,
-                             final GameCatalog gameCatalog,
-                             final SpriteManager spriteManager,
-                             final Font pixelFontSmall) {
+            final GameCatalog gameCatalog,
+            final SpriteManager spriteManager,
+            final Font pixelFontSmall) {
         this.inventoryController = inventoryController;
         this.gameCatalog = gameCatalog;
         this.spriteManager = spriteManager;
@@ -69,7 +68,10 @@ public class InventorySection implements BookSection {
         buildSlots();
     }
 
-    /** Refreshes both pages with current inventory quantities. Call when reopening the book. */
+    /**
+     * Refreshes both pages with current inventory quantities. Call when reopening
+     * the book.
+     */
     public void refresh() {
         buildSlots();
     }
@@ -82,14 +84,14 @@ public class InventorySection implements BookSection {
         ingredientSlots = new ArrayList<>();
         for (final Ingredient ing : gameCatalog.getAllIngredients()) {
             final int qty = inventoryController.getIngredientQuantity(ing.getName());
-            ingredientSlots.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getType(),ing.getPrice()));
+            ingredientSlots.add(new IngredientImpl(ing.getName(), ing.getImagePath(), qty, ing.getType(), ing.getPrice()));
         }
 
         potionSlots = new ArrayList<>();
         for (final Potion pot : gameCatalog.getAllPotions()) {
             final int qty = inventoryController.getPotionQuantity(pot.getName());
             potionSlots.add(new PotionImpl(pot.getName(), pot.getImagePath(), qty,
-                pot.getDescription(), pot.getEffect(), pot.isBlack()));
+                    pot.getDescription(), pot.getEffect(), false));
         }
     }
 
@@ -101,7 +103,7 @@ public class InventorySection implements BookSection {
 
     @Override
     public void render(final GraphicsContext gc, final double x, final double y,
-                        final double w, final double h) {
+            final double w, final double h) {
 
         gc.setImageSmoothing(false); // Lo smoothing annulla l'effetto pixellato
 
@@ -125,32 +127,33 @@ public class InventorySection implements BookSection {
             return;
         }
 
-        // Mantiene il rapporto originale dello sprite (96:144) dentro l'area della pagina
+        // Mantiene il rapporto originale dello sprite (96:144) dentro l'area della
+        // pagina
         final double spriteAspect = cubeSprite.getWidth() / cubeSprite.getHeight();
 
         renderPageBackground(gc, cubeSprite, spriteAspect, ingredientSlots,
-            leftPageX, leftPageY, leftPageW, leftPageH);
+                leftPageX, leftPageY, leftPageW, leftPageH);
         renderPageBackground(gc, cubeSprite, spriteAspect, potionSlots,
-            rightPageX, rightPageY, rightPageW, rightPageH);
+                rightPageX, rightPageY, rightPageW, rightPageH);
     }
 
     /**
      * Draws the cube background sprite fitted inside
      * the page area, centered, then draws the items on top.
      *
-     * @param gc graphics context
-     * @param cubeSprite the cube background sprite
+     * @param gc           graphics context
+     * @param cubeSprite   the cube background sprite
      * @param spriteAspect width/height ratio of cubeSprite
-     * @param items items to draw on this page
-     * @param pageX exact page area x
-     * @param pageY exact page area y
-     * @param pageW exact page area width
-     * @param pageH exact page area height
+     * @param items        items to draw on this page
+     * @param pageX        exact page area x
+     * @param pageY        exact page area y
+     * @param pageW        exact page area width
+     * @param pageH        exact page area height
      */
     private void renderPageBackground(final GraphicsContext gc, final Image cubeSprite,
-                                    final double spriteAspect, final List<GameItem> items,
-                                    final double pageX, final double pageY,
-                                    final double pageW, final double pageH) {
+            final double spriteAspect, final List<GameItem> items,
+            final double pageX, final double pageY,
+            final double pageW, final double pageH) {
         double drawW = pageW;
         double drawH = drawW / spriteAspect;
 
@@ -167,7 +170,7 @@ public class InventorySection implements BookSection {
     }
 
     private void renderItemsOnly(final GraphicsContext gc, final List<GameItem> items,
-                            final double x, final double y, final double w, final double h) {
+            final double x, final double y, final double w, final double h) {
         final double slotW = (w - SLOT_PADDING * (COLUMNS - 1)) / COLUMNS;
         final double slotH = (h - SLOT_PADDING * (ROWS - 1)) / ROWS;
 
@@ -189,7 +192,7 @@ public class InventorySection implements BookSection {
 
                 if (sprite != null) {
                     // Mantiene il rapporto originale dello sprite invece di stirarlo
-                    //dentro lo spazio disponibile dello slot
+                    // dentro lo spazio disponibile dello slot
                     final double spriteAspect = sprite.getWidth() / sprite.getHeight();
                     double itemW = spriteW;
                     double itemH = itemW / spriteAspect;

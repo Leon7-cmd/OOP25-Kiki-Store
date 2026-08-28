@@ -11,11 +11,11 @@ package it.unibo.KikiStore.view.item.api;
  * @param itemId     The unique identifier used by the SpriteManager to locate the correct texture.
  * @param isAnimated Flag indicating if the renderer should treat the asset as a multi-frame sprite sheet.
  */
-public record ItemRenderData(
+public record ItemRenderData (
     double x,
     double y,
     double width,
     double height,
     String itemId, 
     boolean isAnimated
-) { }
+){}

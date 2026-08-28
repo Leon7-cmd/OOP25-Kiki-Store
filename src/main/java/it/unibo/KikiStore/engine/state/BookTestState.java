@@ -33,7 +33,7 @@ import javafx.scene.canvas.GraphicsContext;
  * Added some test items to see colored vs gray slots
  * and one unlocked recipe.
  */
-public class BookTestState implements GameState {
+public final class BookTestState implements GameState {
 
     private final InputHandler input;
     private final GameStateManager gsm;
@@ -41,7 +41,7 @@ public class BookTestState implements GameState {
 
     /**
      * @param input the input handler
-     * @param gsm the game state manager
+     * @param gsm   the game state manager
      */
     public BookTestState(final InputHandler input, final GameStateManager gsm) {
         this.input = input;
@@ -60,9 +60,9 @@ public class BookTestState implements GameState {
             final Player player = new PlayerImpl(35,64);
             final OrderBook orderBook = new OrderBookImpl();
             final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json");
-            final InventoryController inventoryController = new InventoryControllerImpl(recipeBook);
-            final RecipeBookController recipeBookController =
-                new RecipeBookControllerImpl(recipeBook, inventoryController);
+            final InventoryController inventoryController = new InventoryControllerImpl();
+            final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook,
+                    inventoryController);
             final PotionPriceCalculator priceCalculator=new PotionPriceCalculatorImpl(5);
             final Inventory inventory = new InventoryImpl();
             final OrderController orderController = new OrderControllerImpl(orderBook,recipeBook,inventory,player,priceCalculator);
@@ -75,11 +75,11 @@ public class BookTestState implements GameState {
             inventoryController.addIngredient(
                 "Clover", "sprites/ingredients/clover", 2, "plant", 1);
             inventoryController.addPotion(
-                "Shieldberry Potion", "sprites/potions/shieldberry",
-                1, "Smells of lavender and old books, perfect for restless nights", "sleep", false);
+                    "Shieldberry Potion", "sprites/potions/shieldberry",
+                    1, "Smells of lavender and old books, perfect for restless nights", "sleep", false);
 
             // Dopo aver creato recipeBookController, sblocca ricette per test
-            List<Recipe> allRecipes = recipeBookController.getAllRecipes();
+            final List<Recipe> allRecipes = recipeBookController.getAllRecipes();
             if (!allRecipes.isEmpty()) {
                 recipeBookController.unlockRecipe(allRecipes.get(0));
                 recipeBookController.unlockRecipe(allRecipes.get(1));
@@ -87,9 +87,8 @@ public class BookTestState implements GameState {
                 recipeBookController.unlockRecipe(allRecipes.get(3));
             }
             final GameState bookState = new BookState(
-                inventoryController, recipeBookController,orderController, catalog,
-                spriteManager, gsm, this, input
-            );
+                    inventoryController, recipeBookController,orderController, catalog,
+                    spriteManager, gsm, this, input);
 
             gsm.setState(bookState);
         }
@@ -98,5 +97,6 @@ public class BookTestState implements GameState {
     @Override
     public void render(final GraphicsContext gc) {
         // vuoto — sostituito da BookState
+
     }
 }

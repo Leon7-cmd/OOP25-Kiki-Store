@@ -16,11 +16,13 @@ import java.util.List;
  * Page turning is handled externally by BookState via goNext()/goPrev(),
  * synchronized with the page-turn animation.
  */
-public class RecipeSection implements BookSection {
+public final class RecipeSection implements BookSection {
 
     private static final double IMAGE_SIZE_RATIO = 0.5;
     private static final double TEXT_LINE_HEIGHT = 13.0;
     private static final double CHAR_WIDTH_ESTIMATE = 6.5; // TO-DO calibra con Press Start 2P
+    private static final double TEXT_SIDE_PADDING = 10.0;
+    private static final double TEXT_MARGIN = 20.0;
 
     private static final Color COL_TITLE = Color.web("#3B2006");
     private static final Color COL_TEXT = Color.web("#3B2006");
@@ -31,7 +33,7 @@ public class RecipeSection implements BookSection {
     private static final double PAGE_BOTTOM_FRAC = 244.0 / 272.0;
     private static final double PAGE_LEFT_FRAC = 26.0 / 272.0;
     private static final double PAGE_CENTER_FRAC = 135.5 / 272.0;
-    private static final double PAGE_RIGHT_FRAC = 270.0 / 272.0; 
+    private static final double PAGE_RIGHT_FRAC = 270.0 / 272.0;
 
     private final RecipeBookController recipeBookController;
     private final SpriteManager spriteManager;
@@ -43,14 +45,14 @@ public class RecipeSection implements BookSection {
 
     /**
      * @param recipeBookController the recipe book controller
-     * @param spriteManager the sprite manager
-     * @param pixelFont pixel font for the potion name
-     * @param pixelFontSmall pixel font for the description
+     * @param spriteManager        the sprite manager
+     * @param pixelFont            pixel font for the potion name
+     * @param pixelFontSmall       pixel font for the description
      */
     public RecipeSection(final RecipeBookController recipeBookController,
-                          final SpriteManager spriteManager,
-                          final Font pixelFont,
-                          final Font pixelFontSmall) {
+            final SpriteManager spriteManager,
+            final Font pixelFont,
+            final Font pixelFontSmall) {
         this.recipeBookController = recipeBookController;
         this.spriteManager = spriteManager;
         this.pixelFont = pixelFont;
@@ -58,7 +60,10 @@ public class RecipeSection implements BookSection {
         refresh();
     }
 
-    /** Reloads unlocked recipes and resets to the first spread. Call when reopening the book. */
+    /**
+     * Reloads unlocked recipes and resets to the first spread. Call when reopening
+     * the book.
+     */
     public void refresh() {
         leftIndex = 0;
         unlockedRecipes = recipeBookController.getUnlockedRecipes();
@@ -66,12 +71,13 @@ public class RecipeSection implements BookSection {
 
     @Override
     public void update() {
-        // Vuoto — BookState gestisce l'input per coordinare l'animazione di sfoglio pagina
+        // Vuoto — BookState gestisce l'input per coordinare l'animazione di sfoglio
+        // pagina
     }
 
     @Override
     public void render(final GraphicsContext gc, final double x, final double y,
-                        final double w, final double h) {
+            final double w, final double h) {
         gc.setImageSmoothing(false);
         if (unlockedRecipes.isEmpty()) {
             gc.setFill(COL_EMPTY_MSG);
@@ -107,16 +113,16 @@ public class RecipeSection implements BookSection {
     /**
      * Draws a single recipe on one page — potion image, name, and description.
      *
-     * @param gc graphics context
+     * @param gc     graphics context
      * @param recipe the recipe to draw
-     * @param x page area x
-     * @param y page area y
-     * @param w page area width
-     * @param h page area height
+     * @param x      page area x
+     * @param y      page area y
+     * @param w      page area width
+     * @param h      page area height
      */
     private void renderRecipePage(final GraphicsContext gc, final Recipe recipe,
-                                   final double x, final double y,
-                                   final double w, final double h) {
+            final double x, final double y,
+            final double w, final double h) {
         final double imgSize = w * IMAGE_SIZE_RATIO;
         final double imgX = x + (w - imgSize) / 2;
         final double imgY = y + 10;
@@ -132,26 +138,26 @@ public class RecipeSection implements BookSection {
         gc.setFill(COL_TITLE);
         gc.setFont(pixelFont);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(recipe.getPotion().getName(), x + w / 2, imgY + imgSize + 20);
+        gc.fillText(recipe.getPotion().getName(), x + w / 2, imgY + imgSize + TEXT_MARGIN);
 
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFontSmall);
         gc.setTextAlign(TextAlignment.LEFT);
         final double descY = imgY + imgSize + 44;
-        drawWrappedText(gc, recipe.getPotion().getDescription(), x + 10, descY, w - 20);
+        drawWrappedText(gc, recipe.getPotion().getDescription(), x + TEXT_SIDE_PADDING, descY, w - TEXT_MARGIN);
     }
 
     /**
      * Draws text wrapped to fit within maxWidth, breaking on word boundaries.
      *
-     * @param gc graphics context
-     * @param text the text to draw
-     * @param x left x position
-     * @param y starting y position (top of first line)
+     * @param gc       graphics context
+     * @param text     the text to draw
+     * @param x        left x position
+     * @param y        starting y position (top of first line)
      * @param maxWidth maximum width before wrapping
      */
     private void drawWrappedText(final GraphicsContext gc, final String text,
-                                  final double x, final double y, final double maxWidth) {
+            final double x, final double y, final double maxWidth) {
         final int maxCharsPerLine = Math.max(1, (int) (maxWidth / CHAR_WIDTH_ESTIMATE));
 
         final String[] words = text.split(" ");
@@ -174,24 +180,38 @@ public class RecipeSection implements BookSection {
         }
     }
 
-    /** @return true if there is a next spread of 2 more recipes ahead */
+    /**
+     * Checks whether there is a next spread of 2 more recipes ahead.
+     *
+     * @return true if there is a next spread
+     */
     public boolean canGoNext() {
         return leftIndex + 2 < unlockedRecipes.size();
     }
 
-    /** @return true if there is a previous spread */
+    /**
+     * Checks whether there is a previous spread of 2 recipes.
+     *
+     * @return true if there is a previous spread
+     */
     public boolean canGoPrev() {
         return leftIndex - 2 >= 0;
     }
 
-    /** Advances to the next pair of recipes. Called by BookState after the turn-right animation finishes. */
+    /**
+     * Advances to the next pair of recipes. Called by BookState after the
+     * turn-right animation finishes.
+     */
     public void goNext() {
         if (canGoNext()) {
             leftIndex += 2;
         }
     }
 
-    /** Goes back to the previous pair of recipes. Called by BookState after the turn-left animation finishes. */
+    /**
+     * Goes back to the previous pair of recipes. Called by BookState after the
+     * turn-left animation finishes.
+     */
     public void goPrev() {
         if (canGoPrev()) {
             leftIndex -= 2;

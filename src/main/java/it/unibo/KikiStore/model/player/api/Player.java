@@ -83,5 +83,5 @@ public interface Player {
      * 
      * @param input the InputHandler providing the current state of the keys.
      */
-    void update(InputHandler input); 
+    void update(InputHandler input);
 }
