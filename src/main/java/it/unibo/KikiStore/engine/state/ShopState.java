@@ -2,26 +2,19 @@ package it.unibo.KikiStore.engine.state;
 
 import java.util.List;
 
+import it.unibo.KikiStore.controller.api.CraftingController;
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.controller.api.OrderController;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
-import it.unibo.KikiStore.controller.impl.InventoryControllerImpl;
-import it.unibo.KikiStore.controller.impl.OrderControllerImpl;
+import it.unibo.KikiStore.controller.impl.CraftingControllerImpl;
 import it.unibo.KikiStore.controller.impl.OrderSpawnerImpl;
-import it.unibo.KikiStore.controller.impl.RecipeBookControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.BookState;
-import it.unibo.KikiStore.model.economy.api.PotionPriceCalculator;
-import it.unibo.KikiStore.model.economy.impl.PotionPriceCalculatorImpl;
+import it.unibo.KikiStore.engine.impl.CraftingState;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
-import it.unibo.KikiStore.model.inventory.api.Inventory;
-import it.unibo.KikiStore.model.inventory.api.RecipeBook;
-import it.unibo.KikiStore.model.inventory.impl.GameCatalogImpl;
-import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
-import it.unibo.KikiStore.model.inventory.impl.RecipeBookImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
@@ -70,7 +63,28 @@ public final class ShopState implements GameState {
     private final int[][] maskGrid;
 
     private final OrderSpawnerImpl orderSpawner;
-    private final GameCatalog catalog = new GameCatalogImpl("ingredients.json", "potions.json");
+    private final GameCatalog catalog;
+    private final InventoryController inventoryController;
+    private final RecipeBookController recipeBookController;
+    private final OrderController orderController;
+ 
+    /*ora questi sono condivisi 
+    public void seedStarterInventory(final InventoryController inventoryController, final GameCatalog catalog) {
+        inventoryController.addIngredient("Chamomile", "sprites/ingredients/chamomile", 3, "flower", 3);
+        inventoryController.addIngredient("Clover", "sprites/ingredients/clover", 2, "plant", 12);
+        inventoryController.addIngredient("Blue Berries", "sprites/ingredients/blue_berries", 4, "berry", 7);
+        inventoryController.addIngredient("Basil", "sprites/ingredients/basil", 2, "plant", 2);
+        inventoryController.addPotion("Shieldberry Potion", "sprites/potions/shieldberry", 1,
+                "Smells of dark berries and white blossoms, keeps colds and coughs at bay",
+                "immunity", false);
+    }
+
+    public void unlockStarterRecipes(final RecipeBookController recipeBookController) {
+        final List<Recipe> allRecipes = recipeBookController.getAllRecipes();
+        for (int i = 0; i < Math.min(3, allRecipes.size()); i++) {
+            recipeBookController.unlockRecipe(allRecipes.get(i));
+        }
+    }*/
     // accessible for update method 
     /**
      * Constructs a ShopState with the required controller systems and loads map resources.
@@ -78,11 +92,15 @@ public final class ShopState implements GameState {
      * @param transitionController is used to switch from one state to another
      * @param input  controls every input from the player
      */
-    public ShopState(final GameStateTransition transitionController, final InputHandler input) {
+    public ShopState(final GameStateTransition transitionController, final InputHandler input, final GameSession gameSession) {
         this.transitionController = transitionController;
         this.input = input;
+        this.catalog = gameSession.getCatalog();
+        this.inventoryController = gameSession.getInventoryController();
+        this.recipeBookController = gameSession.getRecipeBookController();
+        this.orderController = gameSession.getOrderController();
 
-        final CustomerBook customerBook = new CustomerBookImpl("customers.json", catalog);
+        final CustomerBook customerBook = new CustomerBookImpl("customers.json", this.catalog);
         final NeedBook needBook = new NeedBookImpl("needs.json");
         final NeedGenerator needGenerator = new NeedGeneratorImpl(needBook);
         final OrderGenerator orderGenerator = new OrderGeneratorImpl(customerBook, needGenerator);
@@ -106,8 +124,10 @@ public final class ShopState implements GameState {
         collisionHandler = new CollisionHandler(collisionMap);
 
         // Initialize the player and inject the collision logic
-        this.kiki = new PlayerImpl(PLAYER_X, PLAYER_Y);
-        this.kiki.setCollisionHandler(collisionHandler); 
+        this.kiki = gameSession.getPlayer();
+        this.kiki.setCollisionHandler(collisionHandler);
+        this.kiki.setX(PLAYER_X);
+        this.kiki.setY(PLAYER_Y);
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
@@ -129,23 +149,36 @@ public final class ShopState implements GameState {
             transitionController.popState();
         }
         if (tileId == 3 && input.isAction()) {
-            // Open the real BookState and return to this ShopState when closed
-            final OrderBook orderBook = new OrderBookImpl();
-            final RecipeBook recipeBook = new RecipeBookImpl("recipes.json");
-            final PotionPriceCalculator priceCalculator=new PotionPriceCalculatorImpl(5);
-            final Inventory inventory = new InventoryImpl();
-            final InventoryController inventoryController = new InventoryControllerImpl();
-            final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook, inventoryController);
-            final OrderController orderController = new OrderControllerImpl(orderBook, recipeBook, inventory, kiki, priceCalculator);
             final GameStateManager gsm = (GameStateManager) this.transitionController;
             final BookState bookState = new BookState(
-                inventoryController, recipeBookController, orderController, catalog,
-                spriteManager, gsm, this, input
+                this.inventoryController,
+                this.recipeBookController,
+                this.orderController,
+                this.catalog,
+                this.spriteManager,
+                gsm,
+                this,
+                this.input
             );
             transitionController.pushState(bookState);
         }
         if (tileId == 4 && input.isAction()) {
-            System.out.println("Interacting with the shopkeeper!");
+            final GameStateManager gsm = (GameStateManager) this.transitionController;
+            final CraftingController craftingController = new CraftingControllerImpl(
+                    this.inventoryController,
+                    this.recipeBookController
+            );
+            final GameState craftingState = new CraftingState(
+                    this.inventoryController,
+                    craftingController,
+                    this.recipeBookController,
+                    this.catalog,
+                    this.spriteManager,
+                    gsm,
+                    this,
+                    this.input
+            );
+            transitionController.pushState(craftingState);
         }
     }
 

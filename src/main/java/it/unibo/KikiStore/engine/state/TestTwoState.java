@@ -1,12 +1,14 @@
 package it.unibo.KikiStore.engine.state;
 
+import java.util.List;
+
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
+import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
-import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
@@ -16,8 +18,6 @@ import it.unibo.KikiStore.view.utility.Camera;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
-import java.util.List;
 
 /**
  * Concrete implementation of GameState used to test the integration of 
@@ -82,7 +82,8 @@ public final class TestTwoState implements GameState {
 
         final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
-            final GameState newState = new TestState(transitionController, input);
+            final GameSession session = GameSession.createStarterSession();
+            final GameState newState = new TestState(transitionController, input, session);
             transitionController.pushState(newState);
         }
     }

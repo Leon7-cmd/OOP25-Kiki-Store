@@ -33,6 +33,7 @@ public final class TestState implements GameState {
 
     private final InputHandler input;
     private final PlayerImpl kiki; 
+    private final GameSession gameSession;
 
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
@@ -54,9 +55,10 @@ public final class TestState implements GameState {
      * @param transitionController is used to switch from one state to another
      * @param input  controls every input from the player
      */
-    public TestState(final GameStateTransition transitionController, final InputHandler input) {
+    public TestState(final GameStateTransition transitionController, final InputHandler input, final GameSession gameSession) {
         this.transitionController = transitionController;
         this.input = input;
+        this.gameSession = gameSession;
 
         // --- 1. RESOURCE LOADING ---
         this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
@@ -99,8 +101,7 @@ public final class TestState implements GameState {
             transitionController.pushState(new MinigameFly(transitionController, input));
         }
         if (tileId == 5 && input.isAction()) {
-            System.err.println("heyyyyyy");
-            transitionController.pushState(new ShopState(transitionController, input));
+            transitionController.pushState(new ShopState(transitionController, input, gameSession));
         }
     }
 

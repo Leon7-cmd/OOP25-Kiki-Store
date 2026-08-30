@@ -6,17 +6,18 @@ import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
+import it.unibo.KikiStore.engine.state.GameSession;
 import it.unibo.KikiStore.engine.state.TestState;
 import it.unibo.KikiStore.view.hud.impl.HUDRenderer;
 import it.unibo.KikiStore.view.menu.impl.InitialScreenViewImpl;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -65,8 +66,8 @@ public class StageInitializer {
      */
     public void init(final Stage stage) {
         final Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-        final double screenWidth = screenBounds.getWidth();
-        final double screenHeight = screenBounds.getHeight();
+        final double screenWidth = screenBounds.getWidth()*0.50;
+        final double screenHeight = screenBounds.getHeight()*0.60;
 
         // 1. Canvas setup
         final StackPane root = new StackPane();
@@ -76,13 +77,14 @@ public class StageInitializer {
         
 
         // 2. Initialization of the logical architecture
-        final GameStateManager gsm = new GameStateManagerImpl();
-        final SpriteManager spriteManager = new SpriteManager();
-        final HUDRenderer hudRenderer = new HUDRenderer(spriteManager);
-        final InputHandlerImpl inputHandler = new InputHandlerImpl(scene, hudRenderer, gsm, (GameStateTransition) gsm, canvas);
+        final GameStateManager gsm = new GameStateManagerImpl();//
+        final SpriteManager spriteManager = new SpriteManager();//
+        final HUDRenderer hudRenderer = new HUDRenderer(spriteManager);//
+        final InputHandlerImpl inputHandler = new InputHandlerImpl(scene);
     
 
-        gsm.setState(new TestState((GameStateTransition) gsm, inputHandler));
+        final GameSession gameSession = GameSession.createStarterSession();
+        gsm.setState(new TestState((GameStateTransition) gsm, inputHandler, gameSession));
 
         // Use TestState as initial game state. BookTestState was used for testing
         // and would replace the TestState causing the book to open on New Game.
@@ -92,9 +94,9 @@ public class StageInitializer {
         // 4. Final configuration of the OS window
         stage.setTitle("Kiki's Store - Game");
         stage.setScene(scene);
-        // stage.setResizable(false);
-        stage.setFullScreenExitHint("");
-        stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);
+        stage.setResizable(false);
+        stage.setFullScreenExitHint("");//
+        stage.setFullScreenExitKeyCombination(javafx.scene.input.KeyCombination.NO_MATCH);//
 
         stage.show();
 

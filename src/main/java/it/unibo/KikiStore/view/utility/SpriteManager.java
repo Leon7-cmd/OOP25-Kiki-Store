@@ -1,9 +1,10 @@
 package it.unibo.KikiStore.view.utility;
 
-import javafx.scene.image.Image;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import javafx.scene.image.Image;
 
 /**
  * A centralized manager for graphical assets.
@@ -21,7 +22,7 @@ public class SpriteManager {
      * @param spriteId The path/identifier of the sprite resource.
      * @return The Image object, or null if the resource is missing.
      */
-    public Image getStaticSprite(String spriteId) {
+    public Image getStaticSprite(final String spriteId) {
         return loadFromCacheOrDisk(spriteId);
     }
 
@@ -31,7 +32,7 @@ public class SpriteManager {
      * @param entityId The path/identifier of the entity's sprite sheet.
      * @return The Image object containing the full sheet, or null if missing.
      */
-    public Image getSpriteSheet(String entityId) {
+    public Image getSpriteSheet(final String entityId) {
         return loadFromCacheOrDisk(entityId);
     }
 
@@ -42,7 +43,7 @@ public class SpriteManager {
      * @param spriteId The identifier used as the filename (without extension).
      * @return The loaded Image or null.
      */
-    private Image loadFromCacheOrDisk(String spriteId) {
+    private Image loadFromCacheOrDisk(final String spriteId) {
         // 1. Memory Check: Return the image immediately if it's already in the HashMap
         if (cache.containsKey(spriteId)) {
             return cache.get(spriteId);
@@ -62,7 +63,7 @@ public class SpriteManager {
         }
 
         // 4. Loading & Storage: Create the JavaFX Image and store it for future use
-        Image image = new Image(stream);
+        final Image image = new Image(stream);
         cache.put(spriteId, image);
         return image;
     }
