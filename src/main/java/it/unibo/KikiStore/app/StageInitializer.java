@@ -82,14 +82,14 @@ public class StageInitializer {
         final HUDRenderer hudRenderer = new HUDRenderer(spriteManager);//
         final InputHandlerImpl inputHandler = new InputHandlerImpl(scene);
     
-
         final GameSession gameSession = GameSession.createStarterSession();
+         
         gsm.setState(new TestState((GameStateTransition) gsm, inputHandler, gameSession));
 
         // Use TestState as initial game state. BookTestState was used for testing
         // and would replace the TestState causing the book to open on New Game.
         // 3. GameEngine creation
-        final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
+        final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight,gameSession.getOrderSpawner());
 
         // 4. Final configuration of the OS window
         stage.setTitle("Kiki's Store - Game");

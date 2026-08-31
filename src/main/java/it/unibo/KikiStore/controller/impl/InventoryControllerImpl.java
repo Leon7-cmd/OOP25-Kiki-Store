@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InventoryController;
-import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
-import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
-import it.unibo.KikiStore.model.item.api.GameItem;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
+import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
+import it.unibo.KikiStore.model.inventory.impl.PotionImpl;
+import it.unibo.KikiStore.model.item.api.GameItem;
 
 /**
  * Manages the player's inventory - adding, removing, and querying
@@ -18,12 +17,13 @@ import it.unibo.KikiStore.model.inventory.api.Recipe;
  */
 public final class InventoryControllerImpl implements InventoryController {
     private static final int MAX_CAPACITY = 50;
-    private final Inventory inventory = new InventoryImpl();
+    private final Inventory inventory;
 
     /**
-     * Creates an empty inventory controller.
+     * @param inventory the shared inventory this controller operates on
      */
-    public InventoryControllerImpl() {
+    public InventoryControllerImpl(final Inventory inventory) {
+        this.inventory = inventory;
     }
 
     @Override

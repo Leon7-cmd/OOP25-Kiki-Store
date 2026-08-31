@@ -1,5 +1,6 @@
 package it.unibo.KikiStore.engine.impl;
 
+import it.unibo.KikiStore.controller.api.OrderSpawner;
 import it.unibo.KikiStore.engine.api.GameEngine;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import javafx.animation.AnimationTimer;
@@ -15,6 +16,7 @@ public class GameEngineImpl implements GameEngine {
     private final GameStateManager gsm;
     private final GraphicsContext gc;
     private AnimationTimer loop;
+    private final OrderSpawner orderSpawner;
 
     private final double width;
     private final double height;
@@ -26,13 +28,15 @@ public class GameEngineImpl implements GameEngine {
      * @param gc     The GraphicsContext of the Canvas to draw frames on.
      * @param width  The dynamic width of the game screen.
      * @param height The dynamic height of the game screen.
+     * @param orderSpawner The order spawner.
      */
     public GameEngineImpl(final GameStateManager gsm, final GraphicsContext gc, final double width,
-            final double height) {
+            final double height, final OrderSpawner orderSpawner) {
         this.gsm = gsm;
         this.gc = gc;
         this.width = width;
         this.height = height;
+        this.orderSpawner = orderSpawner;
         initLoop();
     }
 
@@ -44,6 +48,7 @@ public class GameEngineImpl implements GameEngine {
         this.loop = new AnimationTimer() {
             @Override
             public void handle(final long now) {
+                orderSpawner.update();// Update the order spawner logic wherever you are (for now)
                 gsm.update();
                 gc.clearRect(0, 0, width, height);
                 gsm.render(gc);

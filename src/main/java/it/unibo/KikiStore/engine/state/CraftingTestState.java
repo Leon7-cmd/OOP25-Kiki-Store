@@ -11,6 +11,7 @@ import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.impl.CraftingState;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
+import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 import it.unibo.KikiStore.model.inventory.impl.GameCatalogImpl;
 import it.unibo.KikiStore.model.inventory.impl.RecipeBookImpl;
@@ -48,7 +49,8 @@ public final class CraftingTestState implements GameState {
                         initialized = true;
 
                         final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json");
-                        final InventoryController inventoryController = new InventoryControllerImpl();
+                        final Inventory inventory = GameSession.createStarterSession().getInventory();
+                        final InventoryController inventoryController = new InventoryControllerImpl(inventory);
                         final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook,
                                         inventoryController);
 

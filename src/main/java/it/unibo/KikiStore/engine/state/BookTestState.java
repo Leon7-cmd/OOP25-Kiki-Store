@@ -19,7 +19,6 @@ import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
 import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 import it.unibo.KikiStore.model.inventory.impl.GameCatalogImpl;
-import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
 import it.unibo.KikiStore.model.inventory.impl.RecipeBookImpl;
 import it.unibo.KikiStore.model.order.api.OrderBook;
 import it.unibo.KikiStore.model.order.impl.OrderBookImpl;
@@ -60,11 +59,11 @@ public final class BookTestState implements GameState {
             final Player player = new PlayerImpl(35,64);
             final OrderBook orderBook = new OrderBookImpl();
             final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json");
-            final InventoryController inventoryController = new InventoryControllerImpl();
+            final Inventory inventory = GameSession.createStarterSession().getInventory();
+            final InventoryController inventoryController = new InventoryControllerImpl(inventory);
             final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook,
                     inventoryController);
             final PotionPriceCalculator priceCalculator=new PotionPriceCalculatorImpl(5);
-            final Inventory inventory = new InventoryImpl();
             final OrderController orderController = new OrderControllerImpl(orderBook,recipeBook,inventory,player,priceCalculator);
             final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
             final SpriteManager spriteManager = new SpriteManager();

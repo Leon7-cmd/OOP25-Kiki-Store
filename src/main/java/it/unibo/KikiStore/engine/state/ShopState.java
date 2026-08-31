@@ -8,7 +8,6 @@ import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.controller.api.OrderController;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
 import it.unibo.KikiStore.controller.impl.CraftingControllerImpl;
-import it.unibo.KikiStore.controller.impl.OrderSpawnerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
@@ -19,16 +18,6 @@ import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
-import it.unibo.KikiStore.model.order.api.CustomerBook;
-import it.unibo.KikiStore.model.order.api.NeedBook;
-import it.unibo.KikiStore.model.order.api.NeedGenerator;
-import it.unibo.KikiStore.model.order.api.OrderBook;
-import it.unibo.KikiStore.model.order.api.OrderGenerator;
-import it.unibo.KikiStore.model.order.impl.CustomerBookImpl;
-import it.unibo.KikiStore.model.order.impl.NeedBookImpl;
-import it.unibo.KikiStore.model.order.impl.NeedGeneratorImpl;
-import it.unibo.KikiStore.model.order.impl.OrderBookImpl;
-import it.unibo.KikiStore.model.order.impl.OrderGeneratorImpl;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
@@ -62,7 +51,7 @@ public final class ShopState implements GameState {
     private final int[][] decorationGrid;
     private final int[][] maskGrid;
 
-    private final OrderSpawnerImpl orderSpawner;
+   /*  private final OrderSpawner orderSpawner;*/
     private final GameCatalog catalog;
     private final InventoryController inventoryController;
     private final RecipeBookController recipeBookController;
@@ -95,24 +84,26 @@ public final class ShopState implements GameState {
     public ShopState(final GameStateTransition transitionController, final InputHandler input, final GameSession gameSession) {
         this.transitionController = transitionController;
         this.input = input;
+        //catalog+inventoryController+recipeBookController+orderController are passed from GameSession to maintain state across game states
         this.catalog = gameSession.getCatalog();
         this.inventoryController = gameSession.getInventoryController();
         this.recipeBookController = gameSession.getRecipeBookController();
         this.orderController = gameSession.getOrderController();
+       /*  this.orderSpawner = gameSession.getOrderSpawner();*/ 
 
-        final CustomerBook customerBook = new CustomerBookImpl("customers.json", this.catalog);
+
+       /*  final CustomerBook customerBook = new CustomerBookImpl("customers.json", this.catalog);
         final NeedBook needBook = new NeedBookImpl("needs.json");
         final NeedGenerator needGenerator = new NeedGeneratorImpl(needBook);
         final OrderGenerator orderGenerator = new OrderGeneratorImpl(customerBook, needGenerator);
-        final OrderBook orderBook = new OrderBookImpl();
-
-        this.orderSpawner = new OrderSpawnerImpl(
-            orderGenerator, 
-            orderBook, 
+        ora in gamesession causa condivisione e orderspawn condiviso*/
+        /*this.orderSpawner = new OrderSpawnerImpl(
+            orderGenerator,
+            this.orderBook,
             300, // spawn interval in frames
             5,   // max pending orders
             1000 // reset threshold in frames
-        );
+        );*/
 
         // --- 1. RESOURCE LOADING ---
         this.groundGrid = MapLoader.loadMap("maps/shop/shopGround.txt");
@@ -142,7 +133,7 @@ public final class ShopState implements GameState {
     public void update() {
         kiki.update(input);
         frameCount++;
-        orderSpawner.update();
+
 
         final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
