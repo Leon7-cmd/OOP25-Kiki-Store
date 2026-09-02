@@ -1,13 +1,12 @@
 package it.unibo.KikiStore.engine.state;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
+import it.unibo.KikiStore.controller.impl.InventoryControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
-import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.impl.GameCatalogImpl;
-import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
 import it.unibo.KikiStore.model.item.api.Item;
 import it.unibo.KikiStore.model.item.api.ItemSpawner;
 import it.unibo.KikiStore.model.item.impl.ItemSpawnerImpl;
@@ -49,7 +48,7 @@ public final class TestState implements GameState {
 
     private final InputHandler input;
     private final PlayerImpl kiki; 
-    private final Inventory inventory;
+    private final InventoryControllerImpl inventory;
     private final ItemSpawner itemSpawner;
 
     private final GameStateTransition transitionController;
@@ -85,7 +84,7 @@ public final class TestState implements GameState {
         this.kiki.setCollisionHandler(collisionHandler); 
 
         // Inizializzazione inventario e catalogo
-        this.inventory = new InventoryImpl();
+        this.inventory = new InventoryControllerImpl();
         final GameCatalog catalog = new GameCatalogImpl(INGREDIENTS_PATH, POTIONS_PATH);
 
         // ItemSpawner riceve il catalogo e popola il mondo
@@ -117,7 +116,7 @@ public final class TestState implements GameState {
 
             // Stampa il contenuto attuale dell'inventario
             System.out.println("=== INVENTARIO ATTUALE ===");
-            for (final Ingredient ing : inventory.getIngredients()) {
+            for (final Ingredient ing : inventory.getInventory().getIngredients()) {
                 System.out.println(" - " + ing.getName() + " | Quantità: " + ing.getQuantity() + " | Tipo: " + ing.getType());
             }
             System.out.println("==========================");

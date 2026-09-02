@@ -9,8 +9,8 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
+import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
-import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
 import it.unibo.KikiStore.model.item.api.Item;
 import it.unibo.KikiStore.model.item.api.ItemSpawner;
@@ -138,7 +138,7 @@ public final class ItemSpawnerImpl implements ItemSpawner {
     }
 
     @Override
-    public List<Item> checkCollection(final Player player, final Inventory inventory) {
+    public List<Item> checkCollection(final Player player, final InventoryController inventory) {
         Objects.requireNonNull(player, "Player cannot be null");
         final List<Item> collected = new ArrayList<>();
         final Rectangle2D playerHitbox = player.getHitbox();
@@ -150,7 +150,12 @@ public final class ItemSpawnerImpl implements ItemSpawner {
             if (item.getHitbox().intersects(playerHitbox)) {
                 collected.add(item);
                 if (inventory != null && item instanceof GroundItem groundItem) {
-                    inventory.addIngredient(groundItem.getIngredient());
+                    inventory.addIngredient(
+                        groundItem.getIngredient().getName(), 
+                        groundItem.getIngredient().getImagePath(), 
+                        groundItem.getQuantity(), 
+                        groundItem.getIngredient().getType()
+                    );
                 }
                 iterator.remove();
             }

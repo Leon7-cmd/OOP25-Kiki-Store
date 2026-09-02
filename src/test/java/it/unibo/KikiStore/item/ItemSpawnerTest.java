@@ -10,10 +10,9 @@ import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import it.unibo.KikiStore.controller.impl.InventoryControllerImpl;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
-import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
 import it.unibo.KikiStore.model.item.api.Item;
 import it.unibo.KikiStore.model.item.api.ItemSpawner;
 import it.unibo.KikiStore.model.item.impl.ItemSpawnerImpl;
@@ -24,7 +23,7 @@ public class ItemSpawnerTest {
 
     private static final int TILE_SIZE = 32;
 
-    private Inventory inventory;
+    private InventoryControllerImpl inventory;
     private List<Ingredient> samplePool;
     private GameTile testMap;
 
@@ -36,7 +35,7 @@ public class ItemSpawnerTest {
 
     @BeforeEach
     public void setUp() {
-        this.inventory = new InventoryImpl();
+        this.inventory = new InventoryControllerImpl();
         this.samplePool = List.of(new IngredientImpl("Aloe", "sprites/ingredients/aloe", 1, "plant"));
         this.testMap = createTileMap(DEFAULT_GRID);
     }
@@ -105,8 +104,8 @@ public class ItemSpawnerTest {
 
         assertEquals(1, collected.size());
         assertTrue(spawner.getActiveItems().isEmpty());
-        assertEquals(1, inventory.getIngredients().size());
-        assertEquals("Aloe", inventory.getIngredients().get(0).getName());
+        assertEquals(1, inventory.getInventory().getIngredients().size());
+        assertEquals("Aloe", inventory.getInventory().getIngredients().get(0).getName());
     }
 
     @Test

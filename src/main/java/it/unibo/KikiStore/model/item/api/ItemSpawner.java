@@ -1,7 +1,8 @@
 package it.unibo.KikiStore.model.item.api;
 
 import java.util.List;
-import it.unibo.KikiStore.model.inventory.api.Inventory;
+
+import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.model.player.api.Player;
 
 /**
@@ -29,7 +30,7 @@ public interface ItemSpawner {
      * @param inventory the player's inventory.
      * @return the list of items collected during this check.
      */
-    List<Item> checkCollection(Player player, Inventory inventory);
+    List<Item> checkCollection(Player player, InventoryController inventory);
 
     /**
      * @return the list of active items currently present in the world.
