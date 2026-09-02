@@ -33,7 +33,7 @@ public interface ItemSpawner {
     List<Item> checkCollection(Player player, InventoryController inventory);
 
     /**
-     * @return the list of active items currently present in the world.
+     * @return the list of active items currently in the world.
      */
     List<Item> getActiveItems();
 }

@@ -53,7 +53,7 @@ public final class ItemSpawnerImpl implements ItemSpawner {
      *
      * @param collisionMask  the map mask used to verify walkable tiles.
      * @param ingredientPool available ingredients to spawn randomly from.
-     * @param random         random instance for deterministic testing.
+     * @param random         random instance for testing.
      */
     public ItemSpawnerImpl(
         final GameTile collisionMask,

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
@@ -32,7 +31,6 @@ public class GroundItemTest {
     }
 
     @Test
-    @DisplayName("GroundItem correctly reflects position, bounds and ingredient attributes")
     public void testGroundItemAttributes() {
         assertEquals(ID, groundItem.getId());
         assertEquals(X, groundItem.getX());
@@ -45,7 +43,6 @@ public class GroundItemTest {
     }
 
     @Test
-    @DisplayName("GroundItem generates a matching Rectangle2D hitbox")
     public void testGroundItemHitbox() {
         final Rectangle2D hitbox = groundItem.getHitbox();
         assertNotNull(hitbox);
@@ -56,7 +53,6 @@ public class GroundItemTest {
     }
 
     @Test
-    @DisplayName("getIngredient returns the exact encapsulated ingredient instance")
     public void testPayloadRetrieval() {
         final Ingredient payload = groundItem.getIngredient();
         assertNotNull(payload);

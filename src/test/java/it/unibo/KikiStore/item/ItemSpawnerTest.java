@@ -36,7 +36,7 @@ public class ItemSpawnerTest {
     @BeforeEach
     public void setUp() {
         this.inventory = new InventoryControllerImpl();
-        this.samplePool = List.of(new IngredientImpl("Aloe", "sprites/ingredients/aloe", 1, "plant"));
+        this.samplePool = List.of(new IngredientImpl("Aloe", "sprites/ingredients/aloe", 2, "plant"));
         this.testMap = createTileMap(DEFAULT_GRID);
     }
 

@@ -5,7 +5,7 @@ import java.util.Objects;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 
 /**
- * Concrete entity representing an ingredient placed in the game world.
+ * Entity representing an ingredient placed in the game world.
  */
 public final class GroundItem extends AbstractItemImpl {
 
@@ -45,7 +45,7 @@ public final class GroundItem extends AbstractItemImpl {
     }
 
     /**
-     * Retrieves the underlying ingredient to add to the inventory.
+     * Retrieves the ingredient to add to the inventory.
      *
      * @return the encapsulated {@link Ingredient}.
      */
