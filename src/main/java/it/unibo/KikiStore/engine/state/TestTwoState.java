@@ -1,12 +1,14 @@
 package it.unibo.KikiStore.engine.state;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
+import it.unibo.KikiStore.controller.impl.PlayerControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
 import it.unibo.KikiStore.model.map.api.GameTile;
+import it.unibo.KikiStore.model.player.api.Player;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
@@ -27,7 +29,8 @@ public final class TestTwoState implements GameState {
     private static final int PLAYER_X = 220;
     private static final int PLAYER_Y = 220;
     private final InputHandler input;
-    private final PlayerImpl kiki; 
+    private final Player kiki; 
+    private final PlayerControllerImpl kikiController;
 
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
@@ -47,8 +50,9 @@ public final class TestTwoState implements GameState {
      * 
      * @param transitionController is used to switch from one state to another
      * @param input  controls every input from the player
+     * @param kiki the shared player model instance
      */
-    public TestTwoState(final GameStateTransition transitionController, final InputHandler input) {
+    public TestTwoState(final GameStateTransition transitionController, final InputHandler input, final Player kiki) {
         this.transitionController = transitionController;
         this.input = input;
 
@@ -65,6 +69,7 @@ public final class TestTwoState implements GameState {
         // Initialize the player and inject the collision logic
         this.kiki = new PlayerImpl(PLAYER_X, PLAYER_Y);
         this.kiki.setCollisionHandler(collisionHandler); 
+        this.kikiController = new PlayerControllerImpl(this.kiki, input);
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
@@ -77,13 +82,12 @@ public final class TestTwoState implements GameState {
 
     @Override
     public void update() {
-        kiki.update(input);
+        kikiController.update();
         frameCount++;
 
         final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
         if (tileId == 2 && input.isAction()) {
-            final GameState newState = new TestState(transitionController, input);
-            transitionController.pushState(newState);
+            transitionController.popState();
         }
     }
 
@@ -111,5 +115,15 @@ public final class TestTwoState implements GameState {
         environmentRenderer.render(gc, new MapRenderData(upperGrid, 32));
 
         gc.restore(); 
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
     }
 }

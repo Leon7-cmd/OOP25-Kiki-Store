@@ -3,13 +3,14 @@ package it.unibo.KikiStore.engine.state;
 import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
+import it.unibo.KikiStore.controller.impl.PlayerControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.model.map.api.GameTile;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.map.impl.MapLoader;
 import it.unibo.KikiStore.model.map.impl.TileMapImpl;
-import it.unibo.KikiStore.model.player.impl.PlayerImpl;
+import it.unibo.KikiStore.model.player.api.Player;
 import it.unibo.KikiStore.view.entity.api.EntityRenderData;
 import it.unibo.KikiStore.view.entity.impl.EntityRenderer;
 import it.unibo.KikiStore.view.environment.api.MapRenderData;
@@ -41,7 +42,8 @@ public final class MinigameFly implements GameState {
     private boolean gameEnd;
 
     private final InputHandler input;
-    private final PlayerImpl kiki; 
+    private final Player kiki; 
+    private final PlayerControllerImpl kikiController;
 
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
@@ -61,8 +63,9 @@ public final class MinigameFly implements GameState {
      * 
      * @param transitionController handles state popping and switching
      * @param input manages player controls
+     * @param kiki the shared player model instance
      */
-    public MinigameFly(final GameStateTransition transitionController, final InputHandler input) {
+    public MinigameFly(final GameStateTransition transitionController, final InputHandler input, final Player kiki) {
         this.transitionController = transitionController;
         this.input = input;
 
@@ -76,8 +79,8 @@ public final class MinigameFly implements GameState {
         collisionHandler = new CollisionHandler(collisionMap);
 
         // Initialize the player and inject the collision logic
-        this.kiki = new PlayerImpl(PLAYER_X, PLAYER_Y);
-        this.kiki.setCollisionHandler(collisionHandler); 
+        this.kiki = kiki;
+        this.kikiController = new PlayerControllerImpl(this.kiki, input);
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = new SpriteManager();
@@ -87,7 +90,11 @@ public final class MinigameFly implements GameState {
     }
 
     @Override
-    public void init() { }
+    public void init() {
+        this.kiki.setX(PLAYER_X);
+        this.kiki.setY(PLAYER_Y);
+        this.kiki.setCollisionHandler(this.collisionHandler);
+    }
 
     @Override
     public void update() {
@@ -98,7 +105,7 @@ public final class MinigameFly implements GameState {
 
         // GAME END and START CHECK
         if (gameStart && !gameEnd) {
-            kiki.update(input);
+            kikiController.update();
         }
         if (input.isAction() && !gameEnd) {
             gameStart = true;
@@ -108,7 +115,7 @@ public final class MinigameFly implements GameState {
         if (tileId == INTERACTABLE_END_TILE_ID && !gameEnd) {
             gameEnd = true;
             gameStart = false;
-            kiki.setMoney(kiki.getMoney() + REWARD);
+            kiki.addMoney(REWARD);
         }
 
         // OUT OF BOUNDS CHECK
@@ -116,6 +123,7 @@ public final class MinigameFly implements GameState {
             kiki.setX(cam.getX() + cam.getW() - TILE_SIZE);
         }
         if (kiki.getX() < cam.getX() - PLAYER_SIZE || gameEnd && input.isAction()) {
+            input.resetAction();
             transitionController.popState();
         }
     }
@@ -159,5 +167,15 @@ public final class MinigameFly implements GameState {
         // --- HUD ---
         final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), 5, kiki.getMoney());
         hudRenderer.render(gc, hudData);
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
     }
 }

@@ -13,22 +13,36 @@ import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Unit tests for {@link GameStateManagerImpl}.
- * Verifies state stack management, state lifecycles, and transition progression.
+ * Verifies state stack behavior, lifecycle hooks (init, pause, resume), and update propagation.
  */
 class GameStateManagerTest {
 
     private GameStateManagerImpl gsm;
 
     /**
-     * Fake implementation of GameState to track lifecycle calls.
+     * Fake implementation of GameState tracking lifecycle events and updates.
      */
     private static final class DummyState implements GameState {
         private boolean initialized;
+        private boolean paused;
+        private boolean resumed;
         private int updateCount;
 
         @Override
         public void init() {
             this.initialized = true;
+        }
+
+        @Override
+        public void pause() {
+            this.paused = true;
+            this.resumed = false;
+        }
+
+        @Override
+        public void resume() {
+            this.resumed = true;
+            this.paused = false;
         }
 
         @Override
@@ -38,23 +52,37 @@ class GameStateManagerTest {
 
         @Override
         public void render(final GraphicsContext gc) {
-            // Not tested in headless unit tests
+            // Not evaluated in headless unit tests
         }
 
         public boolean isInitialized() {
-            return initialized;
+            return this.initialized;
+        }
+
+        public boolean isPaused() {
+            return this.paused;
+        }
+
+        public boolean isResumed() {
+            return this.resumed;
         }
 
         public int getUpdateCount() {
-            return updateCount;
+            return this.updateCount;
         }
     }
 
+    /**
+     * Prepares an empty GameStateManager instance before each test.
+     */
     @BeforeEach
     void setUp() {
         gsm = new GameStateManagerImpl();
     }
 
+    /**
+     * Verifies that pushing onto an empty stack activates and initializes the state immediately.
+     */
     @Test
     void testInitialPushStateWhenEmpty() {
         final DummyState state = new DummyState();
@@ -64,6 +92,9 @@ class GameStateManagerTest {
         assertTrue(state.isInitialized());
     }
 
+    /**
+     * Verifies that update cycles propagate exclusively to the currently active top-level state.
+     */
     @Test
     void testUpdatePropagatesToCurrentState() {
         final DummyState state = new DummyState();
@@ -75,49 +106,68 @@ class GameStateManagerTest {
         assertEquals(2, state.getUpdateCount());
     }
 
+    /**
+     * Verifies that pushing a new state pauses the previous one and activates the new one.
+     */
     @Test
-    void testPushStateWithTransitionSequence() {
+    void testPushStatePausesPreviousAndActivatesNew() {
         final DummyState firstState = new DummyState();
         final DummyState secondState = new DummyState();
 
         gsm.pushState(firstState);
-
-        // Request transition to second state
         gsm.pushState(secondState);
-        assertSame(firstState, gsm.getCurrentState());
 
-        // Advance updates to complete fade-in and trigger the state switch
-        // (FADE_SPEED = 0.05, reaches 1.0 in more or less 20 updates)
-        for (int i = 0; i < 25; i++) {
-            gsm.update();
-        }
-
-        assertSame(secondState, gsm.getCurrentState());
+        // Previous state is paused; new state is initialized and set active
+        assertTrue(firstState.isPaused());
         assertTrue(secondState.isInitialized());
+        assertSame(secondState, gsm.getCurrentState());
+
+        // Updates now only hit the top state
+        gsm.update();
+        assertEquals(0, firstState.getUpdateCount());
+        assertEquals(1, secondState.getUpdateCount());
     }
 
+    /**
+     * Verifies that popping a state resumes the underlying state and restores it as active.
+     */
     @Test
-    void testPopStateTransitionsBackToPreviousState() {
+    void testPopStateResumesPreviousState() {
         final DummyState baseState = new DummyState();
         final DummyState overlayState = new DummyState();
 
         gsm.pushState(baseState);
-
-        // Transition to overlay state
         gsm.pushState(overlayState);
-        for (int i = 0; i < 45; i++) {
-            gsm.update();
-        }
         assertSame(overlayState, gsm.getCurrentState());
 
-        // Trigger pop
+        // Pop overlay state
         gsm.popState();
 
-        // Advance updates to complete pop transition
-        for (int i = 0; i < 45; i++) {
-            gsm.update();
-        }
-
+        // Underlying state is restored and resumed
         assertSame(baseState, gsm.getCurrentState());
+        assertTrue(baseState.isResumed());
+
+        // Subsequent updates hit the resumed base state
+        gsm.update();
+        assertEquals(1, baseState.getUpdateCount());
+    }
+
+    /**
+     * Verifies that setState clears existing stack history and establishes a clean top-level state.
+     */
+    @Test
+    void testSetStateClearsStack() {
+        final DummyState firstState = new DummyState();
+        final DummyState replacementState = new DummyState();
+
+        gsm.pushState(firstState);
+        gsm.setState(replacementState);
+
+        assertSame(replacementState, gsm.getCurrentState());
+        assertTrue(replacementState.isInitialized());
+
+        // Popping should leave the stack empty
+        gsm.popState();
+        assertEquals(null, gsm.getCurrentState());
     }
 }

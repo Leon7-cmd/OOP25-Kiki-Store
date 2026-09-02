@@ -80,4 +80,9 @@ public final class InputHandlerImpl implements InputHandler {
     @Override public boolean isAction() { 
         return action; 
     }
+
+    @Override
+    public void resetAction() {
+        this.action = false;
+    }
 }

@@ -1,82 +1,104 @@
 package it.unibo.KikiStore.model.player.api;
 
-import it.unibo.KikiStore.controller.api.InputHandler;
+import it.unibo.KikiStore.model.map.impl.CollisionHandler;
+import javafx.geometry.Rectangle2D;
 
 /**
- * Interface representing the player entity.
- * It manages the player's positioning, orientation, and logical updates.
+ * Logical model representing the playable character.
  */
 public interface Player {
 
     /**
-     * @return the current ammount of money for the player.
+     * Attempts to move the player by the given directional delta.
+     *
+     * @param dx horizontal intent (-1 for left, +1 for right, 0 for none).
+     * @param dy vertical intent (-1 for up, +1 for down, 0 for none).
      */
-    int getMoney();
+    void move(double dx, double dy);
 
     /**
-     * Set a new ammount of money.
-     * 
-     * @param newMoney new ammount of money for the player.
-     */
-    void setMoney(int newMoney);
-
-    /**
-     * @return the current ammount of money for the player.
-     */
-    int getEnergy();
-
-    /**
-     * Set a new ammount of energy.
-     * 
-     * @param newEnergy new ammount of energy for the player.
-     */
-    void setEnergy(int newEnergy);
-
-    /**
-     * @return the current X-coordinate of the player.
+     * @return current world X position in pixels.
      */
     double getX();
 
     /**
-     * Set a new value for the X-coordinate.
-     * 
-     * @param newX new X-coordinate value of the player.
-     */
-    void setX(double newX);
-
-    /**
-     * @return the current Y-coordinate of the player.
+     * @return current world Y position in pixels.
      */
     double getY();
 
     /**
-     * Set a new value for the Y-coordinate.
-     * 
-     * @param newY new Y-coordinate value of the player.
+     * Sets the world X position.
+     *
+     * @param x new X coordinate.
      */
-    void setY(double newY);
+    void setX(double x);
 
     /**
-     * Retrieves the current facing direction of the player.
-     * Common values: "up", "down", "left", "right".
-     * 
-     * @return a String representing the player's orientation.
+     * Sets the world Y position.
+     *
+     * @param y new Y coordinate.
+     */
+    void setY(double y);
+
+    /**
+     * @return orientation string ("up", "down", "left", "right").
      */
     String getDirection();
 
     /**
-     * Retrieves the current animation or logical state of the player.
-     * Common values: "idle", "walking", "interacting".
-     * 
-     * @return a String representing the player's current behavior.
+     * @return animation state ("idle" or "walk").
      */
     String getState();
 
     /**
-     * Updates the player's logic (movement, state transitions) based on current input.
-     * This method is intended to be called once per frame by the Game Loop.
-     * 
-     * @param input the InputHandler providing the current state of the keys.
+     * @return player's current currency.
      */
-    void update(InputHandler input); 
+    int getMoney();
+
+    /**
+     * Adds the specified positive amount of currency.
+     *
+     * @param amount the money to add.
+     */
+    void addMoney(int amount);
+
+    /**
+     * Deducts currency if the player has sufficient funds.
+     *
+     * @param amount the money to spend.
+     * @return true if successful, false if insufficient funds.
+     */
+    boolean spendMoney(int amount);
+
+    /**
+     * @return player's current energy units.
+     */
+    int getEnergy();
+
+    /**
+     * Restores energy without exceeding the upper limit.
+     *
+     * @param amount the energy units to restore.
+     */
+    void restoreEnergy(int amount);
+
+    /**
+     * Consumes energy if the player has enough available.
+     *
+     * @param amount the energy units to consume.
+     * @return true if consumed successfully, false if insufficient energy.
+     */
+    boolean consumeEnergy(int amount);
+
+    /**
+     * @return the calculated bounding box used for collision detection.
+     */
+    Rectangle2D getHitbox();
+
+    /**
+     * Attaches or updates the collision handler for the current map.
+     *
+     * @param collisionHandler the collision engine to validate movement against.
+     */
+    void setCollisionHandler(CollisionHandler collisionHandler);
 }
