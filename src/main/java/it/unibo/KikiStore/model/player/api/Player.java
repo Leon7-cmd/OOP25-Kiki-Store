@@ -1,6 +1,7 @@
 package it.unibo.KikiStore.model.player.api;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
+import javafx.geometry.Rectangle2D;
 
 /**
  * Interface representing the player entity.
@@ -78,5 +79,7 @@ public interface Player {
      * 
      * @param input the InputHandler providing the current state of the keys.
      */
-    void update(InputHandler input); 
+    void update(InputHandler input);
+
+    Rectangle2D getHitbox(); 
 }

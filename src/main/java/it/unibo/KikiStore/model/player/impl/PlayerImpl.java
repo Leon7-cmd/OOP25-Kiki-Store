@@ -3,6 +3,7 @@ package it.unibo.KikiStore.model.player.impl;
 import it.unibo.KikiStore.controller.api.InputHandler;
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.player.api.Player;
+import javafx.geometry.Rectangle2D;
 
 /**
  * Implementation of Player.
@@ -143,5 +144,15 @@ public final class PlayerImpl implements Player {
 
     @Override public void setEnergy(final int newEnergy) {
         energy = newEnergy;
+    }
+
+    @Override
+    public Rectangle2D getHitbox() {
+        return new Rectangle2D(
+            x + HITBOX_OFFSET_X,
+            y + HITBOX_OFFSET_Y,
+            HITBOX_WIDTH,
+            HITBOX_HEIGHT
+        );
     }
 }
