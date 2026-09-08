@@ -1,5 +1,6 @@
 package it.unibo.KikiStore.engine.state;
 
+
 import java.util.List;
 
 import it.unibo.KikiStore.controller.api.InputHandler;
@@ -33,7 +34,7 @@ public final class TestState implements GameState {
 
     private final InputHandler input;
     private final PlayerImpl kiki; 
-    private final GameSession gameSession;
+    private final GameSession gameSession;// Shared game session across states by Aya
 
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
@@ -59,7 +60,7 @@ public final class TestState implements GameState {
     public TestState(final GameStateTransition transitionController, final InputHandler input, final GameSession gameSession) {
         this.transitionController = transitionController;
         this.input = input;
-        this.gameSession = gameSession;
+        this.gameSession = gameSession;// Shared game session across states by Aya,even in parameters
 
         // --- 1. RESOURCE LOADING ---
         this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
@@ -101,6 +102,7 @@ public final class TestState implements GameState {
         if (tileId == 4 && input.isAction()) {
             transitionController.pushState(new MinigameFly(transitionController, input));
         }
+        //here there is used the shared gameSession to pass it to the ShopState, so that the state of the game is maintained across different states
         if (tileId == 5 && input.isAction()) {
             transitionController.pushState(new ShopState(transitionController, input, gameSession));
         }
