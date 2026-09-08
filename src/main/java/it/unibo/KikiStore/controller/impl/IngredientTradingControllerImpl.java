@@ -51,7 +51,7 @@ public final class IngredientTradingControllerImpl implements ShopTradingControl
 
     @Override
     public int getSellPrice(final Ingredient item) {
-        return item.getPrice() / 2; // prezzo di vendita = metà del prezzo di acquisto, o usare la percentuale ..
+        return item.getPrice(); // prezzo di vendita
     }
 
     @Override

@@ -80,7 +80,7 @@ public final class ShopTradingState<T extends GameItem> implements GameState {
         }
 
         // Acquisto o Vendita
-        if (input.isAction()) {
+        if (input.consumeAction()) {
             executeTransaction();
         }
     }

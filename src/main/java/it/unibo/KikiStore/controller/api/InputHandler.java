@@ -18,4 +18,6 @@ public interface InputHandler {
     boolean isCancel();
 
     boolean isTab();
+
+    boolean consumeAction();
 }

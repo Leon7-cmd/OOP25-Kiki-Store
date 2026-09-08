@@ -15,8 +15,8 @@ public final class InputHandlerImpl implements InputHandler {
     private boolean left;
     private boolean right;
     private boolean action;
-    private boolean cancel;
-    private boolean tab;
+    private boolean cancel;//escape
+    private boolean tab;//tab
 
     /**
      * Constructor that attaches key listeners to the main application scene.
@@ -102,4 +102,15 @@ public final class InputHandlerImpl implements InputHandler {
     @Override public boolean isTab() {
         return tab;
     }
+    //note: added cancel and tab methods to handle ESC and TAB inputs
+    // In InputHandlerImpl:
+    //note: added consumeAction() method to consume the action input after it has been processed, preventing repeated actions from a single key press.
+    @Override
+    public boolean consumeAction() {
+        if (action) {
+            action = false; // Consuma l'evento, si riattiverà solo alla prossima pressione fisica
+            return true;
+        }
+        return false;
 }
+} 
