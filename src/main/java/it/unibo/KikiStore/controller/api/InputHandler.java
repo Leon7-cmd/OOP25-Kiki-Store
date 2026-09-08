@@ -14,4 +14,8 @@ public interface InputHandler {
     boolean isRight();
 
     boolean isAction();
+
+    boolean isCancel();
+
+    boolean isTab();
 }

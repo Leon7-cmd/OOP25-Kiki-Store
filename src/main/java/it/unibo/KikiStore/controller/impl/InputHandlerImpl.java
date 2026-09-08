@@ -15,6 +15,8 @@ public final class InputHandlerImpl implements InputHandler {
     private boolean left;
     private boolean right;
     private boolean action;
+    private boolean cancel;
+    private boolean tab;
 
     /**
      * Constructor that attaches key listeners to the main application scene.
@@ -39,6 +41,12 @@ public final class InputHandlerImpl implements InputHandler {
             if (code == KeyCode.E) {
                 action = true;
             }
+            if (code == KeyCode.ESCAPE) {
+                cancel = true;
+            }
+            if (code == KeyCode.TAB) {
+                tab = true;
+            }
         });
 
         scene.setOnKeyReleased(event -> {
@@ -57,6 +65,12 @@ public final class InputHandlerImpl implements InputHandler {
             }
             if (code == KeyCode.E) {
                 action = false;
+            }
+            if (code == KeyCode.ESCAPE) {
+                cancel = false;
+            }
+            if (code == KeyCode.TAB) {
+                tab = false;
             }
         });
     }
@@ -79,5 +93,13 @@ public final class InputHandlerImpl implements InputHandler {
 
     @Override public boolean isAction() { 
         return action; 
+    }
+
+    @Override public boolean isCancel() {
+        return cancel;
+    }
+
+    @Override public boolean isTab() {
+        return tab;
     }
 }

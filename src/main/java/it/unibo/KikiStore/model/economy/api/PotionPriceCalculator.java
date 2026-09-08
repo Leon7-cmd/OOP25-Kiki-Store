@@ -7,4 +7,6 @@ public interface PotionPriceCalculator {
 
     double getProfitMargin();
 
+    int calculatePrice(Recipe recipe);
+
 }

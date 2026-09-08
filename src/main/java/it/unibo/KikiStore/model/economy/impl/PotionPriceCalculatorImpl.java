@@ -26,6 +26,17 @@ public class PotionPriceCalculatorImpl implements PotionPriceCalculator {
         }
         return Math.max(price,0);
     }
+    @Override
+    public int calculatePrice(Recipe recipe) {
+        int cost = 0;
+
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            cost += ingredient.getPrice();
+        }
+
+        int price = (int) Math.round(cost * (1 + profitMargin));
+        return Math.max(price,0);
+    }
 
     @Override
     public double getProfitMargin() {

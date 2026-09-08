@@ -49,6 +49,7 @@ public final class TestState implements GameState {
     private final int[][] upperGrid;
     private final int[][] maskGrid;
 
+
     /**
      * Constructs a TestState with the required controller systems and loads map resources.
      * 
@@ -103,8 +104,17 @@ public final class TestState implements GameState {
         if (tileId == 5 && input.isAction()) {
             transitionController.pushState(new ShopState(transitionController, input, gameSession));
         }
+        if (tileId == 6 && input.isAction()) {//potion stand
+            transitionController.pushState(new Stand(transitionController, input, gameSession,tileId));
+        }
+        if (tileId == 7 && input.isAction()) {//ingredient stand
+            transitionController.pushState(new Stand(transitionController, input, gameSession,tileId));
+        }
+
     }
 
+     
+    
     @Override
     public void render(final GraphicsContext gc) {
         final double screenWidth = gc.getCanvas().getWidth(); 

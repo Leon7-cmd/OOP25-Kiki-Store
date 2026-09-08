@@ -42,6 +42,8 @@ public final class GameSession {
     private static final int MAX_PENDING_ORDERS = 5;
     private static final int SPAWN_RESET_THRESHOLD = 1000;
 
+
+
     private final PlayerImpl player;
     private final GameCatalog catalog;
     private final Inventory inventory;
@@ -55,6 +57,7 @@ public final class GameSession {
     private final NeedGenerator needGenerator;
     private final OrderGenerator orderGenerator;
     private final OrderSpawner orderSpawner;
+    private final PotionPriceCalculator priceCalculator;
 
     public static GameSession createStarterSession() {
         final PlayerImpl player = new PlayerImpl(870, 920);
@@ -79,7 +82,7 @@ public final class GameSession {
         unlockStarterRecipes(recipeBookController);
 
         return new GameSession(player, catalog, inventory, inventoryController, recipeBook, recipeBookController,
-                orderBook, orderController, needBook, customerBook, needGenerator, orderGenerator, orderSpawner);
+                priceCalculator, orderBook, orderController, needBook, customerBook, needGenerator, orderGenerator, orderSpawner);
     }
 
     public static void seedStarterInventory(final InventoryController inventoryController, final GameCatalog catalog) {
@@ -105,6 +108,7 @@ public final class GameSession {
             final InventoryController inventoryController,
             final RecipeBook recipeBook,
             final RecipeBookController recipeBookController,
+            final PotionPriceCalculator priceCalculator,
             final OrderBook orderBook,
             final OrderController orderController,
             final NeedBook needBook,
@@ -125,6 +129,7 @@ public final class GameSession {
         this.needGenerator = needGenerator;
         this.orderGenerator = orderGenerator;
         this.orderSpawner = orderSpawner;
+        this.priceCalculator = priceCalculator;
     }
 
     public PlayerImpl getPlayer() {
@@ -177,5 +182,9 @@ public final class GameSession {
 
     public OrderSpawner getOrderSpawner() {
         return orderSpawner;
+    }
+
+    public PotionPriceCalculator getPriceCalculator() {
+        return priceCalculator;
     }
 }

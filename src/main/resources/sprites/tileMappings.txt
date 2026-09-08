@@ -182,3 +182,4 @@ sprites/map/shop/table5
 sprites/map/shop/table6
 sprites/map/shop/phone
 sprites/map/shop/book
+sprites/map/stand/phone
