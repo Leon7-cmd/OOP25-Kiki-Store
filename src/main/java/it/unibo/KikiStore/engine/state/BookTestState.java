@@ -58,14 +58,18 @@ public final class BookTestState implements GameState {
             initialized = true;
             final Player player = new PlayerImpl(35,64);
             final OrderBook orderBook = new OrderBookImpl();
-            final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json");
+            // 1. Creiamo subito il catalogo
+            final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
+            
+            // 2. Creiamo il RecipeBook passando il catalogo appena fatto
+            final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json", catalog);
+            
             final Inventory inventory = GameSession.createStarterSession().getInventory();
             final InventoryController inventoryController = new InventoryControllerImpl(inventory);
             final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook,
                     inventoryController);
             final PotionPriceCalculator priceCalculator=new PotionPriceCalculatorImpl(5);
             final OrderController orderController = new OrderControllerImpl(orderBook,recipeBook,inventory,player,priceCalculator);
-            final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
             final SpriteManager spriteManager = new SpriteManager();
 
             // Item di test — appariranno colorati, il resto grigio

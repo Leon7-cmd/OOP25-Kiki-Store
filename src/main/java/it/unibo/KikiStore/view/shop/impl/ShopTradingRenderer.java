@@ -130,7 +130,7 @@ public final class ShopTradingRenderer {
 
             final int price = isBuyingTab ? controller.getBuyPrice(item) : controller.getSellPrice(item);
             gc.setFont(Font.font("System", FontWeight.BOLD, 12));
-            gc.fillText(price + " G", x + w - 65, itemY + 22);
+            gc.fillText(price + "coins", x + w - 65, itemY + 22);
         }
     }
 

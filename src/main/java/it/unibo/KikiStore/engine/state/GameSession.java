@@ -42,8 +42,6 @@ public final class GameSession {
     private static final int MAX_PENDING_ORDERS = 5;
     private static final int SPAWN_RESET_THRESHOLD = 1000;
 
-
-
     private final PlayerImpl player;
     private final GameCatalog catalog;
     private final Inventory inventory;
@@ -62,9 +60,9 @@ public final class GameSession {
     public static GameSession createStarterSession() {
         final PlayerImpl player = new PlayerImpl(870, 920);
         final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
+        final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json", catalog);//
         final Inventory inventory = new InventoryImpl();
         final InventoryController inventoryController = new InventoryControllerImpl(inventory);
-        final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json");
         final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook, inventoryController);
         final OrderBook orderBook = new OrderBookImpl();
         final PotionPriceCalculator priceCalculator = new PotionPriceCalculatorImpl(5);

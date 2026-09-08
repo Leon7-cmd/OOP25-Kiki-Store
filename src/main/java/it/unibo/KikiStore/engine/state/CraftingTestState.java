@@ -47,8 +47,9 @@ public final class CraftingTestState implements GameState {
         public void update() {
                 if (!initialized) {
                         initialized = true;
-
-                        final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json");
+                        final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json",
+                                        "textFiles/potions.json");
+                        final RecipeBook recipeBook = new RecipeBookImpl("textFiles/recipes.json",catalog);
                         final Inventory inventory = GameSession.createStarterSession().getInventory();
                         final InventoryController inventoryController = new InventoryControllerImpl(inventory);
                         final RecipeBookController recipeBookController = new RecipeBookControllerImpl(recipeBook,
@@ -56,8 +57,7 @@ public final class CraftingTestState implements GameState {
 
                         final CraftingController craftingController = new CraftingControllerImpl(inventoryController,
                                         recipeBookController);
-                        final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json",
-                                        "textFiles/potions.json");
+                        
                         final SpriteManager spriteManager = new SpriteManager();
 
                         // Aggiungi qualche ingrediente di test — prendi 3 che formano

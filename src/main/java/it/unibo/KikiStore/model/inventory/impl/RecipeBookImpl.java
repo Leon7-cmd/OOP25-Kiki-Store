@@ -1,19 +1,21 @@
 package it.unibo.KikiStore.model.inventory.impl;
 
-import it.unibo.KikiStore.model.inventory.api.RecipeBook;
-import it.unibo.KikiStore.model.inventory.api.Ingredient;
-import it.unibo.KikiStore.model.inventory.api.Potion;
-import it.unibo.KikiStore.model.inventory.api.Recipe;
-import java.util.List;
-import java.util.ArrayList;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import it.unibo.KikiStore.model.inventory.api.GameCatalog;
+import it.unibo.KikiStore.model.inventory.api.Ingredient;
+import it.unibo.KikiStore.model.inventory.api.Potion;
+import it.unibo.KikiStore.model.inventory.api.Recipe;
+import it.unibo.KikiStore.model.inventory.api.RecipeBook;
 
 /**
  * Loads and holds all known recipes from a JSON file. Ingredients
@@ -22,13 +24,16 @@ import com.google.gson.JsonObject;
  */
 public final class RecipeBookImpl implements RecipeBook {
     private final List<Recipe> allRecipes;
+    private final GameCatalog catalog;
     // type isn't stored in the recipes JSON, only needed for the constructor
     private static final String PLACEHOLDER_TYPE = "plant";
 
     /**
      * @param jsonFile path to the recipes JSON file in resources
+     * @param catalog the game catalog
      */
-    public RecipeBookImpl(final String jsonFile) {
+    public RecipeBookImpl(final String jsonFile, final GameCatalog catalog) {
+        this.catalog = catalog;
         allRecipes = new ArrayList<>();
         loadFromJson(jsonFile);
     }
@@ -57,12 +62,30 @@ public final class RecipeBookImpl implements RecipeBook {
 
             for (final JsonElement ing : ingredientsArray) {
                 final String ingName = ing.getAsString();
-                ingredients.add(new IngredientImpl(ingName, id, 0, PLACEHOLDER_TYPE, 0));
+                ingredients.add(resolveIngredient(ingName));
             }
             final Potion potion = new PotionImpl(name, id, 0, description, effect, false);
             final Recipe recipe = new RecipeImpl(ingredients, potion, false);
             allRecipes.add(recipe);
         }
+    }
+
+    /**
+     * Risolve il nome ingrediente usato in recipes.json (es. "olive_leaf")
+     * contro il catalogo reale, per ottenere il prezzo effettivo. Se non
+     * trovato, ricade su un placeholder a prezzo 0 e avvisa in console -
+     * utile per scovare disallineamenti tra recipes.json e ingredients.json.
+     */
+    
+    private Ingredient resolveIngredient(final String recipeIngredientName) {
+        final String normalized = recipeIngredientName.replace("_", " ").toLowerCase(Locale.ROOT);
+        for (final Ingredient candidate : catalog.getAllIngredients()) {
+            if (candidate.getName().toLowerCase(Locale.ROOT).equals(normalized)) {
+                return candidate;
+            }
+        }
+        System.err.println("Ingrediente non trovato nel catalogo: " + recipeIngredientName);
+        return new IngredientImpl(recipeIngredientName, recipeIngredientName, 0, PLACEHOLDER_TYPE, 0);
     }
 
     @Override
