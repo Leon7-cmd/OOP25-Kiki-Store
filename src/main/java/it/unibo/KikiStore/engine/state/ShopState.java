@@ -149,7 +149,8 @@ public final class ShopState implements GameState {
                 this.spriteManager,
                 gsm,
                 this,
-                this.input
+                this.input,
+                this.transitionController
             );
             transitionController.pushState(bookState);
         }
@@ -167,7 +168,8 @@ public final class ShopState implements GameState {
                     this.spriteManager,
                     gsm,
                     this,
-                    this.input
+                    this.input,
+                    this.transitionController
             );
             transitionController.pushState(craftingState);
         }

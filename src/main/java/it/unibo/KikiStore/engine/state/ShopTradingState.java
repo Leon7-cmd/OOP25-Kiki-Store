@@ -32,6 +32,11 @@ public final class ShopTradingState<T extends GameItem> implements GameState {
     private int selectedIndex = 0;
     private String currentDialogueText = GREETING;
 
+    private boolean upWasPressed;
+    private boolean downWasPressed;
+    private boolean actionWasPressed;
+    private boolean tabWasPressed;   
+
     /**
      * @param shopTradingController il controller già specializzato (Potion o Ingredient) per questo stand
      * @param spriteManager gestore sprite condiviso, usato dal renderer
@@ -64,25 +69,38 @@ public final class ShopTradingState<T extends GameItem> implements GameState {
         }
 
         // Cambio Tab tra COMPRA e VENDI
-        if (input.isTab() || input.isLeft() || input.isRight()) {
+
+        final boolean tabNow = input.isTab();
+        if (tabNow && !tabWasPressed) {
             isBuyingTab = !isBuyingTab;
             selectedIndex = 0;
         }
+        tabWasPressed = tabNow;
 
         final int listSize = getCurrentList().size();
 
-        // Navigazione lista
-        if (input.isUp()) {
-            selectedIndex = Math.max(0, selectedIndex - 1);
-        }
-        if (input.isDown() && listSize > 0) {
-            selectedIndex = Math.min(listSize - 1, selectedIndex + 1);
+        // 2. Navigazione lista con UP e DOWN a singolo scatto (stile OrdersSection)
+        if (listSize > 0) {
+            final boolean upNow = input.isUp();
+            if (upNow && !upWasPressed) {
+                selectedIndex = Math.max(0, selectedIndex - 1);
+            }
+            upWasPressed = upNow;
+
+            final boolean downNow = input.isDown();
+            if (downNow && !downWasPressed) {
+                selectedIndex = Math.min(listSize - 1, selectedIndex + 1);
+            }
+            downWasPressed = downNow;
         }
 
-        // Acquisto o Vendita
-        if (input.consumeAction()) {
+        // 3. Esecuzione transazione con 'E' a singolo scatto (compra o vendi in base alla tab)
+        final boolean actionNow = input.isAction();
+        if (actionNow && !actionWasPressed) {
             executeTransaction();
         }
+        actionWasPressed = actionNow;
+    
     }
 
     private java.util.List<T> getCurrentList() {
@@ -112,8 +130,8 @@ public final class ShopTradingState<T extends GameItem> implements GameState {
     private String feedbackFor(final TransactionResults result, final T item) {
         return switch (result.outcome()) {
             case SUCCESS -> isBuyingTab
-                    ? "Hai acquistato " + item.getName() + " per " + result.price() + " G!"
-                    : "Hai venduto " + item.getName() + " per " + result.price() + " G!";
+                    ? "Hai acquistato " + item.getName() + " per " + result.price() + " euro!"
+                    : "Hai venduto " + item.getName() + " per " + result.price() + " euro!";
             case INSUFFICIENT_FUNDS -> "Non hai abbastanza monete per questo acquisto...";
             case ITEM_NOT_AVAILABLE -> "Questo oggetto non è più disponibile.";
             case ITEM_NOT_OWNED -> "Non possiedi questo oggetto.";

@@ -22,7 +22,11 @@ import it.unibo.KikiStore.model.order.impl.IngredientRequest;
 import it.unibo.KikiStore.model.order.impl.NeedRequest;
 import it.unibo.KikiStore.model.player.api.Player;
 
-public class OrderControllerImpl implements OrderController {
+/**
+ * Controller implementation for handling orders lifecycle, pricing,
+ * dialog generation, and player state synchronization.
+ */
+public final class OrderControllerImpl implements OrderController {
 
     private final OrderBook orderBook;
     private final RecipeBook recipeBook;
@@ -30,6 +34,13 @@ public class OrderControllerImpl implements OrderController {
     private final Player player;
     private final PotionPriceCalculator priceCalculator;
 
+    /**
+     * @param orderBook the shared order repository
+     * @param recipeBook the recipe book repository
+     * @param inventory the player's inventory
+     * @param player the player model
+     * @param priceCalculator the pricing logic
+     */
     public OrderControllerImpl(final OrderBook orderBook, final RecipeBook recipeBook,
             final Inventory inventory, final Player player, final PotionPriceCalculator priceCalculator) {
         this.orderBook = orderBook;
@@ -45,34 +56,75 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public Recipe getRecipeForOrder(Order order) {
+    public Recipe getRecipeForOrder(final Order order) {
         return resolveRecipe(order.getRequest());
     }
 
-    private Recipe resolveRecipe(CustomerRequest request) {
+    private Recipe resolveRecipe(final CustomerRequest request) {
+        // 1. Caso NeedRequest: cerca la pozione per effetto
         if (request instanceof NeedRequest needRequest) {
-            Need need = needRequest.getNeed();
-            final var matches = recipeBook.findByEffect(need.getName());
-            if (matches == null || matches.isEmpty()) {
+            final Need need = needRequest.getNeed();
+            if (need == null || need.getName() == null) {
                 return null;
             }
-            return matches.get(0);
+
+            final List<Recipe> matches = recipeBook.findByEffect(need.getName());
+            if (matches != null && !matches.isEmpty()) {
+                return matches.get(0);
+            }
+
+            for (final Recipe r : recipeBook.getRecipes()) {
+                if (r.getPotion() != null && r.getPotion().getEffect() != null
+                        && r.getPotion().getEffect().equalsIgnoreCase(need.getName())) {
+                    return r;
+                }
+            }
+            return null;
         }
 
+        // 2. Caso IngredientRequest: cliente porta un ingrediente, cerchiamo la pozione che lo contiene
         if (request instanceof IngredientRequest ingredientRequest) {
-            Ingredient ingredient = ingredientRequest.getIngredient();
-            return recipeBook.findByIngredients(List.of(ingredient));
+            final Ingredient brought = ingredientRequest.getIngredient();
+            if (brought == null || brought.getName() == null) {
+                return null;
+            }
+
+            // Prima controlla tra le ricette sbloccate
+            for (final Recipe r : recipeBook.getUnlockedRecipes()) {
+                if (recipeContainsIngredient(r, brought.getName())) {
+                    return r;
+                }
+            }
+
+            // Se non ne trova tra le sbloccate, controlla tra tutte le ricette note
+            for (final Recipe r : recipeBook.getRecipes()) {
+                if (recipeContainsIngredient(r, brought.getName())) {
+                    return r;
+                }
+            }
         }
 
         return null;
     }
 
-    private Potion findPotion(String name) {
+    private boolean recipeContainsIngredient(final Recipe recipe, final String ingredientName) {
+        if (recipe == null || recipe.getIngredients() == null) {
+            return false;
+        }
+        for (final Ingredient ing : recipe.getIngredients()) {
+            if (ing != null && ing.getName() != null && ing.getName().equalsIgnoreCase(ingredientName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Potion findPotion(final String name) {
         if (name == null) {
             return null;
         }
         for (final Potion p : inventory.getPotions()) {
-            if (p != null && name.equalsIgnoreCase(p.getName())) {
+            if (p != null && name.equalsIgnoreCase(p.getName()) && p.getQuantity() > 0) {
                 return p;
             }
         }
@@ -80,12 +132,13 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public int getPriceForOrder(Order order) {
+    public int getPriceForOrder(final Order order) {
         final Recipe recipe = resolveRecipe(order.getRequest());
         if (recipe == null) {
-            return 0;
+            return 5;
         }
-        return priceCalculator.calculatePrice(recipe, order.getRequest());
+        final int calculated = priceCalculator.calculatePrice(recipe, order.getRequest());
+        return Math.max(calculated, 1);
     }
 
     @Override
@@ -94,28 +147,28 @@ public class OrderControllerImpl implements OrderController {
         if (recipe == null) {
             return false;
         }
-        return findPotion(recipe.getPotion().getName()) != null; //if the potion is in the inventory, it is ready//before having crafting implemented, we can check if the potion is in the inventory to determine if the order is ready
+        return findPotion(recipe.getPotion().getName()) != null;
     }
 
-    //order is completed only when order status is ready ->order is removed from orderBook and potion is removed from inventory, and money is added to player
     @Override
-    public boolean completeOrder(Order order) {
-        final Recipe recipe = resolveRecipe(order.getRequest());
-        if (recipe == null) {
+    public boolean completeOrder(final Order order) {
+        if (!isOrderReady(order)) {
             return false;
         }
 
-        final Potion requestedPotion = recipe.getPotion();
-        final Potion inventoryPotion = findPotion(requestedPotion.getName()); //if the potion is in the inventory, it will be returned, otherwise null //questo equivale a potion ready if potion ready remove from inventory and add money to player and remove order from orderBook
+        final Recipe recipe = resolveRecipe(order.getRequest());
+        final Potion potion = findPotion(recipe.getPotion().getName());
+        if (potion != null) {
+            if (potion.getQuantity() > 1) {
+                potion.setQuantity(potion.getQuantity() - 1);
+            } else {
+                inventory.removePotion(potion);
+            }
+        }
 
-        if (inventoryPotion == null) {
-            return false;
-        } // potion is not ready or it does not exist.
-        //order.getStatus() == OrderStatus.READY
-        inventory.removePotion(inventoryPotion); //remove from inventory
-
-        final int price = priceCalculator.calculatePrice(recipe, order.getRequest());
-        player.setMoney(player.getMoney() + price); //add money(from order) to player
+        // Accredito monete al giocatore
+        final int price = getPriceForOrder(order);
+        player.setMoney(player.getMoney() + price);
 
         order.setStatus(OrderStatus.DELIVERED);
         orderBook.removeOrder(order);
@@ -124,35 +177,52 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public Dialogue getDialogueForOrder(final Order order) {
-    final List<DialogueLine> lines = new ArrayList<>();
-    final String customerName = order.getCustomer().getName();
-    final String kikiName = player.getName();
-    final Recipe recipe = resolveRecipe(order.getRequest());
-    final String potionName = recipe != null ? recipe.getPotion().getName() : "that potion";
+        final List<DialogueLine> lines = new ArrayList<>();
+        final String customerName = order.getCustomer().getName();
+        final String kikiName = player.getName();
+        final Recipe recipe = resolveRecipe(order.getRequest());
 
-    lines.add(new DialogueLine(customerName, order.getRequest().getDialogue()));
+        lines.add(new DialogueLine(customerName, order.getRequest().getDialogue()));
 
-    if (isOrderReady(order)) {
-        final int price = getPriceForOrder(order);
-        lines.add(new DialogueLine(kikiName, "Don't worry, you don't have to wait — it's ready! That's " + price + " coins."));
-        lines.add(new DialogueLine(customerName, "Thank you! See you!"));
-    } else {
-        lines.add(new DialogueLine(kikiName, "You can make the " + potionName + " for that."));
+        // Caso 1: L'ordine è pronto (pozione in inventario)
+        if (isOrderReady(order)) {
+            final int price = getPriceForOrder(order);
+            lines.add(new DialogueLine(kikiName, "Don't worry, you don't have to wait — it's ready! That's " + price + " coins."));
+            lines.add(new DialogueLine(customerName, "Thank you so much! See you soon!"));
+            return new DialogueImpl(lines);
+        }
+
+        // Caso 2: Ricetta bloccata
+        if (recipe != null && !recipe.isUnlocked()) {
+            lines.add(new DialogueLine(kikiName, "It is locked, I don't have that potion!"));
+            lines.add(new DialogueLine(customerName, "Oh, what a pity... I'll come back another time!"));
+            return new DialogueImpl(lines);
+        }
+
+        // Caso 3: Ricetta sbloccata ma da craftare
+        final String potionName = recipe != null ? recipe.getPotion().getName() : "it";
+        lines.add(new DialogueLine(kikiName, "I can brew a " + potionName + " for you. Please give me some time!"));
         lines.add(new DialogueLine(customerName, "Ok, thanks, I'll wait for you!"));
+
+        return new DialogueImpl(lines);
     }
 
-    return new DialogueImpl(lines);
-}
-
-
-   @Override
+    @Override
     public void confirmOrder(final Order order) {
-        if (order.getStatus() == OrderStatus.READY) {
+        final Recipe recipe = resolveRecipe(order.getRequest());
+
+        // Se la ricetta è bloccata: l'ordine viene rifiutato e rimosso dalla lista
+        if (recipe != null && !recipe.isUnlocked()) {
+            order.setStatus(OrderStatus.DELIVERED);
+            orderBook.removeOrder(order);
+            return;
+        }
+
+        // Se l'oggetto è già pronto, completa e incassa
+        if (isOrderReady(order)) {
             completeOrder(order);
         } else {
             order.setStatus(OrderStatus.PENDING_CRAFT);
         }
     }
-
-    
 }

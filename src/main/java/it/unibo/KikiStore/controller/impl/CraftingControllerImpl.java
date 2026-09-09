@@ -30,7 +30,7 @@ public final class CraftingControllerImpl implements CraftingController {
         this.inventoryController = inventoryController;
         this.recipeBookController = recipeBookController;
     }
-
+/*
     @Override
     public void craftPotion(final List<Ingredient> ingredients) {
         final Recipe recipe = recipeBookController.findByIngredients(ingredients);
@@ -48,6 +48,39 @@ public final class CraftingControllerImpl implements CraftingController {
             inventoryController.addPotion(BLACK_POTION_NAME, BLACK_POTION_PATH, 1, "A failed attempt...", "none",
             true);
             // blackPotion.setBlack(true);metodo probabilmente da togliere da potion
+        }
+    }
+    */
+    @Override
+    public void craftPotion(final List<Ingredient> ingredients) {
+        final Recipe recipe = recipeBookController.findByIngredients(ingredients);
+
+        if (recipe != null) {
+            final Potion potion = recipe.getPotion();
+            inventoryController.addPotion(
+                potion.getName(),
+                potion.getImagePath(),
+                1, // di norma crafti 1 pozione alla volta
+                potion.getDescription(),
+                potion.getEffect(),
+                false
+            );
+            recipe.setUnlocked();
+        } else {
+            inventoryController.addPotion(
+                BLACK_POTION_NAME,
+                BLACK_POTION_PATH,
+                1,
+                "A failed attempt...",
+                "none",
+                true
+            );
+        }
+
+        // In ENTRAMBI i casi (successo o fallimento), gli ingredienti inseriti vanno consumati!
+        for (final Ingredient ingredient : ingredients) {
+            final int qtyToRemove = ingredient.getQuantity() > 0 ? ingredient.getQuantity() : 1;
+            inventoryController.removeIngredient(ingredient.getName(), qtyToRemove);
         }
     }
 

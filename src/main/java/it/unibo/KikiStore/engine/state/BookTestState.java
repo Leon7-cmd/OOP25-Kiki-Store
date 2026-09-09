@@ -26,6 +26,7 @@ import it.unibo.KikiStore.model.player.api.Player;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
+import it.unibo.KikiStore.engine.api.GameStateTransition;
 
 /**
  * Test state that opens BookState directly on launch.
@@ -36,15 +37,21 @@ public final class BookTestState implements GameState {
 
     private final InputHandler input;
     private final GameStateManager gsm;
+    private final GameStateTransition transitionController;
     private boolean initialized;
 
     /**
      * @param input the input handler
      * @param gsm   the game state manager
+     * @param transitionController the game state transition controller
+     * 
      */
     public BookTestState(final InputHandler input, final GameStateManager gsm) {
         this.input = input;
         this.gsm = gsm;
+        this.transitionController = (GameStateTransition) gsm; // Assuming transitionController is the same as gsm for this test state
+
+
     }
 
     @Override
@@ -55,6 +62,7 @@ public final class BookTestState implements GameState {
     @Override
     public void update() {
         if (!initialized) {
+            
             initialized = true;
             final Player player = new PlayerImpl(35,64);
             final OrderBook orderBook = new OrderBookImpl();
@@ -91,7 +99,7 @@ public final class BookTestState implements GameState {
             }
             final GameState bookState = new BookState(
                     inventoryController, recipeBookController,orderController, catalog,
-                    spriteManager, gsm, this, input);
+                    spriteManager, gsm, this, input, transitionController);
 
             gsm.setState(bookState);
         }

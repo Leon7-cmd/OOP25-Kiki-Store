@@ -6,6 +6,7 @@ import it.unibo.KikiStore.controller.api.OrderController;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
+import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
 import it.unibo.KikiStore.view.book.BookAnimator;
 import it.unibo.KikiStore.view.book.BookSection;
@@ -22,7 +23,7 @@ import javafx.scene.text.Font;
 /**
  * The magic book — single game state hosting Inventory, Recipes,
  * and Orders sections. Always shown as two open facing pages.
- * Handles open/close animations and page-turn animation (for Recipes only).
+ * Handles open/close animations and page-turn animation.
  */
 public final class BookState implements GameState {
 
@@ -53,6 +54,7 @@ public final class BookState implements GameState {
     private static final double BOOKMARK_ORD_Y_FRAC = 140.0 / 272.0;
 
     private final GameStateManager gsm;
+    private final GameStateTransition transitionController;
     private final GameState previousState;
     private final InputHandler input;
     private final SpriteManager spriteManager;
@@ -80,33 +82,35 @@ public final class BookState implements GameState {
     private boolean escWasPressed;
     private boolean rightWasPressed;
     private boolean leftWasPressed;
-
-    // DA TOGLIERE
     private boolean upWasPressed;
     private boolean downWasPressed;
 
     /**
-     * @param inventoryController  inventory controller
-     * @param recipeBookController recipe book controller
-     * @param gameCatalog          full item catalog
-     * @param spriteManager        sprite manager
-     * @param gsm                  game state manager
-     * @param previousState        state to return to on close
-     * @param input                input handler
+     * @param inventoryController   inventory controller
+     * @param recipeBookController  recipe book controller
+     * @param orderController       order controller
+     * @param gameCatalog           full item catalog
+     * @param spriteManager         sprite manager
+     * @param gsm                   game state manager
+     * @param previousState         state to return to on close
+     * @param input                 input handler
+     * @param transitionController  state transition controller
      */
     public BookState(
-        final InventoryController inventoryController,
-        final RecipeBookController recipeBookController,
-        final OrderController orderController,
-        final GameCatalog gameCatalog,
-        final SpriteManager spriteManager,
-        final GameStateManager gsm,
-        final GameState previousState,
-        final InputHandler input
+            final InventoryController inventoryController,
+            final RecipeBookController recipeBookController,
+            final OrderController orderController,
+            final GameCatalog gameCatalog,
+            final SpriteManager spriteManager,
+            final GameStateManager gsm,
+            final GameState previousState,
+            final InputHandler input,
+            final GameStateTransition transitionController
     ) {
         this.gsm = gsm;
         this.previousState = previousState;
         this.input = input;
+        this.transitionController = transitionController;
         this.spriteManager = spriteManager;
         this.grayscaleBookmark.setSaturation(-1.0);
 
@@ -119,16 +123,20 @@ public final class BookState implements GameState {
 
         this.openAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Open_book", OPEN_COLS, OPEN_ROWS);
         this.closeAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Close_book", OPEN_COLS, OPEN_ROWS);
-        this.turnLeftAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_right", TURN_COLS,
-                TURN_ROWS);
-        this.turnRightAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_left", TURN_COLS,
-                TURN_ROWS);
+        this.turnLeftAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_right", TURN_COLS, TURN_ROWS);
+        this.turnRightAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Turning_pages_left", TURN_COLS, TURN_ROWS);
 
         this.inventorySection = new InventorySection(
                 inventoryController, gameCatalog, spriteManager, pixelFontSmall);
         this.recipeSection = new RecipeSection(
-            recipeBookController, spriteManager, pixelFont, pixelFontSmall);
-        this.ordersSection = new OrdersSection(orderController, input, pixelFontSmall);//new OrdersSection(pixelFontSmall);
+                recipeBookController, spriteManager, pixelFont, pixelFontSmall);
+        this.ordersSection = new OrdersSection(
+    orderController,
+    input,
+    pixelFontSmall,
+    transitionController,
+    spriteManager
+);
     }
 
     @Override
@@ -144,8 +152,24 @@ public final class BookState implements GameState {
 
     @Override
     public void update() {
-        // TO-DO: sostituire con input.isEsc() quando lo aggiungo a InputHandler
-        final boolean escNow = false;
+
+        // Uscita dallo shop con ESC o tasto dedicato
+        if (input.isCancel()) {
+            transitionController.popState();
+            return;
+        }
+
+        // Uscita dal libro con ESC / Cancel
+
+        /*if (cancelNow && !escWasPressed) {
+            if (currentSection == Section.ORDERS && ordersSection.isDialogueActive()) {
+                ordersSection.closeDialogue();
+            } else if (phase == Phase.OPEN) {
+                phase = Phase.CLOSING;
+                closeAnimator.play();
+            }
+        }
+        escWasPressed = cancelNow;*/
 
         switch (phase) {
             case OPENING:
@@ -156,39 +180,24 @@ public final class BookState implements GameState {
                 break;
 
             case OPEN:
-                updateOpenPhase(escNow);
+                updateOpenPhase();
                 break;
 
             case CLOSING:
                 closeAnimator.update();
                 if (closeAnimator.isFinished()) {
                     phase = Phase.CLOSED;
-                    gsm.setState(previousState);
+                    transitionController.popState();
                 }
                 break;
 
             case CLOSED:
-                break;
             default:
                 break;
         }
-
-        escWasPressed = escNow;
     }
 
-    /**
-     * Handles input while the book is fully open — closing, page turning
-     * (Recipes only), and section-specific updates.
-     *
-     * @param escNow whether ESC is currently pressed
-     */
-    private void updateOpenPhase(final boolean escNow) {
-        if (escNow && !escWasPressed) {
-            phase = Phase.CLOSING;
-            closeAnimator.play();
-            return;
-        }
-
+    private void updateOpenPhase() {
         if (turningPage) {
             final BookAnimator activeTurn = turningRight ? turnRightAnimator : turnLeftAnimator;
             activeTurn.update();
@@ -203,38 +212,42 @@ public final class BookState implements GameState {
             return;
         }
 
-        if (currentSection == Section.RECIPES) {
-            final boolean rightNow = input.isRight();
-            if (rightNow && !rightWasPressed && recipeSection.canGoNext()) {
+        // Sfoglio pagine con FRECCIA DESTRA
+        final boolean rightNow = input.isRight();
+        if (rightNow && !rightWasPressed) {
+            if (currentSection == Section.RECIPES && recipeSection.canGoNext()) {
                 turningPage = true;
                 turningRight = true;
                 turnRightAnimator.play();
+            } else if (currentSection == Section.ORDERS && ordersSection.canGoNext()) {
+                ordersSection.goNext();
             }
-            rightWasPressed = rightNow;
+        }
+        rightWasPressed = rightNow;
 
-            final boolean leftNow = input.isLeft();
-            if (leftNow && !leftWasPressed && recipeSection.canGoPrev()) {
+        // Sfoglio pagine con FRECCIA SINISTRA
+        final boolean leftNow = input.isLeft();
+        if (leftNow && !leftWasPressed) {
+            if (currentSection == Section.RECIPES && recipeSection.canGoPrev()) {
                 turningPage = true;
                 turningRight = false;
                 turnLeftAnimator.play();
+            } else if (currentSection == Section.ORDERS && ordersSection.canGoPrev()) {
+                ordersSection.goPrev();
             }
-            leftWasPressed = leftNow;
-        } else {
-            getActiveSection().update();
         }
+        leftWasPressed = leftNow;
 
-        // TO-DO: click sui bookmark per cambiare sezione, quando aggiungo mouse click a
-        // inputhandler
-        // if (input.isMouseClicked()) { ... currentSection = ... }
+        // Esegue l'update specifico della sezione (es. tasto [E] in Orders)
+        getActiveSection().update();
 
-        // SOLUZIONE TEMP DA TOGLIEREEEEEE
-        // Cambia sezione con UP/DOWN (temporaneo, finché non c'è il mouse)
+        // Navigazione tra le sezioni del libro con UP / DOWN
         final boolean upNow = input.isUp();
         if (upNow && !upWasPressed) {
             currentSection = switch (currentSection) {
                 case RECIPES -> Section.INVENTORY;
                 case ORDERS -> Section.RECIPES;
-                case INVENTORY -> Section.INVENTORY; 
+                case INVENTORY -> Section.INVENTORY;
             };
         }
         upWasPressed = upNow;
@@ -243,7 +256,7 @@ public final class BookState implements GameState {
         if (downNow && !downWasPressed) {
             currentSection = switch (currentSection) {
                 case INVENTORY -> Section.RECIPES;
-                case RECIPES -> Section.ORDERS; 
+                case RECIPES -> Section.ORDERS;
                 case ORDERS -> Section.ORDERS;
             };
         }
@@ -264,8 +277,6 @@ public final class BookState implements GameState {
         final double bookX = (screenW - bookW) / 2;
         final double bookY = (screenH - bookH) / 2;
 
-        // System.out.println("screenW=" + screenW + " screenH=" + screenH
-        // + " bookW=" + bookW + " bookH=" + bookH + " bookY=" + bookY);
         switch (phase) {
             case OPENING:
                 openAnimator.render(gc, bookX, bookY, bookW, bookH);
@@ -277,7 +288,6 @@ public final class BookState implements GameState {
                 renderOpenBook(gc, bookX, bookY, bookW, bookH);
                 break;
             case CLOSED:
-                break;
             default:
                 break;
         }
@@ -298,32 +308,16 @@ public final class BookState implements GameState {
                 bookmarkW, bookmarkH, 1, Section.RECIPES);
         renderBookmark(gc, bookmarkX, y + BOOKMARK_ORD_Y_FRAC * bookSize,
                 bookmarkW, bookmarkH, 2, Section.ORDERS);
+
         if (turningPage) {
             final BookAnimator activeTurn = turningRight ? turnRightAnimator : turnLeftAnimator;
             activeTurn.render(gc, x, y, w, h);
             return;
         }
 
-        final double contentX = x;
-        final double contentY = y;
-        final double contentW = w;
-        final double contentH = h;
-
-        getActiveSection().render(gc, contentX, contentY, contentW, contentH);
+        getActiveSection().render(gc, x, y, w, h);
     }
 
-    /**
-     * Draws a single bookmark tab using the bookmark spritesheet.
-     * Orders tab is grayed out and non-selectable (not yet implemented).
-     *
-     * @param gc        graphics context
-     * @param x         bookmark x
-     * @param y         bookmark y
-     * @param w         bookmark width
-     * @param h         bookmark height
-     * @param spriteRow row of this bookmark's icon in the sheet
-     * @param section   which section this bookmark represents
-     */
     private void renderBookmark(final GraphicsContext gc, final double x, final double y,
             final double w, final double h,
             final int spriteRow, final Section section) {
@@ -334,7 +328,7 @@ public final class BookState implements GameState {
         if (sheet != null) {
             final double frameW = sheet.getWidth() / BOOKMARK_SHEET_COLS;
             final double frameH = sheet.getHeight() / BOOKMARK_SHEET_ROWS;
-            final int spriteCol = isActive ? 0 : 1; // colonna destra se selezionato
+            final int spriteCol = isActive ? 0 : 1;
             final double sourceX = spriteCol * frameW;
             final double sourceY = spriteRow * frameH;
 
@@ -349,21 +343,11 @@ public final class BookState implements GameState {
         }
     }
 
-    /**
-     * Returns the section currently shown to the player, based on
-     * which bookmark tab is selected.
-     *
-     * @return the active book section
-     */
     private BookSection getActiveSection() {
-        switch (currentSection) {
-            case RECIPES:
-                return recipeSection;
-            case ORDERS:
-                return ordersSection;
-            case INVENTORY:
-            default:
-                return inventorySection;
-        }
+        return switch (currentSection) {
+            case RECIPES -> recipeSection;
+            case ORDERS -> ordersSection;
+            case INVENTORY -> inventorySection;
+        };
     }
 }

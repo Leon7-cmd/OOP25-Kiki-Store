@@ -51,7 +51,12 @@ public final class PotionTradingControllerImpl implements ShopTradingController<
 
     @Override
     public List<Potion> getSellableItems() {
-        return inventoryController.getInventory().getPotions();
+        final List<Potion> potions = inventoryController.getInventory().getPotions();
+        System.out.println("DEBUG STAND POZIONI -> Totale pozioni trovate: " + potions.size());
+        for (Potion p : potions) {
+            System.out.println(" - " + p.getName() + " (qty: " + p.getQuantity() + ")");
+        }
+        return potions;
     }
 
     @Override
@@ -63,9 +68,11 @@ public final class PotionTradingControllerImpl implements ShopTradingController<
 
     @Override
     public int getSellPrice(final Potion item) {
-        Recipe recipe = recipeBookController.findByName(item.getName());
-        return (priceCalculator.calculatePrice(recipe))/2; // prezzo di vendita = metà del prezzo di acquisto, o usare la percentuale ..
-
+        final Recipe recipe = recipeBookController.findByName(item.getName());
+        if (recipe == null) {
+            return 1;
+        }
+        return priceCalculator.calculatePrice(recipe); // 1:1 senza divisione
     }
 
     @Override

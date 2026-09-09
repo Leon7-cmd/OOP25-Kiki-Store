@@ -9,6 +9,7 @@ import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.controller.api.RecipeBookController;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
+import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
@@ -87,6 +88,7 @@ public final class CraftingState implements GameState {
     private final GameStateManager gsm;
     private final GameState previousState;
     private final InputHandler input;
+    private final GameStateTransition transitionController;
 
     private final Font pixelFont;
     private final Font pixelFontSmall;
@@ -120,6 +122,7 @@ public final class CraftingState implements GameState {
      * @param gsm                  game state manager
      * @param previousState        state to return to on close
      * @param input                input handler
+     * @param transitionController the game state transition controller
      */
     public CraftingState(
             final InventoryController inventoryController,
@@ -129,7 +132,8 @@ public final class CraftingState implements GameState {
             final SpriteManager spriteManager,
             final GameStateManager gsm,
             final GameState previousState,
-            final InputHandler input) {
+            final InputHandler input,
+            final GameStateTransition transitionController) {
         this.inventoryController = inventoryController;
         this.craftingController = craftingController;
         this.recipeBookController = recipeBookController;
@@ -138,6 +142,7 @@ public final class CraftingState implements GameState {
         this.gsm = gsm;
         this.previousState = previousState;
         this.input = input;
+        this.transitionController = transitionController;
         this.grayscale.setSaturation(-1.0);
 
         final Font loadedTitle = Font.loadFont(
@@ -168,6 +173,11 @@ public final class CraftingState implements GameState {
 
     @Override
     public void update() {
+        // Uscita dallo shop con ESC o tasto dedicato
+            if (input.isCancel()) {
+                transitionController.popState();
+                return;
+            }
         switch (phase) {
             case SELECTING:
                 updateSelecting();

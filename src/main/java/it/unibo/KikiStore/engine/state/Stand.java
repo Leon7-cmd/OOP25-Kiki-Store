@@ -151,7 +151,8 @@ public final class Stand implements GameState {
                 this.spriteManager,
                 gsm,
                 this,
-                this.input
+                this.input,
+                this.transitionController
         );
         transitionController.pushState(bookState);
     }

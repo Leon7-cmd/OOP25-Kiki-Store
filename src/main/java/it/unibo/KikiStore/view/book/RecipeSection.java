@@ -40,6 +40,9 @@ public final class RecipeSection implements BookSection {
     private final Font pixelFont;
     private final Font pixelFontSmall;
 
+    private static final double INGREDIENT_ICON_SIZE = 16.0;
+    private static final Color COL_SECTION_HEADER = Color.web("#6B3E11");
+
     private List<Recipe> unlockedRecipes;
     private int leftIndex; // indice della ricetta sulla pagina sinistra; destra = leftIndex + 1
 
@@ -120,12 +123,19 @@ public final class RecipeSection implements BookSection {
      * @param w      page area width
      * @param h      page area height
      */
+    
+
+    /**
+     * Draws a single recipe on one page — potion image, name, required ingredients, and description.
+     */
     private void renderRecipePage(final GraphicsContext gc, final Recipe recipe,
             final double x, final double y,
             final double w, final double h) {
-        final double imgSize = w * IMAGE_SIZE_RATIO;
+
+        // 1. Immagine della pozione (più raccolta per lasciare spazio agli ingredienti)
+        final double imgSize = w * 0.32;
         final double imgX = x + (w - imgSize) / 2;
-        final double imgY = y + 10;
+        final double imgY = y + 6;
 
         final Image potionImg = spriteManager.getStaticSprite(recipe.getPotion().getImagePath());
         if (potionImg != null) {
@@ -135,18 +145,46 @@ public final class RecipeSection implements BookSection {
             gc.fillRect(imgX, imgY, imgSize, imgSize);
         }
 
+        // 2. Nome della pozione
         gc.setFill(COL_TITLE);
         gc.setFont(pixelFont);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(recipe.getPotion().getName(), x + w / 2, imgY + imgSize + TEXT_MARGIN);
+        final double titleY = imgY + imgSize + 14;
+        gc.fillText(recipe.getPotion().getName(), x + w / 2, titleY);
 
-        gc.setFill(COL_TEXT);
+        // 3. Sezione Ingredienti Richiesti
+        double currentY = titleY + 16;
+        gc.setFill(COL_SECTION_HEADER);
         gc.setFont(pixelFontSmall);
         gc.setTextAlign(TextAlignment.LEFT);
-        final double descY = imgY + imgSize + 44;
-        drawWrappedText(gc, recipe.getPotion().getDescription(), x + TEXT_SIDE_PADDING, descY, w - TEXT_MARGIN);
-    }
+        gc.fillText("Ingredients:", x + TEXT_SIDE_PADDING, currentY);
 
+        currentY += 12;
+        final List<it.unibo.KikiStore.model.inventory.api.Ingredient> ingredients = recipe.getIngredients();
+        if (ingredients != null && !ingredients.isEmpty()) {
+            for (final var ing : ingredients) {
+                // Disegna sprite o fallback per ciascun ingrediente
+                final Image ingImg = spriteManager.getStaticSprite(ing.getImagePath());
+                final double iconX = x + TEXT_SIDE_PADDING;
+                if (ingImg != null) {
+                    gc.drawImage(ingImg, iconX, currentY - 10, INGREDIENT_ICON_SIZE, INGREDIENT_ICON_SIZE);
+                }
+
+                // Nome e Quantità (se quantity <= 0 mostriamo 1x)
+                final int qty = ing.getQuantity() > 0 ? ing.getQuantity() : 1;
+                final String text = qty + "x " + ing.getName();
+
+                gc.setFill(COL_TEXT);
+                gc.fillText(text, iconX + INGREDIENT_ICON_SIZE + 4, currentY + 2);
+                currentY += 16;
+            }
+        }
+
+        // 4. Descrizione / Lore in fondo
+        currentY += 6;
+        gc.setFill(COL_EMPTY_MSG);
+        drawWrappedText(gc, recipe.getPotion().getDescription(), x + TEXT_SIDE_PADDING, currentY, w - TEXT_MARGIN);
+    }
     /**
      * Draws text wrapped to fit within maxWidth, breaking on word boundaries.
      *

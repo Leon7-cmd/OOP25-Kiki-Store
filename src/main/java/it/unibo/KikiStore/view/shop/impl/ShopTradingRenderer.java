@@ -130,7 +130,7 @@ public final class ShopTradingRenderer {
 
             final int price = isBuyingTab ? controller.getBuyPrice(item) : controller.getSellPrice(item);
             gc.setFont(Font.font("System", FontWeight.BOLD, 12));
-            gc.fillText(price + "coins", x + w - 65, itemY + 22);
+            gc.fillText(price + "euro", x + w - 65, itemY + 22);
         }
     }
 
@@ -169,7 +169,7 @@ public final class ShopTradingRenderer {
 
         final int price = isBuyingTab ? controller.getBuyPrice(selectedItem) : controller.getSellPrice(selectedItem);
         gc.setFont(Font.font("System", 12));
-        gc.fillText(price + " G", x + 15, spriteY + spriteSize + 40);
+        gc.fillText(price + " euro", x + 15, spriteY + spriteSize + 40);
     }
 
     private void drawDialogueBox(

@@ -9,6 +9,7 @@ import it.unibo.KikiStore.controller.impl.InventoryControllerImpl;
 import it.unibo.KikiStore.controller.impl.RecipeBookControllerImpl;
 import it.unibo.KikiStore.engine.api.GameState;
 import it.unibo.KikiStore.engine.api.GameStateManager;
+import it.unibo.KikiStore.engine.api.GameStateTransition;
 import it.unibo.KikiStore.engine.impl.CraftingState;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
 import it.unibo.KikiStore.model.inventory.api.Inventory;
@@ -27,15 +28,18 @@ public final class CraftingTestState implements GameState {
 
         private final InputHandler input;
         private final GameStateManager gsm;
+        private final GameStateTransition transitionController;
         private boolean initialized;
 
         /**
          * @param input the input handler
          * @param gsm   the game state manager
+         * @param transitionController the game state transition controller
          */
-        public CraftingTestState(final InputHandler input, final GameStateManager gsm) {
+        public CraftingTestState(final InputHandler input, final GameStateManager gsm, final GameStateTransition transitionController) {
                 this.input = input;
                 this.gsm = gsm;
+                this.transitionController = transitionController;
         }
 
         @Override
@@ -81,7 +85,9 @@ public final class CraftingTestState implements GameState {
                                         spriteManager,
                                         gsm,
                                         this,
-                                        input);
+                                        input,
+                                        transitionController
+                                        );
 
                         gsm.setState(craftingState);
                 }
