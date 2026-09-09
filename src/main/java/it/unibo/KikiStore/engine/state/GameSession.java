@@ -12,6 +12,8 @@ import it.unibo.KikiStore.controller.impl.OrderSpawnerImpl;
 import it.unibo.KikiStore.controller.impl.RecipeBookControllerImpl;
 import it.unibo.KikiStore.model.economy.api.PotionPriceCalculator;
 import it.unibo.KikiStore.model.economy.impl.PotionPriceCalculatorImpl;
+import it.unibo.KikiStore.model.house.api.HouseBook;
+import it.unibo.KikiStore.model.house.impl.HouseBookImpl;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
 import it.unibo.KikiStore.model.inventory.api.Inventory;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
@@ -30,6 +32,10 @@ import it.unibo.KikiStore.model.order.impl.NeedGeneratorImpl;
 import it.unibo.KikiStore.model.order.impl.OrderBookImpl;
 import it.unibo.KikiStore.model.order.impl.OrderGeneratorImpl;
 import it.unibo.KikiStore.model.player.impl.PlayerImpl;
+import it.unibo.KikiStore.controller.api.DeliveryController;
+import it.unibo.KikiStore.controller.impl.DeliveryControllerImpl;
+
+import java.util.Map;
 
 /**
  * Shared gameplay session used across map, shop, book, crafting and orders.
@@ -41,6 +47,7 @@ public final class GameSession {
     private static final int SPAWN_INTERVAL_FRAMES = 300;
     private static final int MAX_PENDING_ORDERS = 5;
     private static final int SPAWN_RESET_THRESHOLD = 1000;
+    private static final int DELIVERY_SPAWN_INTERVAL_FRAMES = 300; //for delivery spawn 
 
     private final PlayerImpl player;
     private final GameCatalog catalog;
@@ -56,7 +63,8 @@ public final class GameSession {
     private final OrderGenerator orderGenerator;
     private final OrderSpawner orderSpawner;
     private final PotionPriceCalculator priceCalculator;
-
+    private final HouseBook houseBook;
+    private final DeliveryController deliveryController;
     public static GameSession createStarterSession() {
         final PlayerImpl player = new PlayerImpl(870, 920);
         final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
@@ -67,6 +75,15 @@ public final class GameSession {
         final OrderBook orderBook = new OrderBookImpl();
         final PotionPriceCalculator priceCalculator = new PotionPriceCalculatorImpl(5);
         final OrderController orderController = new OrderControllerImpl(orderBook, recipeBook, inventory, player, priceCalculator);
+        final HouseBook houseBook = new HouseBookImpl(
+        Map.of(8, "Mario", 9, "Luna", 10, "Sofia"),
+        Map.of(
+            "Mario", "He lives in the second house on the left",
+            "Luna", "She lives in the middle house",
+            "Sofia", "She lives in the second house on the right"
+        )
+    );
+        final DeliveryController deliveryController = new DeliveryControllerImpl(houseBook, player, DELIVERY_SPAWN_INTERVAL_FRAMES);
 
         final NeedBook needBook = new NeedBookImpl("textFiles/needs.json");
         final CustomerBook customerBook = new CustomerBookImpl("textFiles/customers.json", catalog);
@@ -78,11 +95,11 @@ public final class GameSession {
 
         seedStarterInventory(inventoryController, catalog);
         unlockStarterRecipes(recipeBookController);
-
+        
         return new GameSession(player, catalog, inventory, inventoryController, recipeBook, recipeBookController,
-                priceCalculator, orderBook, orderController, needBook, customerBook, needGenerator, orderGenerator, orderSpawner);
+                deliveryController, priceCalculator, orderBook, orderController, needBook, customerBook, needGenerator, orderGenerator, orderSpawner, houseBook);
     }
-
+ 
     public static void seedStarterInventory(final InventoryController inventoryController, final GameCatalog catalog) {
         inventoryController.addIngredient("Chamomile", "sprites/ingredients/chamomile", 3, "flower", 3);
         inventoryController.addIngredient("Clover", "sprites/ingredients/clover", 2, "plant", 12);
@@ -106,6 +123,7 @@ public final class GameSession {
             final InventoryController inventoryController,
             final RecipeBook recipeBook,
             final RecipeBookController recipeBookController,
+            final DeliveryController deliveryController,
             final PotionPriceCalculator priceCalculator,
             final OrderBook orderBook,
             final OrderController orderController,
@@ -113,7 +131,8 @@ public final class GameSession {
             final CustomerBook customerBook,
             final NeedGenerator needGenerator,
             final OrderGenerator orderGenerator,
-            final OrderSpawner orderSpawner) {
+            final OrderSpawner orderSpawner,
+            final HouseBook houseBook) {
         this.player = player;
         this.catalog = catalog;
         this.inventory = inventory;
@@ -128,6 +147,8 @@ public final class GameSession {
         this.orderGenerator = orderGenerator;
         this.orderSpawner = orderSpawner;
         this.priceCalculator = priceCalculator;
+        this.deliveryController = deliveryController;
+        this.houseBook = houseBook;
     }
 
     public PlayerImpl getPlayer() {
@@ -184,5 +205,12 @@ public final class GameSession {
 
     public PotionPriceCalculator getPriceCalculator() {
         return priceCalculator;
+    }
+
+    public HouseBook getHouseBook() {
+        return houseBook;
+    }
+    public DeliveryController getDeliveryController() {
+        return deliveryController;
     }
 }

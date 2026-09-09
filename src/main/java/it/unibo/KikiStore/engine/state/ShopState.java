@@ -45,6 +45,8 @@ public final class ShopState implements GameState {
     private final EntityRenderer entityRenderer;
     private final MapRenderer environmentRenderer;
 
+    private final GameSession gameSession;
+
     private final Camera cam = new Camera();
     private int frameCount;
     private final int[][] groundGrid;
@@ -80,10 +82,12 @@ public final class ShopState implements GameState {
      * 
      * @param transitionController is used to switch from one state to another
      * @param input  controls every input from the player
+     * @param gameSession the game session
      */
     public ShopState(final GameStateTransition transitionController, final InputHandler input, final GameSession gameSession) {
         this.transitionController = transitionController;
         this.input = input;
+        this.gameSession = gameSession;
         //catalog+inventoryController+recipeBookController+orderController are passed from GameSession to maintain state across game states
         this.catalog = gameSession.getCatalog();
         this.inventoryController = gameSession.getInventoryController();
@@ -172,6 +176,9 @@ public final class ShopState implements GameState {
                     this.transitionController
             );
             transitionController.pushState(craftingState);
+        }
+        if (tileId == 5 && input.isAction()){
+         transitionController.pushState(new DeliveryState(transitionController, input, gameSession));   
         }
     }
 

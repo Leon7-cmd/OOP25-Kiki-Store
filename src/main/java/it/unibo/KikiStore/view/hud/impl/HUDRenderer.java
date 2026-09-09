@@ -9,9 +9,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-/**
- * Class used to display HUD for energy and money.
- */
 public final class HUDRenderer {
 
     // Energy variables
@@ -30,6 +27,9 @@ public final class HUDRenderer {
     private static final int MENU_START_X = 70;
     private static final int MENU_START_Y = 18;
 
+    // Message for delivery
+    private static final int MESSAGE_Y = 60;
+    private String activeMessage;
 
     // Utility variables
     private static final int FONT_SIZE = 12;
@@ -38,24 +38,13 @@ public final class HUDRenderer {
     private Rectangle2D menuBounds = new Rectangle2D(MENU_START_X - PADDING, MENU_START_Y - PADDING, ICON_SIZE + PADDING * 2, ICON_SIZE + PADDING * 2);
     private final SpriteManager spriteManager;
 
-    /**
-     * Constructs HUDRenderer.
-     * 
-     * @param spriteManager class used to retrive the sprites
-     */
     public HUDRenderer(final SpriteManager spriteManager) {
         this.spriteManager = spriteManager;
     }
 
-    /**
-     * Draws all visual elements of the state on the screen.
-     * 
-     * @param gc The JavaFX GraphicsContext to use for drawing on the Canvas.
-     * @param data The data that needs to be displayed
-     */
     public void render(final GraphicsContext gc, final HUDRenderData data) {
         final double screenWidth = gc.getCanvas().getWidth();
-        final double hudX = screenWidth - ENERGY_START_X; 
+        final double hudX = screenWidth - ENERGY_START_X;
         gc.save();
 
         // --------- ENERGY STATS ---------
@@ -66,7 +55,7 @@ public final class HUDRenderer {
         gc.setFont(Font.font("Helvetica", FontWeight.BOLD, FONT_SIZE));
         gc.setFill(Color.WHITE);
         gc.fillText(
-            data.currentEnergy() + " / " + data.maxEnergy(), 
+            data.currentEnergy() + " / " + data.maxEnergy(),
             hudX + TEXT_ENERGY_OFFSET_X,
             ENERGY_START_Y + TEXT_ENERGY_OFFSET_Y
         );
@@ -79,8 +68,6 @@ public final class HUDRenderer {
         gc.setFont(Font.font("Helvetica", FontWeight.BOLD, FONT_SIZE));
         gc.fillText("x " + data.coins(), COIN_START_X + TEXT_COIN_OFFSET_X, COIN_START_Y + TEXT_COIN_OFFSET_Y);
 
-        
-
         // --------- MENU ICON ---------
         final Image menuSprite = spriteManager.getSpriteSheet("sprites/hud/setting");
         if (menuSprite != null) {
@@ -91,10 +78,30 @@ public final class HUDRenderer {
         }
         menuBounds = new Rectangle2D(MENU_START_X - PADDING, MENU_START_Y - PADDING, ICON_SIZE + PADDING * 2, ICON_SIZE + PADDING * 2);
 
+        // --------- DELIVERY MESSAGE ---------
+        if (activeMessage != null) {
+            gc.setFont(Font.font("Helvetica", FontWeight.BOLD, FONT_SIZE));
+            gc.setFill(Color.WHITE);
+            gc.fillText(activeMessage, COIN_START_X, MESSAGE_Y);
+        }
+
         gc.restore();
     }
 
     public boolean isMenuClicked(final double x, final double y) {
         return menuBounds != null && menuBounds.contains(x, y);
+    }
+
+    // --------- DELIVERY MESSAGE API ---------
+    public void showMessage(final String message) {
+        this.activeMessage = message;
+    }
+
+    public boolean hasActiveMessage() {
+        return activeMessage != null;
+    }
+
+    public void dismissMessage() {
+        this.activeMessage = null;
     }
 }

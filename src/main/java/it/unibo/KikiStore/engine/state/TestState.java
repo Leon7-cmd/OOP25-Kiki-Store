@@ -88,6 +88,13 @@ public final class TestState implements GameState {
 
     @Override
     public void update() {
+        if (hudRenderer.hasActiveMessage()) {
+            if (input.consumeAction()) {
+            hudRenderer.dismissMessage();
+            }
+            return; 
+        }
+        gameSession.getDeliveryController().update();  
         kiki.update(input);
         frameCount++;
         final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
@@ -112,7 +119,18 @@ public final class TestState implements GameState {
         if (tileId == 7 && input.isAction()) {//ingredient stand
             transitionController.pushState(new Stand(transitionController, input, gameSession,tileId));
         }
+        if ((tileId == 8 || tileId == 9 || tileId == 10) && input.consumeAction()) {
+    gameSession.getHouseBook().getOwnerNameByTileId(tileId).ifPresent(this::handleDeliveryAttempt);
+        }
 
+    }
+        private void handleDeliveryAttempt(final String ownerName) {
+        final boolean correct = gameSession.getDeliveryController().attemptDelivery(ownerName);
+        if (correct) {
+            hudRenderer.showMessage("Consegnato a " + ownerName + "! +coins");
+        } else {
+            hudRenderer.showMessage("Questa è la casa di " + ownerName);
+        }
     }
 
      
