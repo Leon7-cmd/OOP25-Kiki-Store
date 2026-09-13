@@ -40,7 +40,7 @@ public final class BookTestState implements GameState {
 
     @Override
     public void init() {
-        // vuoto — la transizione avviene al primo update()
+        // la transizione avviene al primo update()
     }
 
     @Override

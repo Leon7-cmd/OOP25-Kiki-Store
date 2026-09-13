@@ -19,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * The magic book — single game state hosting Inventory, Recipes,
+ * The magic book - one single game state hosting Inventory, Recipes,
  * and Orders sections. Always shown as two open facing pages.
  * Handles open/close animations and page-turn animation (for Recipes only).
  */

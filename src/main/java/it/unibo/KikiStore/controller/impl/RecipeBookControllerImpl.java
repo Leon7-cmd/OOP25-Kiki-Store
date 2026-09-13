@@ -78,7 +78,7 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
         final List<Recipe> matchingRecipes = new ArrayList<>();
         for (final Recipe recipe : recipeBook.getRecipes()) {
             if (recipe.getPotion().getEffect().toLowerCase(Locale.ROOT)
-                    .contains(effect.toLowerCase())) {
+                    .contains(effect.toLowerCase(Locale.ROOT))) {
                 matchingRecipes.add(recipe);
             }
         }
@@ -109,7 +109,7 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
     public Recipe findByName(final String recipeName) {
         for (final Recipe recipe : recipeBook.getRecipes()) {
             if (recipe.getPotion().getName().toLowerCase(Locale.ROOT)
-                    .contains(recipeName.toLowerCase())) {
+                    .contains(recipeName.toLowerCase(Locale.ROOT))) {
                 return recipe;
             }
         }

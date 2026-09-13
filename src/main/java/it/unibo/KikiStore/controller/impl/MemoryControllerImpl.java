@@ -64,7 +64,7 @@ public final class MemoryControllerImpl implements MemoryController {
      *                            sprites for the pairs
      * @param inventoryController the inventory controller, used to grant the random
      *                            potion reward
-     * @param player the player, used to grant energy and money rewards
+     * @param player              the player, used to grant energy and money rewards
      */
     public MemoryControllerImpl(final GameCatalog gameCatalog,
             final InventoryController inventoryController,
