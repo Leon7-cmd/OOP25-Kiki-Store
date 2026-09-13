@@ -8,7 +8,6 @@ import it.unibo.KikiStore.model.memory.api.CardState;
 import it.unibo.KikiStore.model.memory.api.MemoryBoard;
 import it.unibo.KikiStore.model.memory.api.MemoryCard;
 import it.unibo.KikiStore.model.memory.impl.MemoryBoardImpl;
-import it.unibo.KikiStore.model.player.impl.PlayerImpl;
 import it.unibo.KikiStore.model.player.api.Player;
 
 import java.util.ArrayList;

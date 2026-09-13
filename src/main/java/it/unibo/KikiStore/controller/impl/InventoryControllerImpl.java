@@ -121,10 +121,13 @@ public final class InventoryControllerImpl implements InventoryController {
     public void removeIngredient(final String name, final int quantity) {
         if (hasEnoughIngredient(name, quantity)) {
             final GameItem item = findItem(name, inventory.getIngredients());
-
             if (item != null) {
-                item.setQuantity(item.getQuantity() - quantity);
-                return;
+                final int newQuantity = item.getQuantity() - quantity;
+                if (newQuantity <= 0) {
+                    inventory.getIngredients().remove(item);
+                } else {
+                    item.setQuantity(newQuantity);
+                }
             }
         }
     }

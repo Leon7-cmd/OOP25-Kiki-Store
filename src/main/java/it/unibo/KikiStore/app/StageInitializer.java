@@ -5,7 +5,6 @@ import it.unibo.KikiStore.engine.api.GameEngine;
 import it.unibo.KikiStore.engine.api.GameStateManager;
 import it.unibo.KikiStore.engine.impl.GameEngineImpl;
 import it.unibo.KikiStore.engine.impl.GameStateManagerImpl;
-import it.unibo.KikiStore.engine.state.CraftingTestState;
 import it.unibo.KikiStore.engine.state.MemoryTestState;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;

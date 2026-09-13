@@ -22,7 +22,7 @@ public final class CraftingControllerImpl implements CraftingController {
     private final RecipeBookController recipeBookController;
 
     /**
-     * @param inventoryController the inventory controller
+     * @param inventoryController  the inventory controller
      * @param recipeBookController the recipe book controller
      */
     public CraftingControllerImpl(final InventoryController inventoryController,
@@ -39,14 +39,15 @@ public final class CraftingControllerImpl implements CraftingController {
             inventoryController.addPotion(potion.getName(), potion.getImagePath(), potion.getQuantity(),
                     potion.getDescription(), potion.getEffect(), false);
             recipe.setUnlocked();
-            // TO-DO: inventoryController.removeIngredients(ingredients) da sistemare, serve un metodo che prende una lista di ingredienti
-            for (final Ingredient ingredient : recipe.getIngredients()) {
+            // TO-DO: inventoryController.removeIngredients(ingredients) da sistemare, serve
+            // un metodo che prende una lista di ingredienti
+            for (final Ingredient ingredient : ingredients) {
                 inventoryController.removeIngredient(ingredient.getName(), ingredient.getQuantity());
             }
 
         } else {
             inventoryController.addPotion(BLACK_POTION_NAME, BLACK_POTION_PATH, 1, "A failed attempt...", "none",
-            true);
+                    true);
             // blackPotion.setBlack(true);metodo probabilmente da togliere da potion
         }
     }
