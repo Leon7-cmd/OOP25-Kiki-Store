@@ -5,6 +5,7 @@ import it.unibo.KikiStore.model.inventory.api.Potion;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Simple container for the player's owned ingredients and potions.
@@ -24,12 +25,12 @@ public final class InventoryImpl implements Inventory {
 
     @Override
     public List<Ingredient> getIngredients() {
-        return ingredients;
+        return Collections.unmodifiableList(ingredients);
     }
 
     @Override
     public List<Potion> getPotions() {
-        return potions;
+        return Collections.unmodifiableList(potions);
     }
 
     @Override

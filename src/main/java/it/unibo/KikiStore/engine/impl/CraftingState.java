@@ -140,10 +140,10 @@ public final class CraftingState implements GameState {
         this.grayscale.setSaturation(-1.0);
 
         final Font loadedTitle = Font.loadFont(
-                getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), TITLE_FONT_SIZE);
+                getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), TITLE_FONT_SIZE);
         this.pixelFont = loadedTitle != null ? loadedTitle : Font.font("Monospace", TITLE_FONT_SIZE);
         final Font loadedSmall = Font.loadFont(
-                getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), SMALL_FONT_SIZE);
+                getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), SMALL_FONT_SIZE);
         this.pixelFontSmall = loadedSmall != null ? loadedSmall : Font.font("Monospace", SMALL_FONT_SIZE);
     }
 
@@ -176,8 +176,6 @@ public final class CraftingState implements GameState {
                 break;
             case RESULT:
                 updateResult();
-                break;
-            default:
                 break;
         }
     }
@@ -522,8 +520,6 @@ public final class CraftingState implements GameState {
                 break;
             case RESULT:
                 renderResult(gc, centerX, slotsY, belowY);
-                break;
-            default:
                 break;
         }
     }

@@ -12,7 +12,7 @@ import java.util.List;
  * Default implementation of the memory board. Builds two cards for
  * each given image path (defined as a matching pair) and shuffles them.
  */
-public class MemoryBoardImpl implements MemoryBoard {
+public final class MemoryBoardImpl implements MemoryBoard {
     private static final int CARDS_PER_PAIR = 2;
 
     private final List<MemoryCard> cards;

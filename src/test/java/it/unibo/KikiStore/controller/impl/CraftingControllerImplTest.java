@@ -1,5 +1,6 @@
 package it.unibo.KikiStore.controller.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -92,5 +93,39 @@ class CraftingControllerImplTest {
         final Ingredient dandelion = new IngredientImpl("Dandelion", "sprites/dandelion", 1, "flower");
         final Ingredient sage = new IngredientImpl("Sage", "sprites/sage", 1, "plant");
         return List.of(basil, dandelion, sage);
+    }
+
+    /**
+     * Verifies that crafting consumes only one unit of each required
+     * ingredient, not the whole stock.
+     */
+    @Test
+    void craftPotionConsumesOnlyRequiredQuantity() {
+        inventoryController.addIngredient("Basil", "sprites/basil", 4, "plant");
+
+        craftingController.craftPotion(correctIngredients());
+
+        assertEquals(4, inventoryController.getIngredientQuantity("Basil"));
+    }
+
+    /**
+     * Verifies that a crafted potion is added with quantity one.
+     */
+    @Test
+    void craftPotionAddsOnePotion() {
+        craftingController.craftPotion(correctIngredients());
+
+        assertEquals(1, inventoryController.getPotionQuantity("Windrunner Potion"));
+    }
+
+    /**
+     * Verifies that an unlocked recipe is not available once its
+     * ingredients have been used up.
+     */
+    @Test
+    void unlockedRecipeIsNotAvailableWithoutIngredients() {
+        craftingController.craftPotion(correctIngredients());
+
+        assertTrue(craftingController.getAvailableRecipes().isEmpty());
     }
 }

@@ -44,6 +44,7 @@ public final class MemoryState implements GameState {
     private static final double PROMPT_OFFSET_X = 50.0;
     private static final double BUTTON_WIDTH = 60.0;
     private static final double BUTTON_HEIGHT = 30.0;
+    private static final double OVERLAY_OPACITY = 0.6;
 
     private static final Color COL_BG = Color.web("#C68642");
     private static final Color COL_CARD_BACK = Color.web("#5C3A1E");
@@ -116,8 +117,6 @@ public final class MemoryState implements GameState {
             case RESULT:
                 updateResult();
                 break;
-            default:
-                break;
         }
     }
 
@@ -134,7 +133,7 @@ public final class MemoryState implements GameState {
     private void updateResult() {
         final boolean leftNow = input.isLeft();
         final boolean rightNow = input.isRight();
-        if ((leftNow && !leftWasPressed) || (rightNow && !rightWasPressed)) {
+        if (leftNow && !leftWasPressed || rightNow && !rightWasPressed) {
             playAgainYesSelected = !playAgainYesSelected;
         }
         leftWasPressed = leftNow;
@@ -189,16 +188,16 @@ public final class MemoryState implements GameState {
      * @return the clicked card index, or -1 if outside the grid
      */
     private int cardIndexAt(final double mx, final double my) {
-        final double gridW = screenW - MARGIN * 2;
-        final double gridH = screenH - TOP_MARGIN - MARGIN;
-        final double cardW = (gridW - CARD_GAP * (COLS - 1)) / COLS;
-        final double cardH = (gridH - CARD_GAP * (ROWS - 1)) / ROWS;
-
         final double relX = mx - MARGIN;
         final double relY = my - TOP_MARGIN;
         if (relX < 0 || relY < 0) {
             return -1;
         }
+
+        final double gridW = screenW - MARGIN * 2;
+        final double gridH = screenH - TOP_MARGIN - MARGIN;
+        final double cardW = (gridW - CARD_GAP * (COLS - 1)) / COLS;
+        final double cardH = (gridH - CARD_GAP * (ROWS - 1)) / ROWS;
 
         final int col = (int) (relX / (cardW + CARD_GAP));
         final int row = (int) (relY / (cardH + CARD_GAP));
@@ -223,13 +222,8 @@ public final class MemoryState implements GameState {
         renderTopBar(gc);
         renderGrid(gc);
 
-        switch (phase) {
-            case RESULT:
-                renderResult(gc);
-                break;
-            case PLAYING:
-            default:
-                break;
+        if (phase == Phase.RESULT) {
+            renderResult(gc);
         }
     }
 
@@ -268,8 +262,10 @@ public final class MemoryState implements GameState {
 
         final List<MemoryCard> cards = memoryController.getBoard().getCards();
         for (int i = 0; i < cards.size(); i++) {
-            final double x = MARGIN + (i % COLS) * (cardW + CARD_GAP);
-            final double y = TOP_MARGIN + (i / COLS) * (cardH + CARD_GAP);
+            final int col = i % COLS;
+            final int row = i / COLS;
+            final double x = MARGIN + col * (cardW + CARD_GAP);
+            final double y = TOP_MARGIN + row * (cardH + CARD_GAP);
             renderCard(gc, cards.get(i), x, y, cardW, cardH);
         }
     }
@@ -316,7 +312,7 @@ public final class MemoryState implements GameState {
      * @param gc graphics context
      */
     private void renderResult(final GraphicsContext gc) {
-        gc.setFill(Color.rgb(0, 0, 0, 0.6));
+        gc.setFill(Color.rgb(0, 0, 0, OVERLAY_OPACITY));
         gc.fillRect(0, 0, screenW, screenH);
 
         final double centerX = screenW / 2;

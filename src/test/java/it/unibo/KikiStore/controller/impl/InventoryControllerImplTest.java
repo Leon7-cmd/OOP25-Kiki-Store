@@ -116,4 +116,29 @@ class InventoryControllerImplTest {
         assertEquals(1, missing.size());
         assertEquals("Dandelion", missing.get(0).getName());
     }
+
+    /**
+     * Verifies that removing all units of a potion removes it from the inventory.
+     */
+    @Test
+    void removePotionToZeroRemovesIt() {
+        final InventoryControllerImpl controller = new InventoryControllerImpl();
+        controller.addPotion("Test Potion", "sprites/test", 2, "desc", "effect", false);
+
+        controller.removePotion("Test Potion", 2);
+
+        assertFalse(controller.hasPotion("Test Potion"));
+    }
+
+    /**
+     * Verifies that hasEnoughPotion compares against the owned quantity.
+     */
+    @Test
+    void hasEnoughPotionChecksQuantity() {
+        final InventoryControllerImpl controller = new InventoryControllerImpl();
+        controller.addPotion("Test Potion", "sprites/test", 2, "desc", "effect", false);
+
+        assertTrue(controller.hasEnoughPotion("Test Potion", 2));
+        assertFalse(controller.hasEnoughPotion("Test Potion", 3));
+    }
 }

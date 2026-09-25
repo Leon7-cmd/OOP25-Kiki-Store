@@ -71,6 +71,7 @@ public final class MemoryControllerImpl implements MemoryController {
         this.gameCatalog = gameCatalog;
         this.inventoryController = inventoryController;
         this.player = player;
+        this.board = new MemoryBoardImpl(List.of());
     }
 
     @Override
@@ -115,8 +116,6 @@ public final class MemoryControllerImpl implements MemoryController {
                 }
                 break;
             case COMPLETE:
-                break;
-            default:
                 break;
         }
     }

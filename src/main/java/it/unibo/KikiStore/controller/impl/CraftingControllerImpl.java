@@ -16,7 +16,7 @@ import java.util.List;
  */
 public final class CraftingControllerImpl implements CraftingController {
     private static final String BLACK_POTION_NAME = "Failed Potion";
-    private static final String BLACK_POTION_PATH = "assets/potions/black.png";
+    private static final String BLACK_POTION_PATH = "sprites/potions/black_potion";
 
     private final InventoryController inventoryController;
     private final RecipeBookController recipeBookController;
@@ -36,19 +36,19 @@ public final class CraftingControllerImpl implements CraftingController {
         final Recipe recipe = recipeBookController.findByIngredients(ingredients);
         if (recipe != null) {
             final Potion potion = recipe.getPotion();
-            inventoryController.addPotion(potion.getName(), potion.getImagePath(), potion.getQuantity(),
+            inventoryController.addPotion(potion.getName(), potion.getImagePath(), 1,
                     potion.getDescription(), potion.getEffect(), false);
             recipe.setUnlocked();
-            // TO-DO: inventoryController.removeIngredients(ingredients) da sistemare, serve
-            // un metodo che prende una lista di ingredienti
-            for (final Ingredient ingredient : ingredients) {
-                inventoryController.removeIngredient(ingredient.getName(), ingredient.getQuantity());
+            for (final Ingredient required : recipe.getIngredients()) {
+                inventoryController.removeIngredient(required.getName(), required.getQuantity());
             }
 
         } else {
             inventoryController.addPotion(BLACK_POTION_NAME, BLACK_POTION_PATH, 1, "A failed attempt...", "none",
                     true);
-            // blackPotion.setBlack(true);metodo probabilmente da togliere da potion
+            for (final Ingredient chosen : ingredients) {
+                inventoryController.removeIngredient(chosen.getName(), 1);
+            }
         }
     }
 

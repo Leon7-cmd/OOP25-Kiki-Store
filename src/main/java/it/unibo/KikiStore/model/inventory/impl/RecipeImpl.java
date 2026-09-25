@@ -20,7 +20,7 @@ public final class RecipeImpl implements Recipe {
      * @param isUnlocked whether the recipe starts already unlocked
      */
     public RecipeImpl(final List<Ingredient> ingredients, final Potion resultingPotion, final boolean isUnlocked) {
-        this.ingredients = ingredients;
+        this.ingredients = List.copyOf(ingredients);
         this.resultingPotion = resultingPotion;
         this.isUnlocked = isUnlocked;
     }

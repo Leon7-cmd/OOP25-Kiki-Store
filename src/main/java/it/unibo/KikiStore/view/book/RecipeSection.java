@@ -171,7 +171,7 @@ public final class RecipeSection implements BookSection {
                 currentY += TEXT_LINE_HEIGHT;
             }
             if (line.length() > 0) {
-                line.append(" ");
+                line.append("");
             }
             line.append(word);
         }

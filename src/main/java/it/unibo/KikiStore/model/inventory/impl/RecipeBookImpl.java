@@ -6,11 +6,8 @@ import it.unibo.KikiStore.model.inventory.api.Potion;
 import it.unibo.KikiStore.model.inventory.api.Recipe;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,9 +18,10 @@ import com.google.gson.JsonObject;
  * used only for matching.
  */
 public final class RecipeBookImpl implements RecipeBook {
-    private final List<Recipe> allRecipes;
     // type isn't stored in the recipes JSON, only needed for the constructor
     private static final String PLACEHOLDER_TYPE = "plant";
+    private static final int REQUIRED_QUANTITY = 1;
+    private final List<Recipe> allRecipes;
 
     /**
      * @param jsonFile path to the recipes JSON file in resources
@@ -35,18 +33,13 @@ public final class RecipeBookImpl implements RecipeBook {
 
     /**
      * Reads the recipes JSON file and populates {@link #allRecipes}.
+     * Every recipe starts locked and requires one unit of each listed
+     * ingredient.
      *
      * @param jsonFile path to the recipes JSON file in resources
      */
     private void loadFromJson(final String jsonFile) {
-        final InputStream stream = getClass().getClassLoader().getResourceAsStream(jsonFile);
-        if (stream == null) {
-            return;
-        }
-        final InputStreamReader reader = new InputStreamReader(stream);
-        final JsonArray recipes = new Gson().fromJson(reader, JsonArray.class);
-
-        for (final JsonElement entry : recipes) {
+        for (final JsonElement entry : JsonResources.readArray(jsonFile)) {
             final JsonObject recipeData = entry.getAsJsonObject();
             final String name = recipeData.get("name").getAsString();
             final String description = recipeData.get("description").getAsString();
@@ -57,7 +50,7 @@ public final class RecipeBookImpl implements RecipeBook {
 
             for (final JsonElement ing : ingredientsArray) {
                 final String ingName = ing.getAsString();
-                ingredients.add(new IngredientImpl(ingName, id, 0, PLACEHOLDER_TYPE));
+                ingredients.add(new IngredientImpl(ingName, id, REQUIRED_QUANTITY, PLACEHOLDER_TYPE));
             }
             final Potion potion = new PotionImpl(name, id, 0, description, effect, false);
             final Recipe recipe = new RecipeImpl(ingredients, potion, false);
@@ -67,7 +60,7 @@ public final class RecipeBookImpl implements RecipeBook {
 
     @Override
     public List<Recipe> getRecipes() {
-        return allRecipes;
+        return Collections.unmodifiableList(allRecipes);
     }
 
     @Override

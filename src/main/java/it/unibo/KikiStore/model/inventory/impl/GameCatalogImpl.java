@@ -3,12 +3,9 @@ package it.unibo.KikiStore.model.inventory.impl;
 import it.unibo.KikiStore.model.inventory.api.GameCatalog;
 import it.unibo.KikiStore.model.inventory.api.Ingredient;
 import it.unibo.KikiStore.model.inventory.api.Potion;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,16 +31,7 @@ public final class GameCatalogImpl implements GameCatalog {
     }
 
     private void loadIngredients(final String path) {
-        final InputStream stream = getClass()
-                .getClassLoader()
-                .getResourceAsStream(path);
-        if (stream == null) {
-            System.err.println("Ingredients JSON not found: " + path);
-            return;
-        }
-        final JsonArray array = new Gson()
-                .fromJson(new InputStreamReader(stream), JsonArray.class);
-        for (final JsonElement el : array) {
+        for (final JsonElement el : JsonResources.readArray(path)) {
             final JsonObject obj = el.getAsJsonObject();
             final String name = obj.get("name").getAsString();
             final String imagePath = obj.get("imagePath").getAsString();
@@ -53,16 +41,7 @@ public final class GameCatalogImpl implements GameCatalog {
     }
 
     private void loadPotions(final String path) {
-        final InputStream stream = getClass()
-                .getClassLoader()
-                .getResourceAsStream(path);
-        if (stream == null) {
-            System.err.println("Potions JSON not found: " + path);
-            return;
-        }
-        final JsonArray array = new Gson()
-                .fromJson(new InputStreamReader(stream), JsonArray.class);
-        for (final JsonElement el : array) {
+        for (final JsonElement el : JsonResources.readArray(path)) {
             final JsonObject obj = el.getAsJsonObject();
             final String name = obj.get("name").getAsString();
             final String imagePath = obj.get("imagePath").getAsString();

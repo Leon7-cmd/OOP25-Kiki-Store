@@ -165,8 +165,6 @@ public final class BookState implements GameState {
 
             case CLOSED:
                 break;
-            default:
-                break;
         }
 
         escWasPressed = escNow;
@@ -266,15 +264,16 @@ public final class BookState implements GameState {
             case OPENING:
                 openAnimator.render(gc, bookX, bookY, bookW, bookH);
                 break;
+
             case CLOSING:
                 closeAnimator.render(gc, bookX, bookY, bookW, bookH);
                 break;
+
             case OPEN:
                 renderOpenBook(gc, bookX, bookY, bookW, bookH);
                 break;
+
             case CLOSED:
-                break;
-            default:
                 break;
         }
     }

@@ -2,6 +2,8 @@ package it.unibo.KikiStore.controller.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import it.unibo.KikiStore.controller.api.InventoryController;
 import it.unibo.KikiStore.model.inventory.impl.InventoryImpl;
@@ -23,30 +25,71 @@ public final class InventoryControllerImpl implements InventoryController {
     /**
      * Creates an empty inventory controller.
      */
-    public InventoryControllerImpl() {
-    }
-
     @Override
     public boolean isFull() {
-        return (inventory.getIngredients().size() + inventory.getPotions().size()) == MAX_CAPACITY;
+        return inventory.getIngredients().size() + inventory.getPotions().size() >= MAX_CAPACITY;
     }
 
     /**
-     * Finds an item by name within the given list, case-insensitively.
-     * TO-DO: replace with a hashmap-based lookup for better performance.
+     * Searches an item by name, ignoring case, in the given list.
      *
-     * @param name the item name to search for
-     * @param list the list to search in (ingredients or potions)
-     * @return the matching item, or null if not found
+     * @param <T>  the concrete item type (ingredient or potion)
+     * @param name the name of the item to look for
+     * @param list the list to search in
+     * @return the matching item, or null if it is not present
      */
-    private GameItem findItem(final String name, final List<? extends GameItem> list) {
-        for (final GameItem inventoryItem : list) {
+    private <T extends GameItem> T findItem(final String name, final List<T> list) {
+        for (final T inventoryItem : list) {
             if (inventoryItem.getName().equalsIgnoreCase(name)) {
                 return inventoryItem;
             }
         }
         return null;
-        // return inventory.getIngredients().contains(ingredient); ----alternative
+    }
+
+    /**
+     * Increases the quantity of an item already in the given list, or adds a new
+     * item if it is not present yet and the inventory still has room.
+     *
+     * @param <T>      the concrete item type (ingredient or potion)
+     * @param name     the name of the item to look for
+     * @param quantity the amount to add
+     * @param items    the inventory list the item belongs to
+     * @param newItem  creates the new item, called only if the item is not present
+     * @param adder    adds the new item to the inventory
+     */
+    private <T extends GameItem> void increase(final String name, final int quantity,
+            final List<T> items, final Supplier<T> newItem, final Consumer<T> adder) {
+        final T existing = findItem(name, items);
+        if (existing != null) {
+            existing.setQuantity(existing.getQuantity() + quantity);
+        } else if (!isFull()) {
+            adder.accept(newItem.get());
+        }
+    }
+
+    /**
+     * Decreases the quantity of an item in the given list, removing it once its
+     * quantity reaches zero. Does nothing if the item is missing or there is not
+     * enough of it.
+     *
+     * @param <T>      the concrete item type (ingredient or potion)
+     * @param name     the name of the item to look for
+     * @param quantity the amount to remove
+     * @param items    the inventory list the item belongs to
+     * @param remover  removes the item from the inventory
+     */
+    private <T extends GameItem> void decrease(final String name, final int quantity,
+            final List<T> items, final Consumer<T> remover) {
+        final T item = findItem(name, items);
+        if (item != null && item.getQuantity() >= quantity) {
+            final int newQuantity = item.getQuantity() - quantity;
+            if (newQuantity == 0) {
+                remover.accept(item);
+            } else {
+                item.setQuantity(newQuantity);
+            }
+        }
     }
 
     @Override
@@ -72,12 +115,12 @@ public final class InventoryControllerImpl implements InventoryController {
     }
 
     @Override
-    public boolean hasEnoughIngredient(final String name, final int quantity) { // da modificare
+    public boolean hasEnoughIngredient(final String name, final int quantity) {
         return getIngredientQuantity(name) >= quantity;
     }
 
     @Override
-    public boolean hasEnoughPotion(final String name, final int quantity) { // da modificare
+    public boolean hasEnoughPotion(final String name, final int quantity) {
         return getPotionQuantity(name) >= quantity;
     }
 
@@ -88,60 +131,26 @@ public final class InventoryControllerImpl implements InventoryController {
 
     @Override
     public void addIngredient(final String name, final String imagePath, final int quantity, final String type) {
-        if (isFull()) {
-            System.out.println("Cannot add " + name + ", inventory is full");
-            return;
-        }
-        final GameItem item = findItem(name, inventory.getIngredients());
-
-        if (item != null) {
-            item.setQuantity(item.getQuantity() + quantity);
-            return;
-        }
-        inventory.addIngredient(new IngredientImpl(name, imagePath, quantity, type));
+        increase(name, quantity, inventory.getIngredients(),
+                () -> new IngredientImpl(name, imagePath, quantity, type), inventory::addIngredient);
     }
 
     @Override
     public void addPotion(final String name, final String imagePath, final int quantity, final String description,
             final String effect, final boolean isBlack) {
-        if (isFull()) {
-            System.out.println("Cannot add " + name + ", inventory is full");
-            return;
-        }
-        final GameItem item = findItem(name, inventory.getPotions());
-
-        if (item != null) {
-            item.setQuantity(item.getQuantity() + quantity);
-            return;
-        }
-        inventory.addPotion(new PotionImpl(name, imagePath, quantity, description, effect, isBlack));
+        increase(name, quantity, inventory.getPotions(),
+                () -> new PotionImpl(name, imagePath, quantity, description, effect, isBlack),
+                inventory::addPotion);
     }
 
     @Override
     public void removeIngredient(final String name, final int quantity) {
-        if (hasEnoughIngredient(name, quantity)) {
-            final GameItem item = findItem(name, inventory.getIngredients());
-            if (item != null) {
-                final int newQuantity = item.getQuantity() - quantity;
-                if (newQuantity <= 0) {
-                    inventory.getIngredients().remove(item);
-                } else {
-                    item.setQuantity(newQuantity);
-                }
-            }
-        }
+        decrease(name, quantity, inventory.getIngredients(), inventory::removeIngredient);
     }
 
     @Override
     public void removePotion(final String name, final int quantity) {
-        if (hasEnoughPotion(name, quantity)) {
-            final GameItem item = findItem(name, inventory.getPotions());
-
-            if (item != null) {
-                item.setQuantity(item.getQuantity() - quantity);
-                return;
-            }
-        }
+        decrease(name, quantity, inventory.getPotions(), inventory::removePotion);
     }
 
     @Override
