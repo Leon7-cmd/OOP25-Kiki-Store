@@ -104,7 +104,6 @@ class PlayerTest {
             @Override public boolean isLeft() { return false; }
             @Override public boolean isRight() { return true; }
             @Override public boolean isAction() { return false; }
-            @Override public void resetAction() { }
         };
 
         // Bind controller to player model and advance one input frame

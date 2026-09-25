@@ -40,8 +40,5 @@ public interface InputHandler {
      */
     boolean isAction();
 
-    /**
-     * Reset the action variable.
-     */
-    void resetAction();
+    
 }

@@ -128,7 +128,6 @@ public final class TestState implements GameState {
             kiki.setY(TELEPORT2[1]);
         }
         if (tileId == 4 && input.isAction()) {
-            input.resetAction();
             transitionController.pushState(new MinigameFly(transitionController, input, kiki));
         }
     }

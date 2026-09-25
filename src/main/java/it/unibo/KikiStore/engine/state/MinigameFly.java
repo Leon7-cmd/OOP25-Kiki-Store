@@ -122,8 +122,7 @@ public final class MinigameFly implements GameState {
         if (kiki.getX() > cam.getX() + cam.getW() - TILE_SIZE) {
             kiki.setX(cam.getX() + cam.getW() - TILE_SIZE);
         }
-        if (kiki.getX() < cam.getX() - PLAYER_SIZE || gameEnd && input.isAction()) {
-            input.resetAction();
+        if (kiki.getX() < cam.getX() - PLAYER_SIZE || gameEnd) {
             transitionController.popState();
         }
     }

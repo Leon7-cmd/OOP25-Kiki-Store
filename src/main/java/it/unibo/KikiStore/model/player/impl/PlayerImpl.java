@@ -2,7 +2,7 @@ package it.unibo.KikiStore.model.player.impl;
 
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
 import it.unibo.KikiStore.model.player.api.Player;
-import javafx.geometry.Rectangle2D;
+import it.unibo.KikiStore.model.utility.BoundingBox;
 
 /**
  * Concrete Model implementation representing the playable character.
@@ -164,8 +164,8 @@ public final class PlayerImpl implements Player {
     }
 
     @Override
-    public Rectangle2D getHitbox() {
-        return new Rectangle2D(
+    public BoundingBox getHitbox() {
+        return new BoundingBox(
             x + HITBOX_OFFSET_X,
             y + HITBOX_OFFSET_Y,
             HITBOX_WIDTH,

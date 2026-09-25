@@ -28,6 +28,7 @@ public final class PlayerControllerImpl implements PlayerController {
     /**
      * Updates the player position.
      */
+    @Override
     public void update() {
         double dx = 0.0;
         double dy = 0.0;
@@ -43,6 +44,12 @@ public final class PlayerControllerImpl implements PlayerController {
         }
         if (input.isRight()) {
             dx += 1.0;
+        }
+
+        if (dx != 0.0 && dy != 0.0) {
+            final double length = Math.hypot(dx, dy);
+            dx /= length;
+            dy /= length;
         }
 
         player.move(dx, dy);

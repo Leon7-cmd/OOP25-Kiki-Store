@@ -15,6 +15,7 @@ public final class InputHandlerImpl implements InputHandler {
     private boolean left;
     private boolean right;
     private boolean action;
+    private boolean actionConsumed;
 
     /**
      * Constructor that attaches key listeners to the main application scene.
@@ -30,7 +31,7 @@ public final class InputHandlerImpl implements InputHandler {
             if (code == KeyCode.S || code == KeyCode.DOWN) {
                 down = true; 
             }
-            if (code == KeyCode.A || code == KeyCode.LEFT) {
+            if (code == KeyCode.A || code == KeyCode.LEFT) { 
                 left = true; 
             }
             if (code == KeyCode.D || code == KeyCode.RIGHT) { 
@@ -57,6 +58,7 @@ public final class InputHandlerImpl implements InputHandler {
             }
             if (code == KeyCode.E) {
                 action = false;
+                actionConsumed = false;
             }
         });
     }
@@ -77,12 +79,16 @@ public final class InputHandlerImpl implements InputHandler {
         return right; 
     }
 
+    /**
+     * Action variable.
+     * 
+     * @return the Action boolean
+     */
     @Override public boolean isAction() { 
-        return action; 
-    }
-
-    @Override
-    public void resetAction() {
-        this.action = false;
+        if (action && !actionConsumed) {
+            actionConsumed = true;
+            return true;
+        }
+        return false;
     }
 }

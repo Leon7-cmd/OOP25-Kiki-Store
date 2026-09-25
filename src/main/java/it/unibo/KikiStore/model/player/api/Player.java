@@ -1,7 +1,7 @@
 package it.unibo.KikiStore.model.player.api;
 
 import it.unibo.KikiStore.model.map.impl.CollisionHandler;
-import javafx.geometry.Rectangle2D;
+import it.unibo.KikiStore.model.utility.BoundingBox;
 
 /**
  * Logical model representing the playable character.
@@ -93,7 +93,7 @@ public interface Player {
     /**
      * @return the calculated bounding box used for collision detection.
      */
-    Rectangle2D getHitbox();
+    BoundingBox getHitbox();
 
     /**
      * Attaches or updates the collision handler for the current map.
