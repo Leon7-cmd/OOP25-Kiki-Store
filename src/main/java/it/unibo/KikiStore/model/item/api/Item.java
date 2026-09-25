@@ -1,6 +1,6 @@
 package it.unibo.KikiStore.model.item.api;
 
-import javafx.geometry.Rectangle2D;
+import it.unibo.KikiStore.model.utility.BoundingBox;
 
 /**
  * Defines all physical objects.
@@ -57,7 +57,7 @@ public interface Item {
     /**
      * Returns the physical boundary used for collision detection and interaction.
      * 
-     * @return A Rectangle2D representing the item's hitbox.
+     * @return A BoundingBox representing the item's hitbox.
      */
-    Rectangle2D getHitbox();
+    BoundingBox getHitbox();
 }

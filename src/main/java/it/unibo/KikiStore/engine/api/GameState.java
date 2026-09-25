@@ -26,7 +26,19 @@ public interface GameState {
      * Draws all visual elements of the state on the screen.
      * Invoked cyclically by the Game Loop immediately after update().
      * 
-     * @param gc The JavaFX GraphicsContext to use for drawing on the Canvas.
+     * @param gc the JavaFX GraphicsContext to use for drawing on the Canvas.
      */
-    void render(GraphicsContext gc); 
+    void render(GraphicsContext gc);
+
+    /**
+     * Suspends the current state's execution when another state is pushed onto the stack.
+     * Typically used to freeze inputs, cache entity coordinates, or halt local timers.
+     */
+    void pause();
+
+    /**
+     * Resumes the state's active lifecycle when it returns to the top of the stack after a pop.
+     * Typically used to restore entity positions, re-inject map collision handlers, and reactivate logic.
+     */
+    void resume();
 }

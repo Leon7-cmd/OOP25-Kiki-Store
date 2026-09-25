@@ -43,23 +43,20 @@ public final class GameStateManagerImpl implements GameStateManager, GameStateTr
 
     @Override
     public void pushState(final GameState newState) {
-        if (stateStack.isEmpty()) {
-            stateStack.push(newState);
-            newState.init();
-        } else {
-            this.isTransitioning = true;
-            this.pendingState = newState;
-            this.fadeDirection = 1; 
-            this.isPushAction = true;
+        if (!stateStack.isEmpty()) {
+            stateStack.peek().pause();
         }
+        stateStack.push(newState);
+        newState.init();
     }
 
     @Override
     public void popState() {
-        if (stateStack.size() > 1) {
-            this.isTransitioning = true;
-            this.fadeDirection = 1;
-            this.isPushAction = false;
+        if (!stateStack.isEmpty()) {
+            stateStack.pop();
+        }
+        if (!stateStack.isEmpty()) {
+            stateStack.peek().resume();
         }
     }
 
@@ -76,11 +73,10 @@ public final class GameStateManagerImpl implements GameStateManager, GameStateTr
                 alpha = 1.0;
                 fadeDirection = -1;
                 if (isPushAction && pendingState != null) {
-                    stateStack.push(pendingState);
-                    pendingState.init();
+                    pushState(pendingState);
                     pendingState = null;
                 } else if (!isPushAction) {
-                    stateStack.pop();
+                    popState();
                 }
             } else if (alpha <= 0.0) {
                 alpha = 0.0;
