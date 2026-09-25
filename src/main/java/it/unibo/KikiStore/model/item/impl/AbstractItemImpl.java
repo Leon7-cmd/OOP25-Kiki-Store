@@ -1,7 +1,7 @@
 package it.unibo.KikiStore.model.item.impl;
 
 import it.unibo.KikiStore.model.item.api.Item;
-import javafx.geometry.Rectangle2D;
+import it.unibo.KikiStore.model.utility.BoundingBox;
 
 /**
  * Abstrct class for Items.
@@ -92,7 +92,7 @@ public abstract class AbstractItemImpl implements Item {
      * 
      * @return A new Rectangle2D based on current position and dimensions.
      */
-    public Rectangle2D getHitbox() {
-        return new Rectangle2D(x, y, width, height);
+    public BoundingBox getHitbox() {
+        return new BoundingBox(x, y, width, height);
     }
 }

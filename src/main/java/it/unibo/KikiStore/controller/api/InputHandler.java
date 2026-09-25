@@ -39,4 +39,6 @@ public interface InputHandler {
      * @return the Action boolean
      */
     boolean isAction();
+
+    
 }

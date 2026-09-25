@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.unibo.KikiStore.model.item.impl.AbstractItemImpl;
-import javafx.geometry.Rectangle2D;
+import it.unibo.KikiStore.model.utility.BoundingBox;
 
 /**
  * Unit tests for {@link AbstractItemImpl}.
@@ -78,12 +78,12 @@ class ItemTest {
 
     @Test
     void testHitboxGeneration() {
-        final Rectangle2D hitbox = testItem.getHitbox();
+        final BoundingBox hitbox = testItem.getHitbox();
 
         assertNotNull(hitbox);
-        assertEquals(POS_X, hitbox.getMinX(), DELTA);
-        assertEquals(POS_Y, hitbox.getMinY(), DELTA);
-        assertEquals(WIDTH, hitbox.getWidth(), DELTA);
-        assertEquals(HEIGHT, hitbox.getHeight(), DELTA);
+        assertEquals(POS_X, hitbox.x(), DELTA);
+        assertEquals(POS_Y, hitbox.y(), DELTA);
+        assertEquals(WIDTH, hitbox.width(), DELTA);
+        assertEquals(HEIGHT, hitbox.height(), DELTA);
     }
 }
