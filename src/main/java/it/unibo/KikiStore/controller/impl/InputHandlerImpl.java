@@ -17,6 +17,11 @@ public final class InputHandlerImpl implements InputHandler {
     private boolean action;
     private boolean actionConsumed;
 
+    // Mouse click state: set on click, consumed (reset to false) by isMouseClicked()
+    private boolean mouseClicked;
+    private double mouseX;
+    private double mouseY;
+
     /**
      * Constructor that attaches key listeners to the main application scene.
      * 
@@ -61,6 +66,12 @@ public final class InputHandlerImpl implements InputHandler {
                 actionConsumed = false;
             }
         });
+
+        scene.setOnMouseClicked(event -> {
+            mouseClicked = true;
+            mouseX = event.getX();
+            mouseY = event.getY();
+        });
     }
 
     @Override public boolean isUp() { 
@@ -90,5 +101,24 @@ public final class InputHandlerImpl implements InputHandler {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isMouseClicked() {
+        if (mouseClicked) {
+            mouseClicked = false;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public double getMouseX() {
+        return mouseX;
+    }
+
+    @Override
+    public double getMouseY() {
+        return mouseY;
     }
 }

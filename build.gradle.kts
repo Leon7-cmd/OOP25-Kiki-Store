@@ -20,6 +20,12 @@ javafx {
     modules = listOf("javafx.controls", "javafx.graphics", "javafx.media")
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 repositories { // Where to search for dependencies
     mavenCentral()
 }
@@ -49,11 +55,12 @@ dependencies {
 
     testImplementation("org.mockito:mockito-core:5.11.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 }
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.sampleapp.RateAMovie")
+    mainClass.set("it.unibo.KikiStore.app.Main")
 }
 
 tasks.withType<Test>().configureEach {

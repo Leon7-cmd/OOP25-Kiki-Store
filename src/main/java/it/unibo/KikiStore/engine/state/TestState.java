@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Concrete implementation of GameState used to test the integration of 
+ * Concrete implementation of GameState used to test the integration of
  * player movement, dual-layered maps (visual/collision), and camera scrolling.
  */
 public final class TestState implements GameState {
@@ -58,7 +58,8 @@ public final class TestState implements GameState {
     private final int[][] maskGrid;
 
     /**
-     * Constructs a TestState with the required controller systems and loads map resources.
+     * Constructs a TestState with the required controller systems and loads map
+     * resources.
      * 
      * @param transitionController is used to switch from one state to another
      * @param input controls every input from the player
@@ -99,7 +100,8 @@ public final class TestState implements GameState {
     }
 
     @Override
-    public void init() { }
+    public void init() {
+    }
 
     @Override
     public void pause() {
@@ -134,7 +136,7 @@ public final class TestState implements GameState {
 
     @Override
     public void render(final GraphicsContext gc) {
-        final double screenWidth = gc.getCanvas().getWidth(); 
+        final double screenWidth = gc.getCanvas().getWidth();
         final double screenHeight = gc.getCanvas().getHeight();
 
         // Clear the screen with a solid background color
@@ -142,20 +144,19 @@ public final class TestState implements GameState {
         gc.fillRect(0, 0, screenWidth, screenHeight);
 
         // --- CAMERA LOGIC ---
-        gc.save(); 
+        gc.save();
         cam.update(kiki.getX(), kiki.getY(), screenWidth, screenHeight);
-        gc.translate(-cam.getX(), -cam.getY()); 
+        gc.translate(-cam.getX(), -cam.getY());
 
         // --- WORLD RENDERING ---
         environmentRenderer.render(gc, new MapRenderData(groundGrid, TILE_SIZE));
         environmentRenderer.render(gc, new MapRenderData(decorationGrid, TILE_SIZE));
         final EntityRenderData kikiData = new EntityRenderData(
-            kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
-        );
+                kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection());
         entityRenderer.render(gc, List.of(kikiData), frameCount);
         environmentRenderer.render(gc, new MapRenderData(upperGrid, TILE_SIZE));
 
-        gc.restore(); 
+        gc.restore();
 
         // --- HUD ---
         final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), 5, kiki.getMoney());
