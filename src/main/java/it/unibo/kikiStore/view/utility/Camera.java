@@ -4,7 +4,7 @@ package it.unibo.kikiStore.view.utility;
  * Utility class that manages the camera.
  */
 public class Camera {
-    private static final double DEFAULT_ZOOM = 2.5;
+    private static final double DEFAULT_ZOOM = 1.5;
     private static final double PLAYER_SIZE = 64.0;
 
     private double x;

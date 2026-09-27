@@ -109,7 +109,8 @@ public final class VillageState implements GameState {
 
         if (this.kiki.getX() == 0.0 && this.kiki.getY() == 0.0) {
             this.kiki.setPosition(DEFAULT_SPAWN_X, DEFAULT_SPAWN_Y);
-        } 
+        }
+        this.kiki.setCollisionHandler(collisionHandler);
 
         this.inventory = new InventoryControllerImpl();
         this.catalog = catalog;

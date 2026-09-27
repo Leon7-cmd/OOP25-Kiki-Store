@@ -16,20 +16,39 @@ public final class HUDRenderer {
     private static final double SCALE = 2.0;
 
     // Energy variables
-    private static final double ENERGY_START_X = 180 * SCALE;
-    private static final double ENERGY_START_Y = 20 * SCALE;
-    private static final double TEXT_ENERGY_OFFSET_X = -45 * SCALE;
-    private static final double TEXT_ENERGY_OFFSET_Y = 12 * SCALE;
+    private static final double BASE_ENERGY_X = 100.0;
+    private static final double BASE_ENERGY_Y = 20.0;
+    private static final double BASE_TEXT_ENERGY_OFFSET_X = -45.0;
+    private static final double BASE_TEXT_ENERGY_OFFSET_Y = 12.0;
 
     // Coin variables
-    private static final double COIN_START_X = 20 * SCALE;
-    private static final double COIN_START_Y = 18 * SCALE;
-    private static final double TEXT_COIN_OFFSET_X = 24 * SCALE;
-    private static final double TEXT_COIN_OFFSET_Y = 14 * SCALE;
+    private static final double BASE_COIN_X = 20.0;
+    private static final double BASE_COIN_Y = 18.0;
+    private static final double BASE_TEXT_COIN_OFFSET_X = 24.0;
+    private static final double BASE_TEXT_COIN_OFFSET_Y = 14.0;
 
     // Utility variables
-    private static final double FONT_SIZE = 14 * SCALE;
-    private static final double ICON_SIZE = 16 * SCALE;
+    private static final double BASE_FONT_SIZE = 14.0;
+    private static final double BASE_ICON_SIZE = 16.0;
+
+    // Scaled constants
+    private static final double ENERGY_START_X = BASE_ENERGY_X * SCALE;
+    private static final double ENERGY_START_Y = BASE_ENERGY_Y * SCALE;
+    private static final double TEXT_ENERGY_OFFSET_X = BASE_TEXT_ENERGY_OFFSET_X * SCALE;
+    private static final double TEXT_ENERGY_OFFSET_Y = BASE_TEXT_ENERGY_OFFSET_Y * SCALE;
+
+    private static final double COIN_START_X = BASE_COIN_X * SCALE;
+    private static final double COIN_START_Y = BASE_COIN_Y * SCALE;
+    private static final double TEXT_COIN_OFFSET_X = BASE_TEXT_COIN_OFFSET_X * SCALE;
+    private static final double TEXT_COIN_OFFSET_Y = BASE_TEXT_COIN_OFFSET_Y * SCALE;
+
+    private static final double FONT_SIZE = BASE_FONT_SIZE * SCALE;
+    private static final double ICON_SIZE = BASE_ICON_SIZE * SCALE;
+
+    // Assets
+    private static final String FONT_FAMILY = "Helvetica";
+    private static final String ENERGY_SPRITE_PREFIX = "sprites/hud/energy";
+    private static final String COIN_SPRITE_PATH = "sprites/hud/coin";
 
     private final SpriteManager spriteManager;
 
@@ -51,17 +70,19 @@ public final class HUDRenderer {
     public void render(final GraphicsContext gc, final HUDRenderData data) {
         final double screenWidth = gc.getCanvas().getWidth();
         final double hudX = screenWidth - ENERGY_START_X; 
+
         gc.save();
         gc.setImageSmoothing(false);
 
         // --------- ENERGY STATS ---------
-        final Image energySprite = spriteManager.getSpriteSheet("sprites/hud/energy" + data.currentEnergy());
+        final Image energySprite = spriteManager.getSpriteSheet(ENERGY_SPRITE_PREFIX + data.currentEnergy());
         if (energySprite != null) {
             final double energyWidth = energySprite.getWidth() * SCALE;
             final double energyHeight = energySprite.getHeight() * SCALE;
             gc.drawImage(energySprite, hudX, ENERGY_START_Y, energyWidth, energyHeight);
         }
-        gc.setFont(Font.font("Helvetica", FontWeight.BOLD, FONT_SIZE));
+
+        gc.setFont(Font.font(FONT_FAMILY, FontWeight.BOLD, FONT_SIZE));
         gc.setFill(Color.WHITE);
         gc.fillText(
             data.currentEnergy() + " / " + data.maxEnergy(), 
@@ -70,11 +91,10 @@ public final class HUDRenderer {
         );
 
         // --------- MONEY ---------
-        final Image coinSprite = spriteManager.getSpriteSheet("sprites/hud/coin");
+        final Image coinSprite = spriteManager.getSpriteSheet(COIN_SPRITE_PATH);
         if (coinSprite != null) {
             gc.drawImage(coinSprite, COIN_START_X, COIN_START_Y, ICON_SIZE, ICON_SIZE);
         }
-        gc.setFont(Font.font("Helvetica", FontWeight.BOLD, FONT_SIZE));
         gc.fillText("x " + data.coins(), COIN_START_X + TEXT_COIN_OFFSET_X, COIN_START_Y + TEXT_COIN_OFFSET_Y);
 
         gc.restore();

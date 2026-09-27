@@ -13,7 +13,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -23,6 +24,8 @@ import javafx.stage.Stage;
 public final class StageInitializer {
 
     private static final String WINDOW_TITLE = "Kiki's Store";
+    private static final String INGREDIENTS_PATH = "textFiles/ingredients.json";
+    private static final String POTIONS_PATH = "textFiles/potions.json";
 
     /**
      * Configures and displays the game's graphical interface.
@@ -35,13 +38,17 @@ public final class StageInitializer {
         final double screenHeight = screenBounds.getHeight();
 
         // 1. Canvas and Scene setup
-        final StackPane root = new StackPane();
+        final Pane root = new Pane();
         final Canvas canvas = new Canvas(screenWidth, screenHeight);
         root.getChildren().add(canvas);
-        final Scene scene = new Scene(root);
+        final Scene scene = new Scene(root, screenWidth, screenHeight, Color.BLACK);
+
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> canvas.setWidth(newVal.doubleValue()));
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> canvas.setHeight(newVal.doubleValue()));
+
         final InputHandler inputHandler = new InputHandlerImpl(scene);
         final SpriteManager spriteManager = new SpriteManager();
-        final GameCatalogImpl catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
+        final GameCatalogImpl catalog = new GameCatalogImpl(INGREDIENTS_PATH, POTIONS_PATH);
 
         // 2. Initialization of the logical architecture
         final GameStateManagerImpl gsm = new GameStateManagerImpl();
@@ -56,8 +63,8 @@ public final class StageInitializer {
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> engine.stop());
         stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
+        stage.setFullScreen(true);
         stage.show();
 
         // 5. GameLoop startup
