@@ -1,0 +1,66 @@
+package it.unibo.kikiStore.app;
+
+import it.unibo.kikiStore.controller.api.InputHandler;
+import it.unibo.kikiStore.controller.impl.InputHandlerImpl;
+import it.unibo.kikiStore.engine.api.GameEngine;
+import it.unibo.kikiStore.engine.api.GameStateTransition;
+import it.unibo.kikiStore.engine.impl.GameEngineImpl;
+import it.unibo.kikiStore.engine.impl.GameStateManagerImpl;
+import it.unibo.kikiStore.engine.state.MenuState;
+import it.unibo.kikiStore.model.inventory.impl.GameCatalogImpl;
+import it.unibo.kikiStore.view.utility.SpriteManager;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+
+/**
+ * Manages the initialization of the main JavaFX window.
+ */
+public final class StageInitializer {
+
+    private static final String WINDOW_TITLE = "Kiki's Store";
+
+    /**
+     * Configures and displays the game's graphical interface.
+     * 
+     * @param stage the primary window provided by JavaFX upon startup.
+     */
+    public void init(final Stage stage) {
+        final Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        final double screenWidth = screenBounds.getWidth();
+        final double screenHeight = screenBounds.getHeight();
+
+        // 1. Canvas and Scene setup
+        final StackPane root = new StackPane();
+        final Canvas canvas = new Canvas(screenWidth, screenHeight);
+        root.getChildren().add(canvas);
+        final Scene scene = new Scene(root);
+        final InputHandler inputHandler = new InputHandlerImpl(scene);
+        final SpriteManager spriteManager = new SpriteManager();
+        final GameCatalogImpl catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
+
+        // 2. Initialization of the logical architecture
+        final GameStateManagerImpl gsm = new GameStateManagerImpl();
+        gsm.setState(new MenuState((GameStateTransition) gsm, inputHandler, spriteManager, catalog));
+
+        // 3. GameEngine creation
+        final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), screenWidth, screenHeight);
+
+        // 4. Final configuration of the OS window
+        stage.setTitle(WINDOW_TITLE);
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setOnCloseRequest(event -> engine.stop());
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
+        stage.show();
+
+        // 5. GameLoop startup
+        engine.start();
+    }
+}

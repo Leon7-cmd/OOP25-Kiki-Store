@@ -10,12 +10,12 @@
     "type": "plant"
   },
   {
-    "name": "Black Elder",
+    "name": "Black_Elder",
     "imagePath": "sprites/ingredients/black_elder",
     "type": "plant"
   },
   {
-    "name": "Blue Mushroom",
+    "name": "Blue_Mushroom",
     "imagePath": "sprites/ingredients/blue_mushroom",
     "type": "mushroom"
   },
@@ -25,12 +25,12 @@
     "type": "mushroom"
   },
   {
-    "name": "Blue Berries",
+    "name": "Blue_Berries",
     "imagePath": "sprites/ingredients/blue_berries",
     "type": "berry"
   },
   {
-    "name": "Blue Lotus",
+    "name": "Blue_Lotus",
     "imagePath": "sprites/ingredients/blue_lotus",
     "type": "flower"
   },
@@ -55,7 +55,7 @@
     "type": "flower"
   },
   {
-    "name": "Fly Agaric",
+    "name": "Fly_Agaric",
     "imagePath": "sprites/ingredients/tofly_agaric",
     "type": "mushroom"
   },
@@ -70,12 +70,12 @@
     "type": "plant"
   },
   {
-    "name": "Olive Leaf",
+    "name": "Olive_Leaf",
     "imagePath": "sprites/ingredients/olive_leaf",
     "type": "plant"
   },
   {
-    "name": "Milk Thistle",
+    "name": "Milk_Thistle",
     "imagePath": "sprites/ingredients/milk_thistle",
     "type": "plant"
   },
