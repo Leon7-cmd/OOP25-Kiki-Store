@@ -9,13 +9,11 @@ import it.unibo.kikiStore.engine.impl.GameStateManagerImpl;
 import it.unibo.kikiStore.engine.state.MenuState;
 import it.unibo.kikiStore.model.inventory.impl.GameCatalogImpl;
 import it.unibo.kikiStore.view.utility.SpriteManager;
-import javafx.beans.binding.Bindings;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 /**
@@ -38,20 +36,15 @@ public final class StageInitializer {
     public void init(final Stage stage) {
         // 1. Canvas and Scene setup
         final Canvas canvas = new Canvas(VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-        final StackPane root = new StackPane(canvas);
+        final Pane root = new Pane(canvas);
         root.setStyle("-fx-background-color: black;");
 
         final Scene scene = new Scene(root, VIRTUAL_WIDTH, VIRTUAL_HEIGHT, Color.BLACK);
 
-        final Scale scale = new Scale(1.0, 1.0);
-        scale.xProperty().bind(Bindings.min(
-            root.widthProperty().divide(VIRTUAL_WIDTH),
-            root.heightProperty().divide(VIRTUAL_HEIGHT)
-        ));
-        scale.yProperty().bind(scale.xProperty());
-        canvas.getTransforms().add(scale);
+        root.widthProperty().addListener((obs, oldVal, newVal) -> updateLayout(root, canvas));
+        root.heightProperty().addListener((obs, oldVal, newVal) -> updateLayout(root, canvas));
 
-        final InputHandler inputHandler = new InputHandlerImpl(scene);
+        final InputHandler inputHandler = new InputHandlerImpl(scene, canvas);
         final SpriteManager spriteManager = new SpriteManager();
         final GameCatalogImpl catalog = new GameCatalogImpl(INGREDIENTS_PATH, POTIONS_PATH);
 
@@ -74,5 +67,20 @@ public final class StageInitializer {
 
         // 5. GameLoop startup
         engine.start();
+    }
+
+    private void updateLayout(final Pane root, final Canvas canvas) {
+        final double windowW = root.getWidth();
+        final double windowH = root.getHeight();
+        if (windowW <= 0.0 || windowH <= 0.0) {
+            return;
+        }
+
+        final double scaleFactor = Math.min(windowW / VIRTUAL_WIDTH, windowH / VIRTUAL_HEIGHT);
+        canvas.setScaleX(scaleFactor);
+        canvas.setScaleY(scaleFactor);
+
+        canvas.setLayoutX((windowW - VIRTUAL_WIDTH) / 2.0);
+        canvas.setLayoutY((windowH - VIRTUAL_HEIGHT) / 2.0);
     }
 }

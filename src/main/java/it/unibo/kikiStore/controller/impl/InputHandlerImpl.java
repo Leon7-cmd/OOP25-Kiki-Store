@@ -2,6 +2,7 @@ package it.unibo.kikiStore.controller.impl;
 
 import it.unibo.kikiStore.controller.api.InputHandler;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 
 /**
@@ -29,11 +30,12 @@ public final class InputHandlerImpl implements InputHandler {
     private double mouseY;
 
     /**
-     * Constructor that attaches key listeners to the main application scene.
+     * Constructor that attaches keyboard listeners to the Scene and mouse listeners to the Canvas.
      * 
-     * @param scene The JavaFX Scene to monitor for keyboard events.
+     * @param scene  The JavaFX Scene to monitor for keyboard events.
+     * @param canvas The Canvas to monitor for mouse events in virtual coordinates.
      */
-    public InputHandlerImpl(final Scene scene) {
+    public InputHandlerImpl(final Scene scene, final Canvas canvas) {
         scene.setOnKeyPressed(event -> {
             final KeyCode code = event.getCode();
             if (code == KeyCode.W || code == KeyCode.UP) { 
@@ -94,30 +96,40 @@ public final class InputHandlerImpl implements InputHandler {
             }
         });
 
-        scene.setOnMouseClicked(event -> {
+        canvas.setOnMouseClicked(event -> {
             mouseClicked = true;
+            mouseX = event.getX();
+            mouseY = event.getY();
+        });
+
+        canvas.setOnMouseMoved(event -> {
             mouseX = event.getX();
             mouseY = event.getY();
         });
     }
 
-    @Override public boolean isUp() { 
+    @Override
+    public boolean isUp() { 
         return up; 
     }
 
-    @Override public boolean isDown() { 
+    @Override
+    public boolean isDown() { 
         return down; 
     }
 
-    @Override public boolean isLeft() { 
+    @Override
+    public boolean isLeft() { 
         return left; 
     }
 
-    @Override public boolean isRight() { 
+    @Override
+    public boolean isRight() { 
         return right; 
     }
 
-    @Override public boolean isAction() { 
+    @Override
+    public boolean isAction() { 
         if (action && !actionConsumed) {
             actionConsumed = true;
             return true;

@@ -41,7 +41,7 @@ public final class MinigameFlyState implements GameState {
     private static final int ENERGY_RESTORED = 2;
 
     // Rendering & Camera Constants
-    private static final double MINIGAME_ZOOM = 2;
+    private static final double MINIGAME_ZOOM = 2.5;
     private static final double CAMERA_INITIAL_OFFSET_X = 150.0;
     private static final double ALPHA_OVERLAY = 0.75;
 
