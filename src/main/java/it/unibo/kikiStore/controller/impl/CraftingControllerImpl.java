@@ -7,8 +7,10 @@ import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import it.unibo.kikiStore.model.inventory.api.Potion;
 import it.unibo.kikiStore.model.inventory.api.Recipe;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Handles the potion crafting logic - matching selected ingredients
@@ -25,6 +27,9 @@ public final class CraftingControllerImpl implements CraftingController {
      * @param inventoryController  the inventory controller
      * @param recipeBookController the recipe book controller
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers are injected on purpose and shared with the rest of the game")
     public CraftingControllerImpl(final InventoryController inventoryController,
             final RecipeBookController recipeBookController) {
         this.inventoryController = inventoryController;
@@ -33,8 +38,9 @@ public final class CraftingControllerImpl implements CraftingController {
 
     @Override
     public void craftPotion(final List<Ingredient> ingredients) {
-        final Recipe recipe = recipeBookController.findByIngredients(ingredients);
-        if (recipe != null) {
+        final Optional<Recipe> found = recipeBookController.findByIngredients(ingredients);
+        if (found.isPresent()) {
+            final Recipe recipe = found.get();
             final Potion potion = recipe.getPotion();
             inventoryController.addPotion(potion.getName(), potion.getImagePath(), 1,
                     potion.getDescription(), potion.getEffect(), false);
@@ -42,7 +48,6 @@ public final class CraftingControllerImpl implements CraftingController {
             for (final Ingredient required : recipe.getIngredients()) {
                 inventoryController.removeIngredient(required.getName(), required.getQuantity());
             }
-
         } else {
             inventoryController.addPotion(BLACK_POTION_NAME, BLACK_POTION_PATH, 1, "A failed attempt...", "none",
                     true);
@@ -54,23 +59,13 @@ public final class CraftingControllerImpl implements CraftingController {
 
     @Override
     public boolean canCraft(final List<Ingredient> ingredients) {
-        final Recipe recipe = recipeBookController.findByIngredients(ingredients);
-
-        return recipe != null;
+        return recipeBookController.findByIngredients(ingredients).isPresent();
     }
 
     @Override
     public List<Recipe> getAvailableRecipes() {
-        final List<Recipe> availableRecipes = new ArrayList<>();
-        final List<Recipe> allRecipes = recipeBookController.getUnlockedRecipes();
-
-        for (final Recipe recipe : allRecipes) {
-            if (inventoryController.canCraftPotion(recipe)) {
-                availableRecipes.add(recipe);
-            }
-        }
-
-        return availableRecipes;
+        return recipeBookController.getUnlockedRecipes().stream()
+                .filter(inventoryController::canCraftPotion)
+                .toList();
     }
-
 }

@@ -21,6 +21,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Crafting screen — backpack grid on the left, cauldron with 3 ingredient
@@ -128,6 +131,10 @@ public final class CraftingState implements GameState {
      * @param gsm                  game state manager
      * @param input                input handler
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public CraftingState(
             final InventoryController inventoryController,
             final RecipeBookController recipeBookController,
@@ -293,14 +300,13 @@ public final class CraftingState implements GameState {
      * Locks in the craft result now (before the brewing wait) and starts the timer.
      */
     private void startBrewing() {
-        final Recipe matchedRecipe = recipeBookController.findByIngredients(selectedIngredients);
-        lastCraftSucceeded = matchedRecipe != null;
+        final Optional<Recipe> matched = recipeBookController.findByIngredients(selectedIngredients);
+        lastCraftSucceeded = matched.isPresent();
         if (lastCraftSucceeded) {
             player.consumeEnergy(ENERGY_COST_PER_CRAFT);
         }
-        lastResultImagePath = lastCraftSucceeded
-                ? matchedRecipe.getPotion().getImagePath()
-                : "sprites/potions/black_potion";
+        lastResultImagePath = matched.map(r -> r.getPotion().getImagePath())
+                .orElse("sprites/potions/black_potion");
         craftingController.craftPotion(selectedIngredients);
         phase = Phase.BREWING;
         brewTimer = 0;

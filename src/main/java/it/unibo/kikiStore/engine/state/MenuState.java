@@ -1,5 +1,6 @@
 package it.unibo.kikiStore.engine.state;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikiStore.controller.api.InputHandler;
 import it.unibo.kikiStore.controller.api.InventoryController;
 import it.unibo.kikiStore.controller.api.PlayerController;
@@ -70,6 +71,10 @@ public final class MenuState implements GameState {
      * @param spriteManager the manager caching graphic resources
      * @param catalog the global catalog holding game items and recipes
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public MenuState(
         final GameStateTransition transitionController,
         final InputHandler input,

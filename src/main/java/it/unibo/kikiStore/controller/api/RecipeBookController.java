@@ -4,6 +4,7 @@ import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import it.unibo.kikiStore.model.inventory.api.Recipe;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Provides access to the recipe book — querying, unlocking, and
@@ -51,17 +52,17 @@ public interface RecipeBookController {
      * Finds the recipe that matches exactly the given set of ingredients.
      *
      * @param ingredients the ingredients to match
-     * @return the matching recipe, or null if none matches
+     * @return the matching recipe, or an empty Optional if none matches
      */
-    Recipe findByIngredients(List<Ingredient> ingredients);
+    Optional<Recipe> findByIngredients(List<Ingredient> ingredients);
 
     /**
      * Finds a recipe whose potion name matches or contains the given text.
      *
      * @param recipeName the name to search for
-     * @return the matching recipe, or null if none matches
+     * @return the matching recipe, or an empty Optional if none matches
      */
-    Recipe findByName(String recipeName);
+    Optional<Recipe> findByName(String recipeName);
 
     /**
      * Returns how many recipes the player has unlocked so far.

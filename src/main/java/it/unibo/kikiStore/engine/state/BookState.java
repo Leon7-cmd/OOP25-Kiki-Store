@@ -1,5 +1,6 @@
 package it.unibo.kikiStore.engine.state;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikiStore.controller.api.InputHandler;
 import it.unibo.kikiStore.controller.api.InventoryController;
 import it.unibo.kikiStore.controller.api.RecipeBookController;
@@ -92,6 +93,10 @@ public final class BookState implements GameState {
      * @param gsm                  game state manager
      * @param input                input handler
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public BookState(
             final InventoryController inventoryController,
             final RecipeBookController recipeBookController,
@@ -355,15 +360,7 @@ public final class BookState implements GameState {
      * @return the active book section
      */
     private BookSection getActiveSection() {
-        switch (currentSection) {
-            case RECIPES:
-                return recipeSection;
-            case ORDERS:
-                // return ordersSection;
-            case INVENTORY:
-            default:
-                return inventorySection;
-        }
+        return currentSection == Section.RECIPES ? recipeSection : inventorySection;
     }
 
     @Override

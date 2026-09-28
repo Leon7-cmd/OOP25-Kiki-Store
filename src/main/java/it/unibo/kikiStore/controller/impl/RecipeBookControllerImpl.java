@@ -5,9 +5,11 @@ import it.unibo.kikiStore.controller.api.InventoryController;
 import it.unibo.kikiStore.model.inventory.api.RecipeBook;
 import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import it.unibo.kikiStore.model.inventory.api.Recipe;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Provides access to the recipe book - querying, unlocking, and
@@ -22,6 +24,10 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
      * @param inventoryController the inventory controller, used to check
      *                            craftability
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers are injected on purpose and shared with the rest of the game"
+    )
     public RecipeBookControllerImpl(final RecipeBook recipeBook, final InventoryController inventoryController) {
         this.recipeBook = recipeBook;
         this.inventoryController = inventoryController;
@@ -38,13 +44,13 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
     }
 
     @Override
-    public Recipe findByIngredients(final List<Ingredient> ingredients) {
+    public Optional<Recipe> findByIngredients(final List<Ingredient> ingredients) {
         for (final Recipe recipe : recipeBook.getRecipes()) {
             if (matchesIngredients(recipe.getIngredients(), ingredients)) {
-                return recipe;
+                return Optional.of(recipe);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -75,14 +81,10 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
 
     @Override
     public List<Recipe> findByEffect(final String effect) {
-        final List<Recipe> matchingRecipes = new ArrayList<>();
-        for (final Recipe recipe : recipeBook.getRecipes()) {
-            if (recipe.getPotion().getEffect().toLowerCase(Locale.ROOT)
-                    .contains(effect.toLowerCase(Locale.ROOT))) {
-                matchingRecipes.add(recipe);
-            }
-        }
-        return matchingRecipes;
+        final String searched = effect.toLowerCase(Locale.ROOT);
+        return recipeBook.getRecipes().stream()
+                .filter(r -> r.getPotion().getEffect().toLowerCase(Locale.ROOT).contains(searched))
+                .toList();
     }
 
     @Override
@@ -94,27 +96,20 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
     public List<Recipe> getCraftableRecipes() {
         // TO-DO: duplicates CraftingControllerImpl.getAvailableRecipes(), maybe I can
         // remove one
-        final List<Recipe> craftableRecipes = new ArrayList<>();
-
-        for (final Recipe recipe : recipeBook.getUnlockedRecipes()) {
-            if (inventoryController.canCraftPotion(recipe)) {
-                craftableRecipes.add(recipe);
-            }
-        }
-
-        return craftableRecipes;
+        return recipeBook.getUnlockedRecipes().stream()
+                .filter(inventoryController::canCraftPotion)
+                .toList();
     }
 
     @Override
-    public Recipe findByName(final String recipeName) {
+    public Optional<Recipe> findByName(final String recipeName) {
         for (final Recipe recipe : recipeBook.getRecipes()) {
             if (recipe.getPotion().getName().toLowerCase(Locale.ROOT)
                     .contains(recipeName.toLowerCase(Locale.ROOT))) {
-                return recipe;
+                return Optional.of(recipe);
             }
         }
-
-        return null;
+        return Optional.empty();
     }
 
     @Override

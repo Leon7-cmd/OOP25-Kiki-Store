@@ -1,7 +1,7 @@
 package it.unibo.kikiStore.controller.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -36,15 +36,15 @@ public final class InventoryControllerImpl implements InventoryController {
      * @param <T>  the concrete item type (ingredient or potion)
      * @param name the name of the item to look for
      * @param list the list to search in
-     * @return the matching item, or null if it is not present
+     * @return the matching item, or an empty Optional if it is not present
      */
-    private <T extends GameItem> T findItem(final String name, final List<T> list) {
+    private <T extends GameItem> Optional<T> findItem(final String name, final List<T> list) {
         for (final T inventoryItem : list) {
             if (inventoryItem.getName().equalsIgnoreCase(name)) {
-                return inventoryItem;
+                return Optional.of(inventoryItem);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**
@@ -60,9 +60,9 @@ public final class InventoryControllerImpl implements InventoryController {
      */
     private <T extends GameItem> void increase(final String name, final int quantity,
             final List<T> items, final Supplier<T> newItem, final Consumer<T> adder) {
-        final T existing = findItem(name, items);
-        if (existing != null) {
-            existing.setQuantity(existing.getQuantity() + quantity);
+        final Optional<T> existing = findItem(name, items);
+        if (existing.isPresent()) {
+            existing.get().setQuantity(existing.get().getQuantity() + quantity);
         } else if (!isFull()) {
             adder.accept(newItem.get());
         }
@@ -81,8 +81,9 @@ public final class InventoryControllerImpl implements InventoryController {
      */
     private <T extends GameItem> void decrease(final String name, final int quantity,
             final List<T> items, final Consumer<T> remover) {
-        final T item = findItem(name, items);
-        if (item != null && item.getQuantity() >= quantity) {
+        final Optional<T> found = findItem(name, items);
+        if (found.isPresent() && found.get().getQuantity() >= quantity) {
+            final T item = found.get();
             final int newQuantity = item.getQuantity() - quantity;
             if (newQuantity == 0) {
                 remover.accept(item);
@@ -94,24 +95,22 @@ public final class InventoryControllerImpl implements InventoryController {
 
     @Override
     public boolean hasIngredient(final String name) {
-        return findItem(name, inventory.getIngredients()) != null;
+        return findItem(name, inventory.getIngredients()).isPresent();
     }
 
     @Override
     public boolean hasPotion(final String name) {
-        return findItem(name, inventory.getPotions()) != null;
+        return findItem(name, inventory.getPotions()).isPresent();
     }
 
     @Override
     public int getIngredientQuantity(final String name) {
-        final GameItem item = findItem(name, inventory.getIngredients());
-        return item != null ? item.getQuantity() : 0;
+        return findItem(name, inventory.getIngredients()).map(GameItem::getQuantity).orElse(0);
     }
 
     @Override
     public int getPotionQuantity(final String name) {
-        final GameItem item = findItem(name, inventory.getPotions());
-        return item != null ? item.getQuantity() : 0;
+        return findItem(name, inventory.getPotions()).map(GameItem::getQuantity).orElse(0);
     }
 
     @Override
@@ -155,25 +154,14 @@ public final class InventoryControllerImpl implements InventoryController {
 
     @Override
     public boolean canCraftPotion(final Recipe recipe) {
-        for (final Ingredient ingredient : recipe.getIngredients()) {
-            if (!hasEnoughIngredient(ingredient.getName(), ingredient.getQuantity())) {
-                return false;
-            }
-        }
-        return true;
-        // or otherwise to implement DRY concept -> return
-        // getMissingIngredients(recipe).isEmpty();
+        return getMissingIngredients(recipe).isEmpty();
     }
 
     @Override
     public List<Ingredient> getMissingIngredients(final Recipe recipe) {
-        final List<Ingredient> missing = new ArrayList<>();
-        for (final Ingredient ingredient : recipe.getIngredients()) {
-            if (!hasEnoughIngredient(ingredient.getName(), ingredient.getQuantity())) {
-                missing.add(ingredient);
-            }
-        }
-        return missing;
+        return recipe.getIngredients().stream()
+                .filter(i -> !hasEnoughIngredient(i.getName(), i.getQuantity()))
+                .toList();
     }
 
 }

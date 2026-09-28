@@ -10,6 +10,14 @@ import org.junit.jupiter.api.Test;
  */
 class InventoryImplTest {
 
+    private static final String BASIL_SPRITE = "sprites/basil";
+    private static final String BASIL = "Basil";
+    private static final String PLANT = "Plant";
+    private static final String TEST_POTION = "Test Potion";
+    private static final String TEST_SPRITE = "sprites/test";
+    private static final String DESCRIPTION = "desc";
+    private static final String EFFECT = "effect";
+
     /**
      * Verifies that a newly created inventory has no ingredients or potions.
      */
@@ -27,7 +35,7 @@ class InventoryImplTest {
     @Test
     void addAndRemoveIngredient() {
         final InventoryImpl inventory = new InventoryImpl();
-        final IngredientImpl basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
+        final IngredientImpl basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
 
         inventory.addIngredient(basil);
         assertEquals(1, inventory.getIngredients().size());
@@ -43,7 +51,7 @@ class InventoryImplTest {
     @Test
     void addAndRemovePotion() {
         final InventoryImpl inventory = new InventoryImpl();
-        final PotionImpl potion = new PotionImpl("Test Potion", "sprites/test", 1, "desc", "effect", false);
+        final PotionImpl potion = new PotionImpl(TEST_POTION, TEST_SPRITE, 1, DESCRIPTION, EFFECT, false);
 
         inventory.addPotion(potion);
         assertEquals(1, inventory.getPotions().size());

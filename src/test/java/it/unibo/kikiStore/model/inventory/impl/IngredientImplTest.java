@@ -5,21 +5,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for {@link IngredientImpl}. 
+ * Unit tests for {@link IngredientImpl}.
  */
 class IngredientImplTest {
-    
+    private static final String BASIL = "Basil";
+    private static final String BASIL_SPRITE = "sprites/basil";
+    private static final String PLANT = "plant";
+    private static final String FLOWER = "flower";
+    private static final int NEW_QUANTITY = 6;
+
     /**
      * Verifies that the constructor sets every field correctly.
      */
     @Test
     void constructorSetsAllFields() {
-        final IngredientImpl ingredient = new IngredientImpl("Basil", "sprites/basil", 3, "plant");
+        final IngredientImpl ingredient = new IngredientImpl(BASIL, BASIL_SPRITE, 3, PLANT);
 
-        assertEquals("Basil", ingredient.getName());
-        assertEquals("sprites/basil", ingredient.getImagePath());
+        assertEquals(BASIL, ingredient.getName());
+        assertEquals(BASIL_SPRITE, ingredient.getImagePath());
         assertEquals(3, ingredient.getQuantity());
-        assertEquals("plant", ingredient.getType());
+        assertEquals(PLANT, ingredient.getType());
     }
 
     /**
@@ -27,12 +32,12 @@ class IngredientImplTest {
      */
     @Test
     void settersUpdateValues() {
-        final IngredientImpl ingredient = new IngredientImpl("Basil", "sprites/basil", 3, "plant");
+        final IngredientImpl ingredient = new IngredientImpl(BASIL, BASIL_SPRITE, 3, PLANT);
 
-        ingredient.setType("flower");
-        ingredient.setQuantity(6);
+        ingredient.setType(FLOWER);
+        ingredient.setQuantity(NEW_QUANTITY);
 
-        assertEquals("flower", ingredient.getType());
-        assertEquals(6, ingredient.getQuantity());
+        assertEquals(FLOWER, ingredient.getType());
+        assertEquals(NEW_QUANTITY, ingredient.getQuantity());
     }
 }

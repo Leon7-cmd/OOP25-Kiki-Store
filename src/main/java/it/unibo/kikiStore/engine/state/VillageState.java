@@ -31,6 +31,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * GameState implementation for the village area.
  * Handles player movement, item spawning and collection, and transitions to minigames or other areas
@@ -83,6 +85,10 @@ public final class VillageState implements GameState {
      * @param spriteManager        the sprite manager for rendering graphics
      * @param catalog              the game catalog containing item and recipe data
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public VillageState(
         final GameStateTransition transitionController, 
         final InputHandler input, 

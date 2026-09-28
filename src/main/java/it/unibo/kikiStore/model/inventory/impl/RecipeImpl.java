@@ -5,6 +5,8 @@ import it.unibo.kikiStore.model.inventory.api.Potion;
 import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Concrete potion recipe - the ingredients needed and the potion
  * it produces, plus whether the player has discovered it yet.
@@ -19,6 +21,10 @@ public final class RecipeImpl implements Recipe {
      * @param resultingPotion the potion produced by this recipe
      * @param isUnlocked whether the recipe starts already unlocked
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "The recipe keeps a reference to its resulting potion on purpose"
+    )
     public RecipeImpl(final List<Ingredient> ingredients, final Potion resultingPotion, final boolean isUnlocked) {
         this.ingredients = List.copyOf(ingredients);
         this.resultingPotion = resultingPotion;
@@ -31,6 +37,10 @@ public final class RecipeImpl implements Recipe {
     }
 
     @Override
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP",
+        justification = "The recipe returns its reference potion, which is only read"
+    )
     public Potion getPotion() {
         return resultingPotion;
     }

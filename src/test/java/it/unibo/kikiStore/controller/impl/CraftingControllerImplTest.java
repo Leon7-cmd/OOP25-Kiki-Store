@@ -15,6 +15,17 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link CraftingControllerImpl}.
  */
 class CraftingControllerImplTest {
+    private static final String BASIL = "Basil";
+    private static final String BASIL_SPRITE = "sprites/basil";
+    private static final String SAGE = "Sage";
+    private static final String SAGE_SPRITE = "sprites/sage";
+    private static final String DANDELION = "Dandelion";
+    private static final String DANDELION_SPRITE = "sprites/dandelion";
+    private static final String CHAMOMILE = "Chamomile";
+    private static final String CHAMOMILE_SPRITE = "sprites/chamomile";
+    private static final String PLANT = "plant";
+    private static final String FLOWER = "flower";
+    private static final String WINDRUNNER = "Windrunner Potion";
 
     private static final String RECIPES_JSON = "textFiles/recipes.json";
 
@@ -33,9 +44,9 @@ class CraftingControllerImplTest {
                 inventoryController);
         craftingController = new CraftingControllerImpl(inventoryController, recipeBookController);
 
-        inventoryController.addIngredient("Basil", "sprites/basil", 1, "plant");
-        inventoryController.addIngredient("Dandelion", "sprites/dandelion", 1, "flower");
-        inventoryController.addIngredient("Sage", "sprites/sage", 1, "plant");
+        inventoryController.addIngredient(BASIL, BASIL_SPRITE, 1, PLANT);
+        inventoryController.addIngredient(DANDELION, DANDELION_SPRITE, 1, FLOWER);
+        inventoryController.addIngredient(SAGE, SAGE_SPRITE, 1, PLANT);
     }
 
     /**
@@ -53,8 +64,8 @@ class CraftingControllerImplTest {
      */
     @Test
     void canCraftReturnsFalseForInvalidCombination() {
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient chamomile = new IngredientImpl("Chamomile", "sprites/chamomile", 1, "flower");
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient chamomile = new IngredientImpl(CHAMOMILE, CHAMOMILE_SPRITE, 1, FLOWER);
 
         assertFalse(craftingController.canCraft(List.of(basil, chamomile)));
     }
@@ -67,8 +78,8 @@ class CraftingControllerImplTest {
     void craftPotionWithValidCombinationAddsPotionAndConsumesIngredients() {
         craftingController.craftPotion(correctIngredients());
 
-        assertTrue(inventoryController.hasPotion("Windrunner Potion"));
-        assertFalse(inventoryController.hasIngredient("Basil"));
+        assertTrue(inventoryController.hasPotion(WINDRUNNER));
+        assertFalse(inventoryController.hasIngredient(BASIL));
     }
 
     /**
@@ -77,8 +88,8 @@ class CraftingControllerImplTest {
      */
     @Test
     void craftPotionWithInvalidCombinationAddsBlackPotion() {
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient chamomile = new IngredientImpl("Chamomile", "sprites/chamomile", 1, "flower");
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient chamomile = new IngredientImpl(CHAMOMILE, CHAMOMILE_SPRITE, 1, FLOWER);
 
         craftingController.craftPotion(List.of(basil, chamomile));
 
@@ -89,9 +100,9 @@ class CraftingControllerImplTest {
      * @return the ingredients matching the Windrunner Potion recipe
      */
     private List<Ingredient> correctIngredients() {
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient dandelion = new IngredientImpl("Dandelion", "sprites/dandelion", 1, "flower");
-        final Ingredient sage = new IngredientImpl("Sage", "sprites/sage", 1, "plant");
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient dandelion = new IngredientImpl(DANDELION, DANDELION_SPRITE, 1, FLOWER);
+        final Ingredient sage = new IngredientImpl(SAGE, SAGE_SPRITE, 1, PLANT);
         return List.of(basil, dandelion, sage);
     }
 
@@ -101,11 +112,11 @@ class CraftingControllerImplTest {
      */
     @Test
     void craftPotionConsumesOnlyRequiredQuantity() {
-        inventoryController.addIngredient("Basil", "sprites/basil", 4, "plant");
+        inventoryController.addIngredient(BASIL, BASIL_SPRITE, 4, PLANT);
 
         craftingController.craftPotion(correctIngredients());
 
-        assertEquals(4, inventoryController.getIngredientQuantity("Basil"));
+        assertEquals(4, inventoryController.getIngredientQuantity(BASIL));
     }
 
     /**
@@ -115,7 +126,7 @@ class CraftingControllerImplTest {
     void craftPotionAddsOnePotion() {
         craftingController.craftPotion(correctIngredients());
 
-        assertEquals(1, inventoryController.getPotionQuantity("Windrunner Potion"));
+        assertEquals(1, inventoryController.getPotionQuantity(WINDRUNNER));
     }
 
     /**

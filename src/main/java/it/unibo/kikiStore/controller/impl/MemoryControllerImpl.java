@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Implementation of the memory game controller. Manages a
  * preview phase, gameplay with a mismatch delay, and reward granting
@@ -65,6 +67,10 @@ public final class MemoryControllerImpl implements MemoryController {
      *                            potion reward
      * @param player              the player, used to grant energy and money rewards
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers are injected on purpose and shared with the rest of the game"
+    )
     public MemoryControllerImpl(final GameCatalog gameCatalog,
             final InventoryController inventoryController,
             final PlayerController player) {

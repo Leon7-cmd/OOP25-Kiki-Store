@@ -2,6 +2,7 @@ package it.unibo.kikiStore.model.item.impl;
 
 import java.util.Objects;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import it.unibo.kikiStore.model.item.api.GroundItem;
 import it.unibo.kikiStore.model.utility.BoundingBox;
@@ -84,6 +85,10 @@ public final class GroundItemImpl implements GroundItem {
     }
 
     @Override
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP",
+        justification = "The ground item returns the ingredient it wraps, so it can be collected into the inventory"
+    )
     public Ingredient getItem() {
         return item;
     }

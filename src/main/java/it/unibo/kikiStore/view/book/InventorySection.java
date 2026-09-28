@@ -17,6 +17,8 @@ import javafx.scene.text.TextAlignment;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Inventory grid section — shown as two fixed facing pages inside the book:
  * left page = all 18 ingredients, right page = the 10 potions
@@ -56,6 +58,10 @@ public final class InventorySection implements BookSection {
      * @param spriteManager       the sprite manager
      * @param pixelFontSmall      small pixel font for quantity text
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and rendering resources are shared with the book on purpose"
+    )
     public InventorySection(final InventoryController inventoryController,
             final GameCatalog gameCatalog,
             final SpriteManager spriteManager,

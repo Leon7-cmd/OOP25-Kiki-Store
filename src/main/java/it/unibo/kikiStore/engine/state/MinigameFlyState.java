@@ -2,6 +2,7 @@ package it.unibo.kikiStore.engine.state;
 
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikiStore.controller.api.InputHandler;
 import it.unibo.kikiStore.controller.api.PlayerController;
 import it.unibo.kikiStore.engine.api.GameState;
@@ -77,6 +78,10 @@ public final class MinigameFlyState implements GameState {
      * @param input           the InputHandler for user input
      * @param kiki            the PlayerController for controlling the player character
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public MinigameFlyState(
         final GameStateTransition stateController,
         final InputHandler input,

@@ -1,5 +1,6 @@
 package it.unibo.kikiStore.engine.state;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikiStore.controller.api.InputHandler;
 import it.unibo.kikiStore.engine.api.GameState;
 import it.unibo.kikiStore.engine.api.GameStateTransition;
@@ -55,6 +56,10 @@ public final class PauseState implements GameState {
      * @param spriteManager the manager for game sprites.
      * @param catalog the game catalog containing inventory and recipes.
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public PauseState(
         final GameStateTransition transitionController,
         final InputHandler input,

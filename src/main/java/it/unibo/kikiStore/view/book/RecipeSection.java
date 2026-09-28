@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import javafx.scene.text.Text;
 
 /**
@@ -31,10 +33,10 @@ public final class RecipeSection implements BookSection {
     private static final Color COL_IMG_FALLBACK = Color.web("#C8A96E");
 
     private static final double PAGE_TOP_FRAC = 105.0 / 272.0;
-    private static final double PAGE_BOTTOM_FRAC = 244.0 / 272.0;
+    //private static final double PAGE_BOTTOM_FRAC = 244.0 / 272.0;
     private static final double PAGE_LEFT_FRAC = 26.0 / 272.0;
     private static final double PAGE_CENTER_FRAC = 135.5 / 272.0;
-    private static final double PAGE_RIGHT_FRAC = 245.0 / 272.0;;
+    private static final double PAGE_RIGHT_FRAC = 245.0 / 272.0;
 
     private static final double EFFECT_TOP_OFFSET = 18.0;
     private static final double INGREDIENT_TOP_MARGIN = 10.0;
@@ -53,6 +55,10 @@ public final class RecipeSection implements BookSection {
      * @param pixelFont            pixel font for the potion name
      * @param pixelFontSmall       pixel font for the description
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and rendering resources are shared with the book on purpose"
+    )
     public RecipeSection(final RecipeBookController recipeBookController,
             final SpriteManager spriteManager,
             final Font pixelFont,
@@ -97,20 +103,18 @@ public final class RecipeSection implements BookSection {
         final double leftPageX = x + PAGE_LEFT_FRAC * bookSize;
         final double leftPageY = y + PAGE_TOP_FRAC * bookSize;
         final double leftPageW = (PAGE_CENTER_FRAC - PAGE_LEFT_FRAC) * bookSize;
-        final double leftPageH = (PAGE_BOTTOM_FRAC - PAGE_TOP_FRAC) * bookSize;
 
         final double rightPageX = x + PAGE_CENTER_FRAC * bookSize;
         final double rightPageY = leftPageY;
         final double rightPageW = (PAGE_RIGHT_FRAC - PAGE_CENTER_FRAC) * bookSize;
-        final double rightPageH = leftPageH;
 
         // Pagina sinistra — sempre presente se ci sono ricette
-        renderRecipePage(gc, unlockedRecipes.get(leftIndex), leftPageX, leftPageY, leftPageW, leftPageH);
+        renderRecipePage(gc, unlockedRecipes.get(leftIndex), leftPageX, leftPageY, leftPageW);
 
         // Pagina destra — solo se esiste una ricetta successiva nella lista
         final int rightIndex = leftIndex + 1;
         if (rightIndex < unlockedRecipes.size()) {
-            renderRecipePage(gc, unlockedRecipes.get(rightIndex), rightPageX, rightPageY, rightPageW, rightPageH);
+            renderRecipePage(gc, unlockedRecipes.get(rightIndex), rightPageX, rightPageY, rightPageW);
         }
     }
 
@@ -122,11 +126,10 @@ public final class RecipeSection implements BookSection {
      * @param x      page area x
      * @param y      page area y
      * @param w      page area width
-     * @param h      page area height
      */
     private void renderRecipePage(final GraphicsContext gc, final Recipe recipe,
             final double x, final double y,
-            final double w, final double h) {
+            final double w) {
         final double imgSize = w * IMAGE_SIZE_RATIO;
         final double imgX = x + (w - imgSize) / 2;
         final double imgY = y + 10;
@@ -184,6 +187,8 @@ public final class RecipeSection implements BookSection {
      * @param x        left x position
      * @param y        starting y position (top of first line)
      * @param maxWidth maximum width before wrapping
+     * @return the y position just below the last drawn line, where the next
+     *         content can start
      */
     private double drawWrappedText(final GraphicsContext gc, final String text,
             final double x, final double y, final double maxWidth) {
@@ -215,7 +220,6 @@ public final class RecipeSection implements BookSection {
         measurer.setFont(pixelFontSmall);
         return measurer.getLayoutBounds().getWidth();
     }
-
 
     /**
      * Checks whether there is a next spread of 2 more recipes ahead.

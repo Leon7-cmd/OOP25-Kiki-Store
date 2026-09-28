@@ -15,6 +15,22 @@ import org.junit.jupiter.api.Test;
  * Unit tests for {@link InventoryControllerImpl}.
  */
 class InventoryControllerImplTest {
+    private static final String BASIL = "Basil";
+    private static final String BASIL_SPRITE = "sprites/basil";
+    private static final String SAGE = "Sage";
+    private static final String SAGE_SPRITE = "sprites/sage";
+    private static final String DANDELION = "Dandelion";
+    private static final String DANDELION_SPRITE = "sprites/dandelion";
+    private static final String CHAMOMILE = "Chamomile";
+    private static final String CHAMOMILE_SPRITE = "sprites/chamomile";
+    private static final String PLANT = "plant";
+    private static final String TEST_POTION = "Test Potion";
+    private static final String TEST_SPRITE = "sprites/test";
+    private static final String TEST_POTION_2 = "Test Potion 2";
+    private static final String TEST_SPRITE_2 = "sprites/test2";
+    private static final String DESCRIPTION = "desc";
+    private static final String EFFECT = "effect";
+    private static final int STOCK_QUANTITY = 5;
 
     /**
      * Verifies that adding a new ingredient makes it retrievable with the
@@ -24,10 +40,10 @@ class InventoryControllerImplTest {
     void addIngredientStoresQuantity() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
 
-        controller.addIngredient("Basil", "sprites/basil", 3, "plant");
+        controller.addIngredient(BASIL, BASIL_SPRITE, 3, PLANT);
 
-        assertEquals(3, controller.getIngredientQuantity("Basil"));
-        assertTrue(controller.hasIngredient("Basil"));
+        assertEquals(3, controller.getIngredientQuantity(BASIL));
+        assertTrue(controller.hasIngredient(BASIL));
     }
 
     /**
@@ -38,10 +54,10 @@ class InventoryControllerImplTest {
     void addIngredientTwiceSumsQuantity() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
 
-        controller.addIngredient("Basil", "sprites/basil", 2, "plant");
-        controller.addIngredient("Basil", "sprites/basil", 3, "plant");
+        controller.addIngredient(BASIL, BASIL_SPRITE, 2, PLANT);
+        controller.addIngredient(BASIL, BASIL_SPRITE, 3, PLANT);
 
-        assertEquals(5, controller.getIngredientQuantity("Basil"));
+        assertEquals(STOCK_QUANTITY, controller.getIngredientQuantity(BASIL));
     }
 
     /**
@@ -50,11 +66,11 @@ class InventoryControllerImplTest {
     @Test
     void removeIngredientReducesQuantity() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
-        controller.addIngredient("Basil", "sprites/basil", 5, "plant");
+        controller.addIngredient(BASIL, BASIL_SPRITE, STOCK_QUANTITY, PLANT);
 
-        controller.removeIngredient("Basil", 2);
+        controller.removeIngredient(BASIL, 2);
 
-        assertEquals(3, controller.getIngredientQuantity("Basil"));
+        assertEquals(3, controller.getIngredientQuantity(BASIL));
     }
 
     /**
@@ -64,10 +80,10 @@ class InventoryControllerImplTest {
     @Test
     void hasEnoughIngredientChecksQuantity() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
-        controller.addIngredient("Basil", "sprites/basil", 2, "plant");
+        controller.addIngredient(BASIL, BASIL_SPRITE, 2, PLANT);
 
-        assertTrue(controller.hasEnoughIngredient("Basil", 2));
-        assertFalse(controller.hasEnoughIngredient("Basil", 3));
+        assertTrue(controller.hasEnoughIngredient(BASIL, 2));
+        assertFalse(controller.hasEnoughIngredient(BASIL, 3));
     }
 
     /**
@@ -77,19 +93,19 @@ class InventoryControllerImplTest {
     @Test
     void canCraftPotionChecksAllIngredients() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
-        controller.addIngredient("Basil", "sprites/basil", 1, "plant");
-        controller.addIngredient("Sage", "sprites/sage", 1, "plant");
-        controller.addIngredient("Dandelion", "sprites/dandelion", 1, "plant");
+        controller.addIngredient(BASIL, BASIL_SPRITE, 1, PLANT);
+        controller.addIngredient(SAGE, SAGE_SPRITE, 1, PLANT);
+        controller.addIngredient(DANDELION, DANDELION_SPRITE, 1, PLANT);
 
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient sage = new IngredientImpl("Sage", "sprites/sage", 1, "plant");
-        final Ingredient dandelion = new IngredientImpl("Dandelion", "sprites/dandelion", 1, "plant");
-        final Ingredient chamomile = new IngredientImpl("Chamomile", "sprites/chamomile", 1, "plant");
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient sage = new IngredientImpl(SAGE, SAGE_SPRITE, 1, PLANT);
+        final Ingredient dandelion = new IngredientImpl(DANDELION, DANDELION_SPRITE, 1, PLANT);
+        final Ingredient chamomile = new IngredientImpl(CHAMOMILE, CHAMOMILE_SPRITE, 1, PLANT);
 
         final RecipeImpl craftableRecipe = new RecipeImpl(List.of(basil, sage, dandelion),
-                new PotionImpl("Test Potion", "sprites/test", 0, "desc", "effect", false), false);
+                new PotionImpl(TEST_POTION, TEST_SPRITE, 0, DESCRIPTION, EFFECT, false), false);
         final RecipeImpl uncraftableRecipe = new RecipeImpl(List.of(basil, sage, chamomile),
-                new PotionImpl("Test Potion 2", "sprites/test2", 0, "desc", "effect", false), false);
+                new PotionImpl(TEST_POTION_2, TEST_SPRITE_2, 0, DESCRIPTION, EFFECT, false), false);
 
         assertTrue(controller.canCraftPotion(craftableRecipe));
         assertFalse(controller.canCraftPotion(uncraftableRecipe));
@@ -100,21 +116,21 @@ class InventoryControllerImplTest {
      * not present in sufficient quantity.
      */
     @Test
-    void getMissingIngredientsReturnsOnlyMissingOnes() {
+    void missingIngredientsReturnsOnlyMissingOnes() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
-        controller.addIngredient("Basil", "sprites/basil", 1, "plant");
-        controller.addIngredient("Sage", "sprites/sage", 1, "plant");
+        controller.addIngredient(BASIL, BASIL_SPRITE, 1, PLANT);
+        controller.addIngredient(SAGE, SAGE_SPRITE, 1, PLANT);
 
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient sage = new IngredientImpl("Sage", "sprites/sage", 1, "plant");
-        final Ingredient dandelion = new IngredientImpl("Dandelion", "sprites/dandelion", 1, "plant");
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient sage = new IngredientImpl(SAGE, SAGE_SPRITE, 1, PLANT);
+        final Ingredient dandelion = new IngredientImpl(DANDELION, DANDELION_SPRITE, 1, PLANT);
         final RecipeImpl recipe = new RecipeImpl(List.of(basil, sage, dandelion),
-                new PotionImpl("Test Potion", "sprites/test", 0, "desc", "effect", false), false);
+                new PotionImpl(TEST_POTION, TEST_SPRITE, 0, DESCRIPTION, EFFECT, false), false);
 
         final List<Ingredient> missing = controller.getMissingIngredients(recipe);
 
         assertEquals(1, missing.size());
-        assertEquals("Dandelion", missing.get(0).getName());
+        assertEquals(DANDELION, missing.get(0).getName());
     }
 
     /**
@@ -123,11 +139,11 @@ class InventoryControllerImplTest {
     @Test
     void removePotionToZeroRemovesIt() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
-        controller.addPotion("Test Potion", "sprites/test", 2, "desc", "effect", false);
+        controller.addPotion(TEST_POTION, TEST_SPRITE, 2, DESCRIPTION, EFFECT, false);
 
-        controller.removePotion("Test Potion", 2);
+        controller.removePotion(TEST_POTION, 2);
 
-        assertFalse(controller.hasPotion("Test Potion"));
+        assertFalse(controller.hasPotion(TEST_POTION));
     }
 
     /**
@@ -136,9 +152,9 @@ class InventoryControllerImplTest {
     @Test
     void hasEnoughPotionChecksQuantity() {
         final InventoryControllerImpl controller = new InventoryControllerImpl();
-        controller.addPotion("Test Potion", "sprites/test", 2, "desc", "effect", false);
+        controller.addPotion(TEST_POTION, TEST_SPRITE, 2, DESCRIPTION, EFFECT, false);
 
-        assertTrue(controller.hasEnoughPotion("Test Potion", 2));
-        assertFalse(controller.hasEnoughPotion("Test Potion", 3));
+        assertTrue(controller.hasEnoughPotion(TEST_POTION, 2));
+        assertFalse(controller.hasEnoughPotion(TEST_POTION, 3));
     }
 }

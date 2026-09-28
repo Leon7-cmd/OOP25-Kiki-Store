@@ -13,7 +13,7 @@ class RecipeBookImplTest {
     private static final String RECIPES_JSON = "textFiles/recipes.json";
 
     /**
-     * Verifies that recipes are loaded from the JSON file
+     * Verifies that recipes are loaded from the JSON file.
      */
     @Test
     void loadsRecipesFromJson() {

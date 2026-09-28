@@ -1,5 +1,6 @@
 package it.unibo.kikiStore.engine.impl;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikiStore.engine.api.GameEngine;
 import it.unibo.kikiStore.engine.api.GameStateManager;
 import javafx.animation.AnimationTimer;
@@ -31,6 +32,10 @@ public final class GameEngineImpl implements GameEngine {
      * @param width the width of the game canvas
      * @param height the height of the game canvas
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "The engine drives the shared state manager and draws on the shared canvas on purpose"
+    )
     public GameEngineImpl(final GameStateManager gsm, final GraphicsContext gc, final double width, final double height) {
         this.gsm = gsm;
         this.gc = gc;

@@ -2,8 +2,6 @@ package it.unibo.kikiStore.controller.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import it.unibo.kikiStore.model.inventory.api.Ingredient;
@@ -11,6 +9,7 @@ import it.unibo.kikiStore.model.inventory.api.Recipe;
 import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
 import it.unibo.kikiStore.model.inventory.impl.RecipeBookImpl;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +19,11 @@ import org.junit.jupiter.api.Test;
 class RecipeBookControllerImplTest {
 
     private static final String RECIPES_JSON = "textFiles/recipes.json";
+    private static final String BASIL = "Basil";
+    private static final String BASIL_SPRITE = "sprites/basil";
+    private static final String PLANT = "plant";
+    private static final String FLOWER = "flower";
+    private static final String WINDRUNNER = "Windrunner Potion";
 
     private RecipeBookControllerImpl controller;
 
@@ -37,7 +41,7 @@ class RecipeBookControllerImplTest {
      * Verifies that all recipes are loaded and none is unlocked by default.
      */
     @Test
-    void getAllRecipesAndUnlockedRecipes() {
+    void recipesLoadedAndNoneUnlocked() {
         assertFalse(controller.getAllRecipes().isEmpty());
         assertTrue(controller.getUnlockedRecipes().isEmpty());
     }
@@ -48,28 +52,28 @@ class RecipeBookControllerImplTest {
      */
     @Test
     void findByIngredientsMatchesCorrectCombination() {
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient dandelion = new IngredientImpl("Dandelion", "sprites/dandelion", 1, "flower");
-        final Ingredient sage = new IngredientImpl("Sage", "sprites/sage", 1, "plant");
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient dandelion = new IngredientImpl("Dandelion", "sprites/dandelion", 1, FLOWER);
+        final Ingredient sage = new IngredientImpl("Sage", "sprites/sage", 1, PLANT);
 
-        final Recipe found = controller.findByIngredients(List.of(dandelion, basil, sage));
+        final Optional<Recipe> found = controller.findByIngredients(List.of(dandelion, basil, sage));
 
-        assertNotNull(found);
-        assertEquals("Windrunner Potion", found.getPotion().getName());
+        assertTrue(found.isPresent());
+        assertEquals(WINDRUNNER, found.get().getPotion().getName());
     }
 
     /**
-     * Verifies that findByIngredients returns null for a combination that
-     * does not match any known recipe.
+     * Verifies that findByIngredients returns an empty Optional for a
+     * combination that does not match any known recipe.
      */
     @Test
-    void findByIngredientsReturnsNullForUnknownCombination() {
-        final Ingredient basil = new IngredientImpl("Basil", "sprites/basil", 1, "plant");
-        final Ingredient chamomile = new IngredientImpl("Chamomile", "sprites/chamomile", 1, "flower");
+    void findByIngredientsIsEmptyForUnknownCombination() {
+        final Ingredient basil = new IngredientImpl(BASIL, BASIL_SPRITE, 1, PLANT);
+        final Ingredient chamomile = new IngredientImpl("Chamomile", "sprites/chamomile", 1, FLOWER);
 
-        final Recipe found = controller.findByIngredients(List.of(basil, chamomile));
+        final Optional<Recipe> found = controller.findByIngredients(List.of(basil, chamomile));
 
-        assertNull(found);
+        assertTrue(found.isEmpty());
     }
 
     /**
@@ -91,10 +95,10 @@ class RecipeBookControllerImplTest {
      */
     @Test
     void findByNameMatchesPartialName() {
-        final Recipe found = controller.findByName("windrunner");
+        final Optional<Recipe> found = controller.findByName("windrunner");
 
-        assertNotNull(found);
-        assertEquals("Windrunner Potion", found.getPotion().getName());
+        assertTrue(found.isPresent());
+        assertEquals(WINDRUNNER, found.get().getPotion().getName());
     }
 
     /**

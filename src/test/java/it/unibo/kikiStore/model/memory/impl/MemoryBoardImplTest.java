@@ -15,12 +15,16 @@ import org.junit.jupiter.api.Test;
  */
 class MemoryBoardImplTest {
 
+    private static final String BASIL_SPRITE = "sprites/basil";
+    private static final String SAGE_SPRITE = "sprites/sage";
+    private static final String DANDELION_SPRITE = "sprites/dandelion";
+
     /**
      * Verifies that the board creates exactly two cards per given path.
      */
     @Test
     void boardHasTwoCardsPerPair() {
-        final MemoryBoardImpl board = new MemoryBoardImpl(List.of("sprites/basil", "sprites/sage"));
+        final MemoryBoardImpl board = new MemoryBoardImpl(List.of(BASIL_SPRITE, SAGE_SPRITE));
 
         assertEquals(4, board.getCards().size());
     }
@@ -31,13 +35,13 @@ class MemoryBoardImplTest {
     @Test
     void everyCardHasExactlyOneMatchingPair() {
         final MemoryBoardImpl board = new MemoryBoardImpl(
-                List.of("sprites/basil", "sprites/sage", "sprites/dandelion"));
+                List.of(BASIL_SPRITE, SAGE_SPRITE, DANDELION_SPRITE));
         final List<MemoryCard> cards = board.getCards();
 
         for (final MemoryCard card : cards) {
             int matchCount = 0;
             for (final MemoryCard other : cards) {
-                if (other != card && other.getPairId() == card.getPairId()) {
+                if (other.equals(card) && other.getPairId() == card.getPairId()) {
                     matchCount++;
                 }
             }
@@ -51,7 +55,7 @@ class MemoryBoardImplTest {
      */
     @Test
     void newBoardIsNotComplete() {
-        final MemoryBoardImpl board = new MemoryBoardImpl(List.of("sprites/basil", "sprites/sage"));
+        final MemoryBoardImpl board = new MemoryBoardImpl(List.of(BASIL_SPRITE, SAGE_SPRITE));
 
         assertFalse(board.isComplete());
     }
@@ -61,7 +65,7 @@ class MemoryBoardImplTest {
      */
     @Test
     void boardIsCompleteWhenAllCardsAreMatched() {
-        final MemoryBoardImpl board = new MemoryBoardImpl(List.of("sprites/basil", "sprites/sage"));
+        final MemoryBoardImpl board = new MemoryBoardImpl(List.of(BASIL_SPRITE, SAGE_SPRITE));
 
         for (final MemoryCard card : board.getCards()) {
             card.setState(CardState.MATCHED);

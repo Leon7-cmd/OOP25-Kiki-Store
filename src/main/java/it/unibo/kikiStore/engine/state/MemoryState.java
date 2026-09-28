@@ -19,6 +19,8 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Memory minigame screen - a 5x4 grid of cards flipped with the mouse.
  * States: PLAYING (grid interactive, time/moves shown), RESULT
@@ -83,6 +85,10 @@ public final class MemoryState implements GameState {
      * @param gsm              the game state manager
      * @param input            the input handler
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Controllers and resources are injected on purpose and shared between game states"
+    )
     public MemoryState(
         final PlayerController player, 
         final GameCatalog catalog, 

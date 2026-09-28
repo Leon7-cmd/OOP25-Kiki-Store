@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
  */
 class MemoryControllerImplTest {
 
+    private static final int FULL_BOARD_SIZE = 20;
     private static final int PREVIEW_DURATION_TICKS = 60;
 
     private MemoryControllerImpl controller;
@@ -29,17 +30,58 @@ class MemoryControllerImplTest {
     @BeforeEach
     void setUp() {
         final InputHandler dummyInput = new InputHandler() {
-            @Override public boolean isUp() { return false; }
-            @Override public boolean isDown() { return false; }
-            @Override public boolean isLeft() { return false; }
-            @Override public boolean isRight() { return false; }
-            @Override public boolean isAction() { return false; }
-            @Override public boolean isEscapePressed() { return false; }
-            @Override public boolean isInventoryPressed() { return false; }
-            @Override public boolean isCraftingPressed() { return false; }
-            @Override public boolean isMouseClicked() { return false; }
-            @Override public double getMouseX() { return 0.0; }
-            @Override public double getMouseY() { return 0.0; }
+
+            @Override
+            public boolean isUp() { 
+                return false;
+            }
+
+            @Override
+            public boolean isDown() {
+                return false;
+            }
+
+            @Override
+            public boolean isLeft() {
+                return false;
+            }
+
+            @Override
+            public boolean isRight() {
+                return false;
+            }
+
+            @Override
+            public boolean isAction() {
+                return false;
+            }
+
+            @Override
+            public boolean isEscapePressed() {
+                return false;
+            }
+
+            @Override
+            public boolean isInventoryPressed() {
+                return false;
+            }
+
+            @Override public boolean isCraftingPressed() {
+                return false;
+            }
+
+            @Override
+            public boolean isMouseClicked() {
+                return false;
+            }
+
+            @Override public double getMouseX() {
+                return 0.0;
+            }
+
+            @Override public double getMouseY() {
+                return 0.0;
+            }
         };
         final GameCatalog catalog = new GameCatalogImpl("textFiles/ingredients.json", "textFiles/potions.json");
         final InventoryControllerImpl inventoryController = new InventoryControllerImpl();
@@ -65,7 +107,7 @@ class MemoryControllerImplTest {
      */
     @Test
     void startNewGameCreatesFullBoard() {
-        assertEquals(20, controller.getBoard().getCards().size());
+        assertEquals(FULL_BOARD_SIZE, controller.getBoard().getCards().size());
         assertEquals(0, controller.getMoveCount());
         assertFalse(controller.isGameComplete());
     }
@@ -118,7 +160,7 @@ class MemoryControllerImplTest {
         for (int i = 0; i < cards.size(); i++) {
             for (int j = i + 1; j < cards.size(); j++) {
                 if (cards.get(i).getPairId() == cards.get(j).getPairId()) {
-                    return new int[] { i, j };
+                    return new int[] {i, j};
                 }
             }
         }
@@ -135,7 +177,7 @@ class MemoryControllerImplTest {
         for (int i = 0; i < cards.size(); i++) {
             for (int j = i + 1; j < cards.size(); j++) {
                 if (cards.get(i).getPairId() != cards.get(j).getPairId()) {
-                    return new int[] { i, j };
+                    return new int[] {i, j};
                 }
             }
         }

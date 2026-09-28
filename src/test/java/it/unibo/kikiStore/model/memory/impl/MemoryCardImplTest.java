@@ -11,15 +11,17 @@ import org.junit.jupiter.api.Test;
  */
 class MemoryCardImplTest {
 
+    private static final String BASIL_SPRITE = "sprites/basil";
+
     /**
      * Verifies that a newly created card starts hidden and has the
      * given image path and pair id.
      */
     @Test
     void constructorSetsFieldsAndStartsHidden() {
-        final MemoryCardImpl card = new MemoryCardImpl("sprites/basil", 3);
+        final MemoryCardImpl card = new MemoryCardImpl(BASIL_SPRITE, 3);
 
-        assertEquals("sprites/basil", card.getImagePath());
+        assertEquals(BASIL_SPRITE, card.getImagePath());
         assertEquals(3, card.getPairId());
         assertEquals(CardState.HIDDEN, card.getState());
     }
@@ -29,7 +31,7 @@ class MemoryCardImplTest {
      */
     @Test
     void setStateUpdatesState() {
-        final MemoryCardImpl card = new MemoryCardImpl("sprites/basil", 0);
+        final MemoryCardImpl card = new MemoryCardImpl(BASIL_SPRITE, 0);
 
         card.setState(CardState.MATCHED);
 
