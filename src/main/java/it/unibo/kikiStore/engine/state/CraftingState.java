@@ -622,7 +622,7 @@ public final class CraftingState implements GameState {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(question, centerX, y);
 
-        gc.setFont(pixelFont);
+        gc.setFont(pixelFontSmall);
         gc.setFill(brewYesSelected ? COL_SELECTED_BORDER : COL_TEXT_DIM);
         gc.fillText("Yes", centerX - PROMPT_OFFSET_X, y + PROMPT_OFFSET_Y);
         gc.setFill(!brewYesSelected ? COL_SELECTED_BORDER : COL_TEXT_DIM);
