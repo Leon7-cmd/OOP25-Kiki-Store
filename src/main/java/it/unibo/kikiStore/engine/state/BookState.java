@@ -40,7 +40,7 @@ public final class BookState implements GameState {
     private static final int BOOKMARK_SHEET_ROWS = 3;
     private static final double OVERLAY_OPACITY = 0.6;
     private static final double TITLE_FONT_SIZE = 12.0;
-    private static final double SMALL_FONT_SIZE = 8.0;
+    private static final double SMALL_FONT_SIZE = 9.0;
 
     private static final double BOOK_WIDTH_RATIO = 0.75;
     private static final double BOOK_HEIGHT_RATIO = 0.85;
@@ -49,6 +49,9 @@ public final class BookState implements GameState {
     private static final double BOOKMARK_INV_Y_FRAC = 100.0 / 272.0;
     private static final double BOOKMARK_RCP_Y_FRAC = 120.0 / 272.0;
     private static final double BOOKMARK_ORD_Y_FRAC = 140.0 / 272.0;
+
+    private static final double BOOK_ZOOM = 1.25; // 1.0 = normale, aumenta per ingrandire tutto
+    private static final double ZOOM_VERTICAL_ANCHOR_RATIO = 1.10;
 
     private final GameStateTransition gsm;
     private final InputHandler input;
@@ -102,10 +105,10 @@ public final class BookState implements GameState {
         this.grayscaleBookmark.setSaturation(-1.0);
 
         final Font loadedTitle = Font.loadFont(
-                getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), TITLE_FONT_SIZE);
+                getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), TITLE_FONT_SIZE);
         this.pixelFont = loadedTitle != null ? loadedTitle : Font.font("Monospace", TITLE_FONT_SIZE);
         final Font loadedSmall = Font.loadFont(
-                getClass().getResourceAsStream("/fonts/press_start_2p.ttf"), SMALL_FONT_SIZE);
+                getClass().getResourceAsStream("/fonts/PressStart2P.ttf"), SMALL_FONT_SIZE);
         this.pixelFontSmall = loadedSmall != null ? loadedSmall : Font.font("Monospace", SMALL_FONT_SIZE);
 
         this.openAnimator = new BookAnimator(spriteManager, "sprites/ui_book/Open_book", OPEN_COLS, OPEN_ROWS);
@@ -133,7 +136,6 @@ public final class BookState implements GameState {
 
     @Override
     public void update() {
-        // TO-DO: sostituire con input.isEsc() quando lo aggiungo a InputHandler
         final boolean escNow = input.isEscapePressed();
 
         switch (phase) {
@@ -248,8 +250,6 @@ public final class BookState implements GameState {
         final double bookX = (screenW - bookW) / 2;
         final double bookY = (screenH - bookH) / 2;
 
-        // System.out.println("screenW=" + screenW + " screenH=" + screenH
-        // + " bookW=" + bookW + " bookH=" + bookH + " bookY=" + bookY);
         switch (phase) {
             case OPENING:
                 openAnimator.render(gc, bookX, bookY, bookW, bookH);
@@ -272,6 +272,15 @@ public final class BookState implements GameState {
 
     private void renderOpenBook(final GraphicsContext gc, final double x, final double y,
             final double w, final double h) {
+        gc.save();
+
+        // Centro dello zoom = centro del libro
+        final double centerX = x + w / 2;
+        final double centerY = y + h * ZOOM_VERTICAL_ANCHOR_RATIO;
+        gc.translate(centerX, centerY);
+        gc.scale(BOOK_ZOOM, BOOK_ZOOM);
+        gc.translate(-centerX, -centerY);
+
         openAnimator.render(gc, x, y, w, h);
         final double bookmarkAspect = 27.5 / 26.67;
         final double bookSize = w;
@@ -285,9 +294,11 @@ public final class BookState implements GameState {
                 bookmarkW, bookmarkH, 1, Section.RECIPES);
         renderBookmark(gc, bookmarkX, y + BOOKMARK_ORD_Y_FRAC * bookSize,
                 bookmarkW, bookmarkH, 2, Section.ORDERS);
+
         if (turningPage) {
             final BookAnimator activeTurn = turningRight ? turnRightAnimator : turnLeftAnimator;
             activeTurn.render(gc, x, y, w, h);
+            gc.restore();
             return;
         }
 
@@ -297,6 +308,8 @@ public final class BookState implements GameState {
         final double contentH = h;
 
         getActiveSection().render(gc, contentX, contentY, contentW, contentH);
+
+        gc.restore();
     }
 
     /**
@@ -355,8 +368,10 @@ public final class BookState implements GameState {
     }
 
     @Override
-    public void pause() { }
+    public void pause() {
+    }
 
     @Override
-    public void resume() { }
+    public void resume() {
+    }
 }

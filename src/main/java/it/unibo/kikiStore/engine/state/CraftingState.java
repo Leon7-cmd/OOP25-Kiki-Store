@@ -42,21 +42,21 @@ public final class CraftingState implements GameState {
     private static final double ITEM_PADDING = 6.0;
     private static final double BACKPACK_WIDTH_RATIO = 0.4;
     private static final double CAULDRON_SLOT_SIZE = 90.0;
-    private static final Color COL_BG = Color.web("#C68642");
+    private static final Color COL_BG = Color.web("#c5925b");
 
     private static final Color COL_TEXT = Color.web("#3B2006");
     private static final Color COL_TEXT_DIM = Color.web("#5C4A3A");
-    private static final Color COL_CURSOR = Color.web("#FFD700");
-    private static final Color COL_SELECTED_BORDER = Color.web("#1D9E75");
+    private static final Color COL_CURSOR = Color.web("#e8da8a");
+    private static final Color COL_SELECTED_BORDER = Color.web("#5fc6a6");
 
-    private static final double TITLE_FONT_SIZE = 24.0;
+    private static final double TITLE_FONT_SIZE = 40.0;
     private static final double SMALL_FONT_SIZE = 20.0;
 
     private static final double BACKPACK_X = 20.0;
-    private static final double BACKPACK_Y = 40.0;
+    private static final double BACKPACK_Y = 60.0;
     private static final double BACKPACK_WIDTH_MARGIN = 40.0;
     private static final double BACKPACK_HEIGHT_MARGIN = 80.0;
-    private static final double OVERLAY_OPACITY = 0.6;
+    private static final double CURSOR_LABEL_Y = 35.0;
 
     private static final double ITEM_QTY_BOTTOM_SPACE = 12.0;
     private static final double QTY_TEXT_OFFSET_X = 3.0;
@@ -65,13 +65,18 @@ public final class CraftingState implements GameState {
     private static final double BORDER_INSET = 1.0;
     private static final double BORDER_SIZE_REDUCTION = 2.0;
 
+    private static final double TITLE_AREA_RATIO = 0.30;
     private static final double CAULDRON_MARGIN = 40.0;
-    private static final double CAULDRON_TITLE_OFFSET_Y = 30.0;
     private static final double CAULDRON_SLOT_GAP = 16.0;
-    private static final double CAULDRON_SLOTS_TOP_OFFSET = 60.0;
     private static final double CAULDRON_BELOW_OFFSET = 40.0;
     private static final double CAULDRON_ITEM_INSET = 10.0;
     private static final double CAULDRON_ITEM_SIZE_REDUCTION = 20.0;
+    private static final double CAULDRON_BOTTOM_RESERVE = 90.0;
+
+    // Centro dell'apertura d'acqua, misurato sullo sprite cauldron.png (128x128):
+    // apertura a x=42 y=39, larghezza 70, altezza 55
+    private static final double APERTURE_CENTER_X_FRAC = 63.0 / 128.0;
+    private static final double APERTURE_CENTER_Y_FRAC = 48.0 / 128.0;
 
     private static final double RESULT_IMAGE_SIZE = 80.0;
     private static final double RESULT_TEXT_OFFSET_Y = 20.0;
@@ -327,7 +332,7 @@ public final class CraftingState implements GameState {
         gc.save();
         gc.setImageSmoothing(false);
 
-        gc.setFill(Color.rgb(0, 0, 0, OVERLAY_OPACITY));
+        gc.setFill(Color.rgb(0, 0, 0));
         gc.fillRect(0, 0, screenW, screenH);
 
         gc.setFill(COL_BG);
@@ -335,6 +340,10 @@ public final class CraftingState implements GameState {
 
         final double backpackW = screenW * BACKPACK_WIDTH_RATIO;
         final boolean interactive = phase == Phase.SELECTING;
+
+        if (interactive) {
+            renderCursorLabel(gc, BACKPACK_X);
+        }
 
         renderBackpack(gc, BACKPACK_X, BACKPACK_Y, backpackW - BACKPACK_WIDTH_MARGIN,
                 screenH - BACKPACK_HEIGHT_MARGIN, interactive);
@@ -452,6 +461,25 @@ public final class CraftingState implements GameState {
     }
 
     /**
+     * Draws the name of the ingredient currently under the cursor, in the
+     * margin above the backpack grid.
+     *
+     * @param gc graphics context
+     * @param x  label x position
+     */
+    private void renderCursorLabel(final GraphicsContext gc, final double x) {
+        if (cursorIndex >= allIngredients.size()) {
+            return;
+        }
+        final Ingredient hovered = allIngredients.get(cursorIndex);
+
+        gc.setFill(COL_TEXT);
+        gc.setFont(pixelFontSmall);
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.fillText(hovered.getName(), x, CURSOR_LABEL_Y);
+    }
+
+    /**
      * Draws the cauldron with 3 ingredient slots, and the state-dependent
      * content below it (Brew Potion? / brewing timer / result).
      *
@@ -465,21 +493,32 @@ public final class CraftingState implements GameState {
             final double w, final double h) {
         final double centerX = x + w / 2;
 
-        final double cauldronX = x + CAULDRON_MARGIN;
-        final double cauldronY = y + CAULDRON_MARGIN;
-        final double cauldronW = w - CAULDRON_MARGIN * 2;
-        final double cauldronH = h - CAULDRON_MARGIN * 2;
-
-        renderCauldronSprite(gc, cauldronX, cauldronY, cauldronW, cauldronH);
+        // 30% superiore riservato al titolo, 70% inferiore al calderone
+        final double titleAreaHeight = h * TITLE_AREA_RATIO;
+        final double cauldronAreaY = y + titleAreaHeight;
+        final double cauldronAreaHeight = h - titleAreaHeight;
 
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFont);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText("Cauldron", centerX, cauldronY + CAULDRON_TITLE_OFFSET_Y);
+        gc.fillText("CAULDRON", centerX, y + titleAreaHeight / 2);
 
+        // Il calderone resta quadrato: la sua dimensione e' il minimo tra
+        // larghezza e altezza disponibili nel 70% inferiore, con margine
+        final double availableW = w - CAULDRON_MARGIN * 2;
+        final double availableH = cauldronAreaHeight - CAULDRON_MARGIN - CAULDRON_BOTTOM_RESERVE;
+        final double cauldronSize = Math.min(availableW, availableH);
+        final double cauldronX = x + (w - cauldronSize) / 2;
+        final double cauldronY = cauldronAreaY;
+
+        renderCauldronSprite(gc, cauldronX, cauldronY, cauldronSize, cauldronSize);
+
+        // Slot centrati sul centro esatto dell'apertura, dimensione invariata
         final double slotsTotalW = CAULDRON_SLOT_SIZE * REQUIRED_INGREDIENTS + CAULDRON_SLOT_GAP * 2;
-        final double slotsX = centerX - slotsTotalW / 2;
-        final double slotsY = cauldronY + CAULDRON_SLOTS_TOP_OFFSET;
+        final double apertureCenterX = cauldronX + cauldronSize * APERTURE_CENTER_X_FRAC;
+        final double apertureCenterY = cauldronY + cauldronSize * APERTURE_CENTER_Y_FRAC;
+        final double slotsX = apertureCenterX - slotsTotalW / 2;
+        final double slotsY = apertureCenterY - CAULDRON_SLOT_SIZE / 2;
 
         for (int i = 0; i < REQUIRED_INGREDIENTS; i++) {
             final double sx = slotsX + i * (CAULDRON_SLOT_SIZE + CAULDRON_SLOT_GAP);
@@ -499,7 +538,7 @@ public final class CraftingState implements GameState {
             }
         }
 
-        final double belowY = slotsY + CAULDRON_SLOT_SIZE + CAULDRON_BELOW_OFFSET;
+        final double belowY = cauldronY + cauldronSize + CAULDRON_BELOW_OFFSET;
 
         switch (phase) {
             case SELECTING:
@@ -591,8 +630,10 @@ public final class CraftingState implements GameState {
     }
 
     @Override
-    public void pause() { }
+    public void pause() {
+    }
 
     @Override
-    public void resume() { }
+    public void resume() {
+    }
 }

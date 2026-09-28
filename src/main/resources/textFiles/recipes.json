@@ -6,8 +6,8 @@
     "id": "sprites/potions/giggling_toadstool",
     "ingredients": [
         "toadstool",
-        "fly_agaric",
-        "blue_mushroom"
+        "fly agaric",
+        "blue mushroom"
     ]
     
   },
@@ -17,7 +17,7 @@
     "effect": "sleep",
     "id": "sprites/potions/starlit_slumber",
     "ingredients": [
-        "blue_lotus",
+        "blue lotus",
         "chamomile",
         "sage"
     ]
@@ -28,7 +28,7 @@
     "effect": "detox",
     "id": "sprites/potions/thistledown_detox",
     "ingredients": [
-        "milk_thistle",
+        "milk thistle",
         "dandelion",
         "senna"
     ]
@@ -41,7 +41,7 @@
     "id": "sprites/potions/turmeric_blaze",
     "ingredients": [
         "turmeric",
-        "olive_leaf",
+        "olive leaf",
         "echinacea"
     ]
     
@@ -54,7 +54,7 @@
     "ingredients": [
         "clover",
         "calendula",
-        "blue_berries"
+        "blue berries"
     ]
     
   },
@@ -77,8 +77,8 @@
     "id": "sprites/potions/shieldberry",
     "ingredients": [
         "echinacea",
-        "black_elder",
-        "blue_berries"
+        "black elder",
+        "blue berries"
     ]
         
   },
@@ -102,7 +102,7 @@
     "ingredients": [
         "turmeric",
         "basil",
-        "black_elder"
+        "black elder"
     ]
     
   },
@@ -113,7 +113,7 @@
     "id": "sprites/potions/serene_iris",
     "ingredients": [
         "aloe",
-        "olive_leaf",
+        "olive leaf",
         "sage"
     ]
     

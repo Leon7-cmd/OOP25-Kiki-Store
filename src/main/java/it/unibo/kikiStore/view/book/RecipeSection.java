@@ -1,6 +1,7 @@
 package it.unibo.kikiStore.view.book;
 
 import it.unibo.kikiStore.controller.api.RecipeBookController;
+import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import it.unibo.kikiStore.model.inventory.api.Recipe;
 import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import java.util.List;
+import javafx.scene.text.Text;
 
 /**
  * Recipe book section — shows two recipes at once, one per open page
@@ -20,9 +22,8 @@ public final class RecipeSection implements BookSection {
 
     private static final double IMAGE_SIZE_RATIO = 0.5;
     private static final double TEXT_LINE_HEIGHT = 13.0;
-    private static final double CHAR_WIDTH_ESTIMATE = 6.5; // TO-DO calibra con Press Start 2P
-    private static final double TEXT_SIDE_PADDING = 10.0;
-    private static final double TEXT_MARGIN = 20.0;
+    private static final double TEXT_SIDE_PADDING = 15.0;
+    private static final double TEXT_MARGIN = 35.0;
 
     private static final Color COL_TITLE = Color.web("#3B2006");
     private static final Color COL_TEXT = Color.web("#3B2006");
@@ -33,7 +34,10 @@ public final class RecipeSection implements BookSection {
     private static final double PAGE_BOTTOM_FRAC = 244.0 / 272.0;
     private static final double PAGE_LEFT_FRAC = 26.0 / 272.0;
     private static final double PAGE_CENTER_FRAC = 135.5 / 272.0;
-    private static final double PAGE_RIGHT_FRAC = 270.0 / 272.0;
+    private static final double PAGE_RIGHT_FRAC = 245.0 / 272.0;;
+
+    private static final double EFFECT_TOP_OFFSET = 18.0;
+    private static final double INGREDIENT_TOP_MARGIN = 10.0;
 
     private final RecipeBookController recipeBookController;
     private final SpriteManager spriteManager;
@@ -143,8 +147,33 @@ public final class RecipeSection implements BookSection {
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFontSmall);
         gc.setTextAlign(TextAlignment.LEFT);
-        final double descY = imgY + imgSize + 44;
-        drawWrappedText(gc, recipe.getPotion().getDescription(), x + TEXT_SIDE_PADDING, descY, w - TEXT_MARGIN);
+        final double effectY = imgY + imgSize + TEXT_MARGIN + EFFECT_TOP_OFFSET;
+        gc.fillText("EFFECT: " + recipe.getPotion().getEffect(), x + TEXT_SIDE_PADDING, effectY);
+
+        final double descY = effectY + TEXT_MARGIN;
+        final double textEndY = drawWrappedText(gc, recipe.getPotion().getDescription(),
+                x + TEXT_SIDE_PADDING, descY, w - TEXT_MARGIN);
+
+        final String ingredientsText = "Ingredients: " + joinIngredientNames(recipe.getIngredients());
+        drawWrappedText(gc, ingredientsText, x + TEXT_SIDE_PADDING,
+                textEndY + INGREDIENT_TOP_MARGIN, w - TEXT_MARGIN);
+    }
+
+    /**
+     * Joins the ingredient names into a single comma-separated string.
+     *
+     * @param ingredients the recipe's required ingredients
+     * @return the joined names, e.g. "Basil, Dandelion, Sage"
+     */
+    private String joinIngredientNames(final List<Ingredient> ingredients) {
+        final StringBuilder result = new StringBuilder();
+        for (int i = 0; i < ingredients.size(); i++) {
+            if (i > 0) {
+                result.append(", ");
+            }
+            result.append(ingredients.get(i).getName());
+        }
+        return result.toString();
     }
 
     /**
@@ -156,29 +185,37 @@ public final class RecipeSection implements BookSection {
      * @param y        starting y position (top of first line)
      * @param maxWidth maximum width before wrapping
      */
-    private void drawWrappedText(final GraphicsContext gc, final String text,
+    private double drawWrappedText(final GraphicsContext gc, final String text,
             final double x, final double y, final double maxWidth) {
-        final int maxCharsPerLine = Math.max(1, (int) (maxWidth / CHAR_WIDTH_ESTIMATE));
-
         final String[] words = text.split(" ");
         final StringBuilder line = new StringBuilder();
         double currentY = y;
 
         for (final String word : words) {
-            if (line.length() + word.length() + 1 > maxCharsPerLine) {
+            final String candidate = line.length() == 0 ? word : line + " " + word;
+            if (line.length() > 0 && measureTextWidth(candidate) > maxWidth) {
                 gc.fillText(line.toString(), x, currentY);
-                line.setLength(0);
                 currentY += TEXT_LINE_HEIGHT;
+                line.setLength(0);
+                line.append(word);
+            } else {
+                line.setLength(0);
+                line.append(candidate);
             }
-            if (line.length() > 0) {
-                line.append("");
-            }
-            line.append(word);
         }
         if (line.length() > 0) {
             gc.fillText(line.toString(), x, currentY);
+            currentY += TEXT_LINE_HEIGHT;
         }
+        return currentY;
     }
+
+    private double measureTextWidth(final String text) {
+        final Text measurer = new Text(text);
+        measurer.setFont(pixelFontSmall);
+        return measurer.getLayoutBounds().getWidth();
+    }
+
 
     /**
      * Checks whether there is a next spread of 2 more recipes ahead.

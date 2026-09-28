@@ -50,11 +50,11 @@ public final class MemoryState implements GameState {
     private static final double BUTTON_HEIGHT = 30.0;
     private static final double OVERLAY_OPACITY = 0.6;
 
-    private static final Color COL_BG = Color.web("#C68642");
+    private static final Color COL_BG = Color.web("#c5925b");
     private static final Color COL_CARD_BACK = Color.web("#5C3A1E");
     private static final Color COL_TEXT = Color.web("#3B2006");
     private static final Color COL_TEXT_DIM = Color.web("#5C4A3A");
-    private static final Color COL_SELECTED_BORDER = Color.web("#1D9E75");
+    private static final Color COL_SELECTED_BORDER = Color.web("#5fc6a6");
     private static final Color COL_PANEL_BG = Color.web("#F5E6C8");
 
     private final MemoryController memoryController;
@@ -378,7 +378,7 @@ public final class MemoryState implements GameState {
         gc.setFill(COL_TEXT);
         gc.setFont(pixelFontSmall);
         gc.setTextAlign(TextAlignment.CENTER);
-        gc.fillText(question, centerX, y - LINE_HEIGHT / 2);
+        gc.fillText(question, centerX, y - LINE_HEIGHT);
 
         gc.setFont(pixelFont);
         gc.setFill(playAgainYesSelected ? COL_SELECTED_BORDER : COL_TEXT_DIM);
