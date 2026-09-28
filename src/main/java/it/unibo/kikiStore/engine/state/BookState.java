@@ -238,8 +238,6 @@ public final class BookState implements GameState {
         final double screenW = gc.getCanvas().getWidth();
         final double screenH = gc.getCanvas().getHeight();
 
-        gc.save();
-
         gc.setImageSmoothing(false);
         gc.setFill(Color.rgb(0, 0, 0, OVERLAY_OPACITY));
         gc.fillRect(0, 0, screenW, screenH);
@@ -249,6 +247,14 @@ public final class BookState implements GameState {
         final double bookH = bookSize;
         final double bookX = (screenW - bookW) / 2;
         final double bookY = (screenH - bookH) / 2;
+
+        gc.save();
+        // Centro dello zoom = centro del libro
+        final double zoomCenterX = bookX + bookW / 2;
+        final double zoomCenterY = bookY + bookH * ZOOM_VERTICAL_ANCHOR_RATIO;
+        gc.translate(zoomCenterX, zoomCenterY);
+        gc.scale(BOOK_ZOOM, BOOK_ZOOM);
+        gc.translate(-zoomCenterX, -zoomCenterY);
 
         switch (phase) {
             case OPENING:
@@ -273,13 +279,6 @@ public final class BookState implements GameState {
     private void renderOpenBook(final GraphicsContext gc, final double x, final double y,
             final double w, final double h) {
         gc.save();
-
-        // Centro dello zoom = centro del libro
-        final double centerX = x + w / 2;
-        final double centerY = y + h * ZOOM_VERTICAL_ANCHOR_RATIO;
-        gc.translate(centerX, centerY);
-        gc.scale(BOOK_ZOOM, BOOK_ZOOM);
-        gc.translate(-centerX, -centerY);
 
         openAnimator.render(gc, x, y, w, h);
         final double bookmarkAspect = 27.5 / 26.67;

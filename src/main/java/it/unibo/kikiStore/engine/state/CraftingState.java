@@ -11,6 +11,7 @@ import it.unibo.kikiStore.model.inventory.api.GameCatalog;
 import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import it.unibo.kikiStore.model.inventory.api.Recipe;
 import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikiStore.controller.api.PlayerController;
 import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
@@ -37,6 +38,7 @@ public final class CraftingState implements GameState {
     private static final int SLOTS = COLUMNS * ROWS;
     private static final int REQUIRED_INGREDIENTS = 3;
     private static final int BREW_DURATION_TICKS = 90; // ~1.5s a 60fps
+    private static final int ENERGY_COST_PER_CRAFT = 1;
 
     private static final double SLOT_PADDING = 6.0;
     private static final double ITEM_PADDING = 6.0;
@@ -45,6 +47,7 @@ public final class CraftingState implements GameState {
     private static final Color COL_BG = Color.web("#c5925b");
 
     private static final Color COL_TEXT = Color.web("#3B2006");
+    private static final Color COL_TEXT_ERROR = Color.web("#781a0d");
     private static final Color COL_TEXT_DIM = Color.web("#5C4A3A");
     private static final Color COL_CURSOR = Color.web("#e8da8a");
     private static final Color COL_SELECTED_BORDER = Color.web("#5fc6a6");
@@ -87,6 +90,7 @@ public final class CraftingState implements GameState {
     private final InventoryController inventoryController;
     private final CraftingController craftingController;
     private final RecipeBookController recipeBookController;
+    private final PlayerController player;
     private final GameCatalog gameCatalog;
     private final SpriteManager spriteManager;
     private final GameStateTransition gsm;
@@ -117,6 +121,8 @@ public final class CraftingState implements GameState {
     /**
      * @param inventoryController  inventory controller
      * @param recipeBookController recipe book controller
+     * @param player               the player, whose energy is spent on each
+     *                             succefful craft
      * @param gameCatalog          full item catalog
      * @param spriteManager        sprite manager
      * @param gsm                  game state manager
@@ -125,12 +131,14 @@ public final class CraftingState implements GameState {
     public CraftingState(
             final InventoryController inventoryController,
             final RecipeBookController recipeBookController,
+            final PlayerController player,
             final GameCatalog gameCatalog,
             final SpriteManager spriteManager,
             final GameStateTransition gsm,
             final InputHandler input) {
         this.inventoryController = inventoryController;
         this.recipeBookController = recipeBookController;
+        this.player = player;
         this.gameCatalog = gameCatalog;
         this.spriteManager = spriteManager;
         this.gsm = gsm;
@@ -244,6 +252,9 @@ public final class CraftingState implements GameState {
 
     /** Selects or deselects the ingredient currently under the cursor. */
     private void toggleSelection() {
+        if (player.getEnergy() <= 0) {
+            return;
+        }
         if (cursorIndex >= allIngredients.size()) {
             return;
         }
@@ -284,6 +295,9 @@ public final class CraftingState implements GameState {
     private void startBrewing() {
         final Recipe matchedRecipe = recipeBookController.findByIngredients(selectedIngredients);
         lastCraftSucceeded = matchedRecipe != null;
+        if (lastCraftSucceeded) {
+            player.consumeEnergy(ENERGY_COST_PER_CRAFT);
+        }
         lastResultImagePath = lastCraftSucceeded
                 ? matchedRecipe.getPotion().getImagePath()
                 : "sprites/potions/black_potion";
@@ -542,7 +556,12 @@ public final class CraftingState implements GameState {
 
         switch (phase) {
             case SELECTING:
-                if (askingBrewConfirm) {
+                if (player.getEnergy() <= 0) {
+                    gc.setFill(COL_TEXT_ERROR);
+                    gc.setFont(pixelFontSmall);
+                    gc.setTextAlign(TextAlignment.CENTER);
+                    gc.fillText("NO ENERGY LEFT TO CRAFT", centerX, belowY);
+                } else if (askingBrewConfirm) {
                     renderYesNoPrompt(gc, centerX, belowY, "Brew potion?");
                 }
                 break;

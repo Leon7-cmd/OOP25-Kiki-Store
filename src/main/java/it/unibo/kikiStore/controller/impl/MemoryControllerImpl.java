@@ -35,7 +35,7 @@ public final class MemoryControllerImpl implements MemoryController {
     private static final int PENALTY_PER_EXTRA_SECOND = 8;
     private static final int PENALTY_PER_EXTRA_MOVE = 20;
 
-    private static final int ENERGY_BOOST_AMOUNT = 20;
+    private static final int ENERGY_BOOST_AMOUNT = 1;
     private static final int COIN_DIVISOR = 10;
     private static final int MIN_COINS = 1;
 

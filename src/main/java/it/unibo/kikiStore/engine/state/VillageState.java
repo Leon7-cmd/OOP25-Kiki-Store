@@ -184,6 +184,7 @@ public final class VillageState implements GameState {
                 new CraftingState(
                     inventory, 
                     recipeBookController, 
+                    kiki,
                     catalog, 
                     spriteManager, 
                     transitionController, 
