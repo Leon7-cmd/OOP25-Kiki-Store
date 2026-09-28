@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.memory.api;
+package it.unibo.kikistore.model.memory.api;
 
 import java.util.List;
 

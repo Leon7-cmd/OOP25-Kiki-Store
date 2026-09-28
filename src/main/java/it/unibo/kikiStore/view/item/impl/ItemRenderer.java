@@ -1,11 +1,12 @@
-package it.unibo.kikiStore.view.item.impl;
+package it.unibo.kikistore.view.item.impl;
 
-import it.unibo.kikiStore.view.item.api.ItemRenderData;
-import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.List;
+
+import it.unibo.kikistore.view.item.api.ItemRenderData;
+import it.unibo.kikistore.view.utility.SpriteManager;
 
 /**
  * Handles the visual representation of all items in the game world.
@@ -42,10 +43,10 @@ public class ItemRenderer {
 
                 if (spriteSheet != null) {
                     // 2. Determine the total number of frames based on image width
-                    final int totalFrames = (int) (spriteSheet.getWidth() / SPRITE_SIZE);
+                    final int totalFrames = ((int) spriteSheet.getWidth()) / SPRITE_SIZE;
 
                     // 3. Calculate current frame using the frameCount (20 frames per second animation speed) 
-                    final int currentFrame = (frameCount / 20) % totalFrames; 
+                    final int currentFrame = frameCount / 20 % totalFrames; 
 
                     // 4. Find the starting point (X)
                     final double sourceX = currentFrame * SPRITE_SIZE;

@@ -1,7 +1,7 @@
-package it.unibo.kikiStore.controller.api;
+package it.unibo.kikistore.controller.api;
 
-import it.unibo.kikiStore.model.map.impl.CollisionHandler;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.map.impl.CollisionHandler;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
 /**
  * Controller responsible for translating user interactions into player model actions

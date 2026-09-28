@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.inventory.api;
+package it.unibo.kikistore.model.inventory.api;
 
 import java.util.List;
 

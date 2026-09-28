@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.model.map.impl;
+package it.unibo.kikistore.model.map.impl;
 
-import it.unibo.kikiStore.model.map.api.GameTile;
+import it.unibo.kikistore.model.map.api.GameTile;
 
 /**
  * Handles collision detection logic between game entities and the map environment.

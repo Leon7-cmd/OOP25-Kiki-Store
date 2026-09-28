@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.item.api;
+package it.unibo.kikistore.view.item.api;
 
 /**
  * A DTO containing all the information necessary 

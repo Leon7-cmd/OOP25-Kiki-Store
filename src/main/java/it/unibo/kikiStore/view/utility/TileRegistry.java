@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.utility;
+package it.unibo.kikistore.view.utility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,8 +39,8 @@ public final class TileRegistry {
                     line = reader.readLine();
                 }
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) { 
+            throw new IllegalStateException("Impossibile caricare i tile", e);
         }
     }
 

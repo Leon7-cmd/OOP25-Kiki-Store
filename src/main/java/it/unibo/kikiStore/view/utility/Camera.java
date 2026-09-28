@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.utility;
+package it.unibo.kikistore.view.utility;
 
 /**
  * Utility class that manages the camera.

@@ -1,9 +1,5 @@
-package it.unibo.kikiStore.model.inventory.impl;
+package it.unibo.kikistore.model.inventory.impl;
 
-import it.unibo.kikiStore.model.inventory.api.RecipeBook;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Potion;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +7,11 @@ import java.util.Collections;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Potion;
+import it.unibo.kikistore.model.inventory.api.Recipe;
+import it.unibo.kikistore.model.inventory.api.RecipeBook;
 
 /**
  * Loads and holds all known recipes from a JSON file. Ingredients

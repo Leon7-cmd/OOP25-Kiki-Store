@@ -1,7 +1,7 @@
-package it.unibo.kikiStore.view.hud.impl;
+package it.unibo.kikistore.view.hud.impl;
 
-import it.unibo.kikiStore.view.hud.api.HUDRenderData;
-import it.unibo.kikiStore.view.utility.SpriteManager;
+import it.unibo.kikistore.view.hud.api.HUDRenderData;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

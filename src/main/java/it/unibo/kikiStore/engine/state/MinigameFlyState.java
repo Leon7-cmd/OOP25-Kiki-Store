@@ -1,24 +1,24 @@
-package it.unibo.kikiStore.engine.state;
+package it.unibo.kikistore.engine.state;
 
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.model.map.api.GameTile;
-import it.unibo.kikiStore.model.map.impl.CollisionHandler;
-import it.unibo.kikiStore.model.map.impl.MapLoader;
-import it.unibo.kikiStore.model.map.impl.TileMapImpl;
-import it.unibo.kikiStore.view.entity.api.EntityRenderData;
-import it.unibo.kikiStore.view.entity.impl.EntityRenderer;
-import it.unibo.kikiStore.view.environment.api.MapRenderData;
-import it.unibo.kikiStore.view.environment.impl.MapRenderer;
-import it.unibo.kikiStore.view.hud.api.HUDRenderData;
-import it.unibo.kikiStore.view.hud.impl.HUDRenderer;
-import it.unibo.kikiStore.view.utility.Camera;
-import it.unibo.kikiStore.view.utility.SpriteManager;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.model.map.api.GameTile;
+import it.unibo.kikistore.model.map.impl.CollisionHandler;
+import it.unibo.kikistore.model.map.impl.MapLoader;
+import it.unibo.kikistore.model.map.impl.TileMapImpl;
+import it.unibo.kikistore.view.entity.api.EntityRenderData;
+import it.unibo.kikistore.view.entity.impl.EntityRenderer;
+import it.unibo.kikistore.view.environment.api.MapRenderData;
+import it.unibo.kikistore.view.environment.impl.MapRenderer;
+import it.unibo.kikistore.view.hud.api.HUDRenderData;
+import it.unibo.kikistore.view.hud.impl.HUDRenderer;
+import it.unibo.kikistore.view.utility.Camera;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -29,6 +29,10 @@ import javafx.scene.text.TextAlignment;
  * GameState implementation for the fly minigame.
  * Handles side scrolling mechanics, camera progression, and win/loss conditions.
  */
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP2",
+    justification = "GameStateTransition and PlayerController are shared components for world and player management"
+)
 public final class MinigameFlyState implements GameState {
 
     // Gameplay Constants
@@ -78,10 +82,6 @@ public final class MinigameFlyState implements GameState {
      * @param input           the InputHandler for user input
      * @param kiki            the PlayerController for controlling the player character
      */
-    @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "Controllers and resources are injected on purpose and shared between game states"
-    )
     public MinigameFlyState(
         final GameStateTransition stateController,
         final InputHandler input,
@@ -166,7 +166,7 @@ public final class MinigameFlyState implements GameState {
     public void render(final GraphicsContext gc) {
         final double screenWidth = gc.getCanvas().getWidth(); 
         final double screenHeight = gc.getCanvas().getHeight();
-        final double mapCenterY = (groundGrid.length * TILE_SIZE) / 2.0;
+        final double mapCenterY = groundGrid.length * TILE_SIZE / 2.0;
 
         final double viewW = screenWidth / cam.getZoom();
 

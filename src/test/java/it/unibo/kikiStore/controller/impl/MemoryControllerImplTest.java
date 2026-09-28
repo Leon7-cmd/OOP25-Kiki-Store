@@ -1,18 +1,19 @@
-package it.unibo.kikiStore.controller.impl;
+package it.unibo.kikistore.controller.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.inventory.impl.GameCatalogImpl;
-import it.unibo.kikiStore.model.memory.api.CardState;
-import it.unibo.kikiStore.model.memory.api.MemoryCard;
-import it.unibo.kikiStore.model.player.impl.PlayerImpl;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.impl.GameCatalogImpl;
+import it.unibo.kikistore.model.memory.api.CardState;
+import it.unibo.kikistore.model.memory.api.MemoryCard;
+import it.unibo.kikistore.model.player.impl.PlayerImpl;
 
 /**
  * Unit tests for {@link MemoryControllerImpl}.

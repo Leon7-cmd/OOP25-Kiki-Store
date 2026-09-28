@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.map.api;
+package it.unibo.kikistore.model.map.api;
 
 /**
  * Interface representing a grid-based map structure.

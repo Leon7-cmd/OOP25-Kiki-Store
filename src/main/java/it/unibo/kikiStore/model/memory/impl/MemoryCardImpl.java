@@ -1,7 +1,7 @@
-package it.unibo.kikiStore.model.memory.impl;
+package it.unibo.kikistore.model.memory.impl;
 
-import it.unibo.kikiStore.model.memory.api.CardState;
-import it.unibo.kikiStore.model.memory.api.MemoryCard;
+import it.unibo.kikistore.model.memory.api.CardState;
+import it.unibo.kikistore.model.memory.api.MemoryCard;
 
 /**
  * Default implementation of a memory card.

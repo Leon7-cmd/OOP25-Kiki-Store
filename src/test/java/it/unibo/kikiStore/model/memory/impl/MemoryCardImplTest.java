@@ -1,10 +1,10 @@
-package it.unibo.kikiStore.model.memory.impl;
+package it.unibo.kikistore.model.memory.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import it.unibo.kikiStore.model.memory.api.CardState;
-
 import org.junit.jupiter.api.Test;
+
+import it.unibo.kikistore.model.memory.api.CardState;
 
 /**
  * Unit tests for {@link MemoryCardImpl}.

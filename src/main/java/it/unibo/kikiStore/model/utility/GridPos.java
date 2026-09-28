@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.utility;
+package it.unibo.kikistore.model.utility;
 
 /**
  * Represents a position in the grid.

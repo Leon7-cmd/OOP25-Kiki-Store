@@ -1,16 +1,15 @@
-package it.unibo.kikiStore.controller.impl;
-
-import it.unibo.kikiStore.controller.api.CraftingController;
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.RecipeBookController;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Potion;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
+package it.unibo.kikistore.controller.impl;
 
 import java.util.List;
 import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.CraftingController;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.RecipeBookController;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Potion;
+import it.unibo.kikistore.model.inventory.api.Recipe;
 
 /**
  * Handles the potion crafting logic - matching selected ingredients

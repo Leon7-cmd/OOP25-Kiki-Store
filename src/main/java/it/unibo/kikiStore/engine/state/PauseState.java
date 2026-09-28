@@ -1,11 +1,11 @@
-package it.unibo.kikiStore.engine.state;
+package it.unibo.kikistore.engine.state;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.view.utility.SpriteManager;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,6 +17,10 @@ import javafx.scene.text.TextAlignment;
 /**
  * Pause overlay state displaying resume and return to title options.
  */
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP2",
+    justification = "GameStateTransition is needed to allow state transitions"
+)
 public final class PauseState implements GameState {
 
     // Layout Constants
@@ -56,10 +60,6 @@ public final class PauseState implements GameState {
      * @param spriteManager the manager for game sprites.
      * @param catalog the game catalog containing inventory and recipes.
      */
-    @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "Controllers and resources are injected on purpose and shared between game states"
-    )
     public PauseState(
         final GameStateTransition transitionController,
         final InputHandler input,

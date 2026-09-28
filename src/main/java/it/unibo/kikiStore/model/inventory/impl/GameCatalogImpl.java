@@ -1,11 +1,11 @@
-package it.unibo.kikiStore.model.inventory.impl;
-
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Potion;
+package it.unibo.kikistore.model.inventory.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Potion;
 
 import java.util.ArrayList;
 import java.util.Collections;

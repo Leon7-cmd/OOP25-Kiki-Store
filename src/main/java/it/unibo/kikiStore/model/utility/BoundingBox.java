@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.utility;
+package it.unibo.kikistore.model.utility;
 
 /**
  * Represents a rectangular area in the game world.

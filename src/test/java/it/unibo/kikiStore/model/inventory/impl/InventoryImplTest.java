@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.inventory.impl;
+package it.unibo.kikistore.model.inventory.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

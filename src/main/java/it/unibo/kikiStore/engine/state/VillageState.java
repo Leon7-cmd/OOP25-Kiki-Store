@@ -1,42 +1,45 @@
-package it.unibo.kikiStore.engine.state;
+package it.unibo.kikistore.engine.state;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.impl.InventoryControllerImpl;
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.item.api.GroundItem;
-import it.unibo.kikiStore.model.item.api.ItemSpawner;
-import it.unibo.kikiStore.model.item.impl.ItemSpawnerImpl;
-import it.unibo.kikiStore.model.map.api.GameTile;
-import it.unibo.kikiStore.model.map.impl.CollisionHandler;
-import it.unibo.kikiStore.model.map.impl.MapLoader;
-import it.unibo.kikiStore.model.map.impl.TileMapImpl;
-import it.unibo.kikiStore.view.entity.api.EntityRenderData;
-import it.unibo.kikiStore.view.entity.impl.EntityRenderer;
-import it.unibo.kikiStore.view.environment.api.MapRenderData;
-import it.unibo.kikiStore.view.environment.impl.MapRenderer;
-import it.unibo.kikiStore.view.hud.api.HUDRenderData;
-import it.unibo.kikiStore.view.hud.impl.HUDRenderer;
-import it.unibo.kikiStore.view.item.api.ItemRenderData;
-import it.unibo.kikiStore.view.item.impl.ItemRenderer;
-import it.unibo.kikiStore.view.utility.Camera;
-import it.unibo.kikiStore.view.utility.SpriteManager;
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.controller.api.RecipeBookController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.controller.api.RecipeBookController;
+import it.unibo.kikistore.controller.impl.InventoryControllerImpl;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.item.api.GroundItem;
+import it.unibo.kikistore.model.item.api.ItemSpawner;
+import it.unibo.kikistore.model.item.impl.ItemSpawnerImpl;
+import it.unibo.kikistore.model.map.api.GameTile;
+import it.unibo.kikistore.model.map.impl.CollisionHandler;
+import it.unibo.kikistore.model.map.impl.MapLoader;
+import it.unibo.kikistore.model.map.impl.TileMapImpl;
+import it.unibo.kikistore.view.entity.api.EntityRenderData;
+import it.unibo.kikistore.view.entity.impl.EntityRenderer;
+import it.unibo.kikistore.view.environment.api.MapRenderData;
+import it.unibo.kikistore.view.environment.impl.MapRenderer;
+import it.unibo.kikistore.view.hud.api.HUDRenderData;
+import it.unibo.kikistore.view.hud.impl.HUDRenderer;
+import it.unibo.kikistore.view.item.api.ItemRenderData;
+import it.unibo.kikistore.view.item.impl.ItemRenderer;
+import it.unibo.kikistore.view.utility.Camera;
+import it.unibo.kikistore.view.utility.SpriteManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * GameState implementation for the village area.
  * Handles player movement, item spawning and collection, and transitions to minigames or other areas
  */
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP2",
+    justification = "GameStateTransition and PlayerController are shared components for world and player management"
+)
 public final class VillageState implements GameState {
     private static final int TILE_SIZE = 32;
     private static final int ITEM_SPAWN_COUNT = 10;
@@ -85,10 +88,6 @@ public final class VillageState implements GameState {
      * @param spriteManager        the sprite manager for rendering graphics
      * @param catalog              the game catalog containing item and recipe data
      */
-    @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "Controllers and resources are injected on purpose and shared between game states"
-    )
     public VillageState(
         final GameStateTransition transitionController, 
         final InputHandler input, 

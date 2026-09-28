@@ -1,15 +1,16 @@
-package it.unibo.kikiStore.controller.impl;
+package it.unibo.kikistore.controller.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.kikiStore.model.inventory.impl.PotionImpl;
-import it.unibo.kikiStore.model.inventory.impl.RecipeImpl;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.model.inventory.impl.PotionImpl;
+import it.unibo.kikistore.model.inventory.impl.RecipeImpl;
 
 /**
  * Unit tests for {@link InventoryControllerImpl}.

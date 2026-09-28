@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.item.api;
+package it.unibo.kikistore.model.item.api;
 
 /**
  * Represents a generic item owned by the player - ingredients and

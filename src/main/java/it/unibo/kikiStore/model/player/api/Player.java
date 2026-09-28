@@ -1,7 +1,7 @@
-package it.unibo.kikiStore.model.player.api;
+package it.unibo.kikistore.model.player.api;
 
-import it.unibo.kikiStore.model.map.impl.CollisionHandler;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.map.impl.CollisionHandler;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
 /**
  * Logical model representing the player.

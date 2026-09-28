@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.app;
+package it.unibo.kikistore.app;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

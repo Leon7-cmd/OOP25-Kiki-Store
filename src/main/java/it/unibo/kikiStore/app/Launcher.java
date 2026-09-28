@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.app;
+package it.unibo.kikistore.app;
 
 /**
  * Utility class to launch the game.

@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.model.inventory.api;
+package it.unibo.kikistore.model.inventory.api;
 
-import it.unibo.kikiStore.model.item.api.GameItem;
+import it.unibo.kikistore.model.item.api.GameItem;
 
 /**
  * Represents a potion - a {@link GameItem} with a description and an

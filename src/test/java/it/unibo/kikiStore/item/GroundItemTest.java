@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.item;
+package it.unibo.kikistore.item;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -7,12 +7,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.kikiStore.model.item.impl.GroundItemImpl;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.model.item.impl.GroundItemImpl;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
-public class GroundItemTest {
+/**
+ * Unit tests for {@link GroundItemImpl}.
+ * Verifies positioning, hitbox geometry, and item payload integrity.
+ */
+class GroundItemTest {
 
     private static final String ID = "sprites/ingredients/aloe";
     private static final String NAME = "Aloe";
@@ -21,17 +25,16 @@ public class GroundItemTest {
     private static final double Y = 128.0;
     private static final double SIZE = 32.0;
 
-    private Ingredient ingredient;
     private GroundItemImpl groundItem;
 
     @BeforeEach
-    public void setUp() {
-        this.ingredient = new IngredientImpl(NAME, ID, 2, TYPE);
+    void setUp() {
+        final Ingredient ingredient = new IngredientImpl(NAME, ID, 2, TYPE);
         this.groundItem = new GroundItemImpl(ID, X, Y, SIZE, SIZE, false, ingredient);
     }
 
     @Test
-    public void testGroundItemAttributes() {
+    void testGroundItemAttributes() {
         assertEquals(ID, groundItem.getId());
         assertEquals(X, groundItem.getX());
         assertEquals(Y, groundItem.getY());
@@ -43,7 +46,7 @@ public class GroundItemTest {
     }
 
     @Test
-    public void testGroundItemHitbox() {
+    void testGroundItemHitbox() {
         final BoundingBox hitbox = groundItem.getHitbox();
         assertNotNull(hitbox);
         assertEquals(X, hitbox.x());
@@ -53,7 +56,7 @@ public class GroundItemTest {
     }
 
     @Test
-    public void testPayloadRetrieval() {
+    void testPayloadRetrieval() {
         final Ingredient payload = groundItem.getItem();
         assertNotNull(payload);
         assertEquals(NAME, payload.getName());

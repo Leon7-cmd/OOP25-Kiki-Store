@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.map.impl;
+package it.unibo.kikistore.model.map.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,22 +30,22 @@ public final class MapLoader {
             if (is == null) {
                 return createFallbackMap();
             }
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            String line = reader.readLine();
-            while (line != null) {
-                line = line.trim();
-                if (line.isEmpty()) { 
-                    continue; 
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+                String line = reader.readLine();
+                while (line != null) {
+                    line = line.trim();
+                    if (line.isEmpty()) { 
+                        continue; 
+                    }
+                    final String[] values = line.split(",");
+                    final int[] row = new int[values.length];
+                    for (int i = 0; i < values.length; i++) {
+                        row[i] = Integer.parseInt(values[i].trim());
+                    }
+                    lines.add(row);
+                    line = reader.readLine();
                 }
-                final String[] values = line.split(",");
-                final int[] row = new int[values.length];
-                for (int i = 0; i < values.length; i++) {
-                    row[i] = Integer.parseInt(values[i].trim());
-                }
-                lines.add(row);
-                line = reader.readLine();
             }
-
         } catch (final IOException e) {
             return createFallbackMap();
         }

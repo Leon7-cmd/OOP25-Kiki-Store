@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.entity.api;
+package it.unibo.kikistore.view.entity.api;
 
 /**
  * A DTO representing all the information needed to render an entity.

@@ -1,14 +1,14 @@
-package it.unibo.kikiStore.model.memory.impl;
+package it.unibo.kikistore.model.memory.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import it.unibo.kikiStore.model.memory.api.CardState;
-import it.unibo.kikiStore.model.memory.api.MemoryCard;
-
 import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import it.unibo.kikistore.model.memory.api.CardState;
+import it.unibo.kikistore.model.memory.api.MemoryCard;
 
 /**
  * Unit tests for {@link MemoryBoardImpl}.

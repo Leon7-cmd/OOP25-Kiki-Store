@@ -1,10 +1,10 @@
-package it.unibo.kikiStore.controller.api;
-
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
+package it.unibo.kikistore.controller.api;
 
 import java.util.List;
 import java.util.Optional;
+
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Recipe;
 
 /**
  * Provides access to the recipe book — querying, unlocking, and

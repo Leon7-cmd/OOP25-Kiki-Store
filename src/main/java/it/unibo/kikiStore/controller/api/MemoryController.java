@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.controller.api;
+package it.unibo.kikistore.controller.api;
 
-import it.unibo.kikiStore.model.memory.api.MemoryBoard;
+import it.unibo.kikistore.model.memory.api.MemoryBoard;
 
 /**
  * Controls functioning of a emory minigame session - turning cards, tracking

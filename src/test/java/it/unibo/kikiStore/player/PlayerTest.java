@@ -1,15 +1,15 @@
-package it.unibo.kikiStore.player;
+package it.unibo.kikistore.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.controller.impl.PlayerControllerImpl;
-import it.unibo.kikiStore.model.player.api.Player;
-import it.unibo.kikiStore.model.player.impl.PlayerImpl;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.controller.impl.PlayerControllerImpl;
+import it.unibo.kikistore.model.player.api.Player;
+import it.unibo.kikistore.model.player.impl.PlayerImpl;
 
 /**
  * Unit tests for {@link PlayerImpl}.
@@ -19,6 +19,7 @@ class PlayerTest {
 
     private static final double START_X = 100.0;
     private static final double START_Y = 150.0;
+    private static final double PLAYER_SPEED = 3.5;
     private static final double DELTA = 0.001;
     private static final int INITIAL_MONEY = 40;
     private static final int INITIAL_ENERGY = 5;
@@ -30,7 +31,7 @@ class PlayerTest {
      */
     @BeforeEach
     void setUp() {
-        player = new PlayerImpl(START_X, START_Y);
+        this.player = new PlayerImpl(START_X, START_Y);
     }
 
     /**
@@ -39,12 +40,12 @@ class PlayerTest {
      */
     @Test
     void testInitialState() {
-        assertEquals(START_X, player.getX(), DELTA);
-        assertEquals(START_Y, player.getY(), DELTA);
-        assertEquals(INITIAL_MONEY, player.getMoney());
-        assertEquals(INITIAL_ENERGY, player.getEnergy());
-        assertEquals("down", player.getDirection());
-        assertEquals("idle", player.getState());
+        assertEquals(START_X, this.player.getX(), DELTA);
+        assertEquals(START_Y, this.player.getY(), DELTA);
+        assertEquals(INITIAL_MONEY, this.player.getMoney());
+        assertEquals(INITIAL_ENERGY, this.player.getEnergy());
+        assertEquals("down", this.player.getDirection());
+        assertEquals("idle", this.player.getState());
     }
 
     /**
@@ -55,11 +56,11 @@ class PlayerTest {
         final double newX = 250.0;
         final double newY = 320.5;
 
-        player.setX(newX);
-        player.setY(newY);
+        this.player.setX(newX);
+        this.player.setY(newY);
 
-        assertEquals(newX, player.getX(), DELTA);
-        assertEquals(newY, player.getY(), DELTA);
+        assertEquals(newX, this.player.getX(), DELTA);
+        assertEquals(newY, this.player.getY(), DELTA);
     }
 
     /**
@@ -73,20 +74,20 @@ class PlayerTest {
         final int excessiveEnergy = 10;
 
         // Verify currency accumulation
-        player.addMoney(addedMoney);
-        assertEquals(INITIAL_MONEY + addedMoney, player.getMoney());
+        this.player.addMoney(addedMoney);
+        assertEquals(INITIAL_MONEY + addedMoney, this.player.getMoney());
 
         // Verify energy consumption (5 - 3 = 2)
-        player.consumeEnergy(energyToConsume);
-        assertEquals(INITIAL_ENERGY - energyToConsume, player.getEnergy());
+        this.player.consumeEnergy(energyToConsume);
+        assertEquals(INITIAL_ENERGY - energyToConsume, this.player.getEnergy());
 
         // Verify partial energy restoration (2 + 2 = 4)
-        player.restoreEnergy(energyToRestore);
-        assertEquals(INITIAL_ENERGY - energyToConsume + energyToRestore, player.getEnergy());
+        this.player.restoreEnergy(energyToRestore);
+        assertEquals(INITIAL_ENERGY - energyToConsume + energyToRestore, this.player.getEnergy());
 
         // Verify ceiling clamping against MAX_ENERGY
-        player.restoreEnergy(excessiveEnergy);
-        assertEquals(INITIAL_ENERGY, player.getEnergy());
+        this.player.restoreEnergy(excessiveEnergy);
+        assertEquals(INITIAL_ENERGY, this.player.getEnergy());
     }
 
     /**
@@ -95,31 +96,77 @@ class PlayerTest {
      */
     @Test
     void testMovementWithoutCollisionHandler() {
-        final double speed = 3.5;
-
-        // Stub providing simulated rightward directional input
-        final InputHandler movingInput = new InputHandler() {
-            @Override public boolean isUp() { return false; }
-            @Override public boolean isDown() { return false; }
-            @Override public boolean isLeft() { return false; }
-            @Override public boolean isRight() { return true; }
-            @Override public boolean isAction() { return false; }
-            @Override public boolean isEscapePressed() { return false; }
-            @Override public boolean isMouseClicked() { return false; }
-            @Override public double getMouseX() { return 0.0; }
-            @Override public double getMouseY() { return 0.0; }
-            @Override public boolean isInventoryPressed() { return false; }
-            @Override public boolean isCraftingPressed() { return false; }
-        };
+        final InputHandler movingInput = new RightMovingInputHandler();
 
         // Bind controller to player model and advance one input frame
-        final PlayerController controller = new PlayerControllerImpl(player, movingInput);
+        final PlayerController controller = new PlayerControllerImpl(this.player, movingInput);
         controller.update();
 
         // Without collision constraints, player advances freely by its base speed
-        assertEquals(START_X + speed, player.getX(), DELTA);
-        assertEquals(START_Y, player.getY(), DELTA);
-        assertEquals("right", player.getDirection());
-        assertEquals("walk", player.getState());
+        assertEquals(START_X + PLAYER_SPEED, this.player.getX(), DELTA);
+        assertEquals(START_Y, this.player.getY(), DELTA);
+        assertEquals("right", this.player.getDirection());
+        assertEquals("walk", this.player.getState());
+    }
+
+    /**
+     * Test stub providing simulated rightward directional input.
+     */
+    private static final class RightMovingInputHandler implements InputHandler {
+
+        @Override
+        public boolean isUp() {
+            return false;
+        }
+
+        @Override
+        public boolean isDown() {
+            return false;
+        }
+
+        @Override
+        public boolean isLeft() {
+            return false;
+        }
+
+        @Override
+        public boolean isRight() {
+            return true;
+        }
+
+        @Override
+        public boolean isAction() {
+            return false;
+        }
+
+        @Override
+        public boolean isEscapePressed() {
+            return false;
+        }
+
+        @Override
+        public boolean isInventoryPressed() {
+            return false;
+        }
+
+        @Override
+        public boolean isCraftingPressed() {
+            return false;
+        }
+
+        @Override
+        public boolean isMouseClicked() {
+            return false;
+        }
+
+        @Override
+        public double getMouseX() {
+            return 0.0;
+        }
+
+        @Override
+        public double getMouseY() {
+            return 0.0;
+        }
     }
 }

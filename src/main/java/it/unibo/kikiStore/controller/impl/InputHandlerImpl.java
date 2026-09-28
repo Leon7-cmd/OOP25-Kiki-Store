@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.controller.impl;
+package it.unibo.kikistore.controller.impl;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.InputHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;

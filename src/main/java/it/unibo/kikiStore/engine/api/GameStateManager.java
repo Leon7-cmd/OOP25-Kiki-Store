@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.engine.api;
+package it.unibo.kikistore.engine.api;
 
 import javafx.scene.canvas.GraphicsContext;
 

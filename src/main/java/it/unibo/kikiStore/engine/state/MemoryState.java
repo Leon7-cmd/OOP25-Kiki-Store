@@ -1,16 +1,5 @@
-package it.unibo.kikiStore.engine.state;
+package it.unibo.kikistore.engine.state;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.MemoryController;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.controller.impl.MemoryControllerImpl;
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.memory.api.CardState;
-import it.unibo.kikiStore.model.memory.api.MemoryCard;
-import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -20,6 +9,17 @@ import javafx.scene.text.TextAlignment;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.MemoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.controller.impl.MemoryControllerImpl;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.memory.api.CardState;
+import it.unibo.kikistore.model.memory.api.MemoryCard;
+import it.unibo.kikistore.view.utility.SpriteManager;
 
 /**
  * Memory minigame screen - a 5x4 grid of cards flipped with the mouse.

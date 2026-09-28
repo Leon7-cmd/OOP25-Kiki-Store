@@ -1,12 +1,12 @@
-package it.unibo.kikiStore.controller.impl;
+package it.unibo.kikistore.controller.impl;
 
 import java.util.Objects;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.model.map.impl.CollisionHandler;
-import it.unibo.kikiStore.model.player.api.Player;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.model.map.impl.CollisionHandler;
+import it.unibo.kikistore.model.player.api.Player;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
 /**
  * Controller translating user input into movement intents on the Player model.

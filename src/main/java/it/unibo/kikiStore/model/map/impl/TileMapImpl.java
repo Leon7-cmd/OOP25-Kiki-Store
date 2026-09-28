@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.model.map.impl;
+package it.unibo.kikistore.model.map.impl;
 
-import it.unibo.kikiStore.model.map.api.GameTile;
+import it.unibo.kikistore.model.map.api.GameTile;
 
 /**
  * Implementation of GameTile interface.
@@ -19,7 +19,10 @@ public class TileMapImpl implements GameTile {
      * @param tileSize The size of each square tile in pixels
      */
     public TileMapImpl(final int[][] grid, final int tileSize) {
-        this.grid = grid.clone();
+        this.grid = new int[grid.length][];
+        for (int i = 0; i < grid.length; i++) {
+            this.grid[i] = grid[i].clone();
+        }
         this.tileSize = tileSize;
     }
 

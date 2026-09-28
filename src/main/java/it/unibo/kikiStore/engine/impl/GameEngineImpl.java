@@ -1,19 +1,23 @@
-package it.unibo.kikiStore.engine.impl;
+package it.unibo.kikistore.engine.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import it.unibo.kikiStore.engine.api.GameEngine;
-import it.unibo.kikiStore.engine.api.GameStateManager;
+import it.unibo.kikistore.engine.api.GameEngine;
+import it.unibo.kikistore.engine.api.GameStateManager;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
  * Implementation of the GameEngine.
  */
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP2",
+    justification = "GameStateManager and GraphicsContext are required shared engine components"
+)
 public final class GameEngineImpl implements GameEngine {
 
     private static final long ONE_SECOND_NS = 1_000_000_000L;
     private static final int TARGET_FPS = 60;
-    private static final long TIME_PER_TICK = ONE_SECOND_NS / TARGET_FPS; // ~16.66 ms in nanosecondi
+    private static final long TIME_PER_TICK = ONE_SECOND_NS / TARGET_FPS;
 
     private final GameStateManager gsm;
     private final GraphicsContext gc;
@@ -32,10 +36,6 @@ public final class GameEngineImpl implements GameEngine {
      * @param width the width of the game canvas
      * @param height the height of the game canvas
      */
-    @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "The engine drives the shared state manager and draws on the shared canvas on purpose"
-    )
     public GameEngineImpl(final GameStateManager gsm, final GraphicsContext gc, final double width, final double height) {
         this.gsm = gsm;
         this.gc = gc;

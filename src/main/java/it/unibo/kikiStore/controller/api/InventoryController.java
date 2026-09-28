@@ -1,10 +1,9 @@
-package it.unibo.kikiStore.controller.api;
-
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Inventory;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
+package it.unibo.kikistore.controller.api;
 
 import java.util.List;
+
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Recipe;
 
 /**
  * Manages the player's inventory — adding, removing, and querying
@@ -101,13 +100,6 @@ public interface InventoryController {
      * @return true if the recipe can be crafted
      */
     boolean canCraftPotion(Recipe recipe);
-
-    /**
-     * Returns the inventory.
-     *
-     * @return the inventory
-     */
-    Inventory getInventory();
 
     /**
      * Returns how many of the given ingredient are in the inventory.

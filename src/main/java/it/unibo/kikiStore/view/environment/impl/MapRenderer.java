@@ -1,8 +1,8 @@
-package it.unibo.kikiStore.view.environment.impl;
+package it.unibo.kikistore.view.environment.impl;
 
-import it.unibo.kikiStore.view.environment.api.MapRenderData;
-import it.unibo.kikiStore.view.utility.SpriteManager;
-import it.unibo.kikiStore.view.utility.TileRegistry;
+import it.unibo.kikistore.view.environment.api.MapRenderData;
+import it.unibo.kikistore.view.utility.SpriteManager;
+import it.unibo.kikistore.view.utility.TileRegistry;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

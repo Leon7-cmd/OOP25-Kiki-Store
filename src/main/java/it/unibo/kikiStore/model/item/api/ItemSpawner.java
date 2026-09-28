@@ -1,9 +1,9 @@
-package it.unibo.kikiStore.model.item.api;
+package it.unibo.kikistore.model.item.api;
 
 import java.util.List;
 
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.PlayerController;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
 
 /**
  * Manages spawning, tracking, and player collection of items in the game world.

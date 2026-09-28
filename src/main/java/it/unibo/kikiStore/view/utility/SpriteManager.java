@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.utility;
+package it.unibo.kikistore.view.utility;
 
 import javafx.scene.image.Image;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class SpriteManager {
 
         // 2. Resource Path Resolution: Constructs the standard path for PNG files
         final String resourcePath = "/" + spriteId + ".png";
-        final InputStream stream = getClass().getResourceAsStream(resourcePath);
+        final InputStream stream = SpriteManager.class.getResourceAsStream(resourcePath);
 
         // 3. Manage cases where files are missing
         if (stream == null) {

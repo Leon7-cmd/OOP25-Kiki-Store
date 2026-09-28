@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.hud.api;
+package it.unibo.kikistore.view.hud.api;
 
 /**
  * Data Transfer Object containing the values required to render the HUD.

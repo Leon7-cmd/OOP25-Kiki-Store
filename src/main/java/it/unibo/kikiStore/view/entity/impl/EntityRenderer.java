@@ -1,11 +1,12 @@
-package it.unibo.kikiStore.view.entity.impl;
+package it.unibo.kikistore.view.entity.impl;
 
-import it.unibo.kikiStore.view.entity.api.EntityRenderData;
-import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
 import java.util.List;
+
+import it.unibo.kikistore.view.entity.api.EntityRenderData;
+import it.unibo.kikistore.view.utility.SpriteManager;
 
 /**
  * Handles the graphical rendering of all entities on the game canvas.

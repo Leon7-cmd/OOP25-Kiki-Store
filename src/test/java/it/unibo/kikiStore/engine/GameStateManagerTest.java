@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.engine;
+package it.unibo.kikistore.engine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.impl.GameStateManagerImpl;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.impl.GameStateManagerImpl;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -18,59 +18,6 @@ import javafx.scene.canvas.GraphicsContext;
 class GameStateManagerTest {
 
     private GameStateManagerImpl gsm;
-
-    /**
-     * Fake implementation of GameState tracking lifecycle events and updates.
-     */
-    private static final class DummyState implements GameState {
-        private boolean initialized;
-        private boolean paused;
-        private boolean resumed;
-        private int updateCount;
-
-        @Override
-        public void init() {
-            this.initialized = true;
-        }
-
-        @Override
-        public void pause() {
-            this.paused = true;
-            this.resumed = false;
-        }
-
-        @Override
-        public void resume() {
-            this.resumed = true;
-            this.paused = false;
-        }
-
-        @Override
-        public void update() {
-            this.updateCount++;
-        }
-
-        @Override
-        public void render(final GraphicsContext gc) {
-            // Not evaluated in headless unit tests
-        }
-
-        public boolean isInitialized() {
-            return this.initialized;
-        }
-
-        public boolean isPaused() {
-            return this.paused;
-        }
-
-        public boolean isResumed() {
-            return this.resumed;
-        }
-
-        public int getUpdateCount() {
-            return this.updateCount;
-        }
-    }
 
     /**
      * Prepares an empty GameStateManager instance before each test.
@@ -169,5 +116,58 @@ class GameStateManagerTest {
         // Popping should leave the stack empty
         gsm.popState();
         assertEquals(null, gsm.getCurrentState());
+    }
+
+    /**
+     * Fake implementation of GameState tracking lifecycle events and updates.
+     */
+    private static final class DummyState implements GameState {
+        private boolean initialized;
+        private boolean paused;
+        private boolean resumed;
+        private int updateCount;
+
+        @Override
+        public void init() {
+            this.initialized = true;
+        }
+
+        @Override
+        public void pause() {
+            this.paused = true;
+            this.resumed = false;
+        }
+
+        @Override
+        public void resume() {
+            this.resumed = true;
+            this.paused = false;
+        }
+
+        @Override
+        public void update() {
+            this.updateCount++;
+        }
+
+        @Override
+        public void render(final GraphicsContext gc) {
+            // Not evaluated in headless unit tests
+        }
+
+        public boolean isInitialized() {
+            return this.initialized;
+        }
+
+        public boolean isPaused() {
+            return this.paused;
+        }
+
+        public boolean isResumed() {
+            return this.resumed;
+        }
+
+        public int getUpdateCount() {
+            return this.updateCount;
+        }
     }
 }

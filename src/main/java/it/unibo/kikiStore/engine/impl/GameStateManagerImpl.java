@@ -1,14 +1,15 @@
-package it.unibo.kikiStore.engine.impl;
+package it.unibo.kikistore.engine.impl;
 
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateManager;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
+
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateManager;
+import it.unibo.kikistore.engine.api.GameStateTransition;
 
 /**
  * Implementation of the game state manager.
@@ -18,13 +19,13 @@ import java.util.Iterator;
 public final class GameStateManagerImpl implements GameStateManager, GameStateTransition {
 
     //TRANSITION VARIABLES
-    private static final double FADE_SPEED = 1.0 / 30.0; // Speed of the fade transition (1/30 per update)
+    private static final boolean IS_PUSH_ACTION = true;
+    private static final double FADE_SPEED = 1.0 / 30.0;
     private static final double FADE_OUT_UPDATE_THRESHOLD = 0.9;
     private boolean isTransitioning;
     private double alpha;
     private int fadeDirection = 1;
     private GameState pendingState;
-    private boolean isPushAction = true;
 
     private final Deque<GameState> stateStack = new ArrayDeque<>();
 
@@ -73,10 +74,10 @@ public final class GameStateManagerImpl implements GameStateManager, GameStateTr
             if (alpha >= 1.0) {
                 alpha = 1.0;
                 fadeDirection = -1;
-                if (isPushAction && pendingState != null) {
+                if (IS_PUSH_ACTION && pendingState != null) {
                     pushState(pendingState);
                     pendingState = null;
-                } else if (!isPushAction) {
+                } else if (!IS_PUSH_ACTION) {
                     popState();
                 }
             } else if (alpha <= 0.0) {

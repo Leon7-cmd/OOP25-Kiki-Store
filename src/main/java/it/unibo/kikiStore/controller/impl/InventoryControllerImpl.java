@@ -1,18 +1,18 @@
-package it.unibo.kikiStore.controller.impl;
+package it.unibo.kikistore.controller.impl;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.model.inventory.impl.InventoryImpl;
-import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.kikiStore.model.inventory.impl.PotionImpl;
-import it.unibo.kikiStore.model.item.api.GameItem;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Inventory;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Inventory;
+import it.unibo.kikistore.model.inventory.api.Recipe;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.model.inventory.impl.InventoryImpl;
+import it.unibo.kikistore.model.inventory.impl.PotionImpl;
+import it.unibo.kikistore.model.item.api.GameItem;
 
 /**
  * Manages the player's inventory - adding, removing, and querying
@@ -121,11 +121,6 @@ public final class InventoryControllerImpl implements InventoryController {
     @Override
     public boolean hasEnoughPotion(final String name, final int quantity) {
         return getPotionQuantity(name) >= quantity;
-    }
-
-    @Override
-    public Inventory getInventory() {
-        return inventory;
     }
 
     @Override

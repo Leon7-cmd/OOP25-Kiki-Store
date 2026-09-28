@@ -1,20 +1,19 @@
-package it.unibo.kikiStore.controller.impl;
-
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.MemoryController;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.inventory.api.Potion;
-import it.unibo.kikiStore.model.memory.api.CardState;
-import it.unibo.kikiStore.model.memory.api.MemoryBoard;
-import it.unibo.kikiStore.model.memory.api.MemoryCard;
-import it.unibo.kikiStore.model.memory.impl.MemoryBoardImpl;
+package it.unibo.kikistore.controller.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.MemoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.api.Potion;
+import it.unibo.kikistore.model.memory.api.CardState;
+import it.unibo.kikistore.model.memory.api.MemoryBoard;
+import it.unibo.kikistore.model.memory.api.MemoryCard;
+import it.unibo.kikistore.model.memory.impl.MemoryBoardImpl;
 
 /**
  * Implementation of the memory game controller. Manages a

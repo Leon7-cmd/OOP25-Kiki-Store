@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.controller.api;
+package it.unibo.kikistore.controller.api;
 
 /**
  * Interface representing the player's input state.

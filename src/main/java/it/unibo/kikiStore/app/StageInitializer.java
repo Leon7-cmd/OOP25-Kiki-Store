@@ -1,14 +1,14 @@
-package it.unibo.kikiStore.app;
+package it.unibo.kikistore.app;
 
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.impl.InputHandlerImpl;
-import it.unibo.kikiStore.engine.api.GameEngine;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.engine.impl.GameEngineImpl;
-import it.unibo.kikiStore.engine.impl.GameStateManagerImpl;
-import it.unibo.kikiStore.engine.state.MenuState;
-import it.unibo.kikiStore.model.inventory.impl.GameCatalogImpl;
-import it.unibo.kikiStore.view.utility.SpriteManager;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.impl.InputHandlerImpl;
+import it.unibo.kikistore.engine.api.GameEngine;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.engine.impl.GameEngineImpl;
+import it.unibo.kikistore.engine.impl.GameStateManagerImpl;
+import it.unibo.kikistore.engine.state.MenuState;
+import it.unibo.kikistore.model.inventory.impl.GameCatalogImpl;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCombination;

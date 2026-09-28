@@ -1,9 +1,5 @@
-package it.unibo.kikiStore.view.book;
+package it.unibo.kikistore.view.book;
 
-import it.unibo.kikiStore.controller.api.RecipeBookController;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
-import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -12,6 +8,10 @@ import javafx.scene.text.TextAlignment;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.RecipeBookController;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Recipe;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.scene.text.Text;
 
 /**

@@ -1,12 +1,12 @@
-package it.unibo.kikiStore.model.memory.impl;
-
-import it.unibo.kikiStore.model.memory.api.CardState;
-import it.unibo.kikiStore.model.memory.api.MemoryBoard;
-import it.unibo.kikiStore.model.memory.api.MemoryCard;
+package it.unibo.kikistore.model.memory.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import it.unibo.kikistore.model.memory.api.CardState;
+import it.unibo.kikistore.model.memory.api.MemoryBoard;
+import it.unibo.kikistore.model.memory.api.MemoryCard;
 
 /**
  * Default implementation of the memory board. Builds two cards for

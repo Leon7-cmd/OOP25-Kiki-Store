@@ -1,23 +1,23 @@
-package it.unibo.kikiStore.model.item.impl;
+package it.unibo.kikistore.model.item.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.kikiStore.model.item.api.GroundItem;
-import it.unibo.kikiStore.model.item.api.ItemSpawner;
-import it.unibo.kikiStore.model.map.api.GameTile;
-import it.unibo.kikiStore.model.utility.BoundingBox;
-import it.unibo.kikiStore.model.utility.GridPos;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.model.item.api.GroundItem;
+import it.unibo.kikistore.model.item.api.ItemSpawner;
+import it.unibo.kikistore.model.map.api.GameTile;
+import it.unibo.kikistore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.utility.GridPos;
 
 /**
  * Manages periodic spawning, tracking, and player collection of items in the game world.
@@ -25,10 +25,10 @@ import it.unibo.kikiStore.model.utility.GridPos;
 public final class ItemSpawnerImpl implements ItemSpawner {
 
     private static final int WALKABLE_TILE_ID = 0;
-    private static final int MAX_SPAWN_ATTEMPTS = 70;
+    private static final int MAX_SPAWN_ATTEMPTS = 200;
 
-    private static final int SPAWN_INTERVAL_TICKS = 60000; //
-    private static final int ITEMS_PER_WAVE = 30;
+    private static final int SPAWN_INTERVAL_TICKS = 60_000;
+    private static final int ITEMS_PER_WAVE = 50;
     private static final int MAX_ACTIVE_ITEMS = 100;
 
     private final GameTile collisionMask;
@@ -55,14 +55,18 @@ public final class ItemSpawnerImpl implements ItemSpawner {
      * @param ingredientPool available ingredients to spawn randomly from.
      * @param random         random instance for testing.
      */
+    @SuppressFBWarnings(
+        value = "EI_EXPOSE_REP2",
+        justification = "Random instance is intentionally passed for deterministic unit testing"
+    )
     public ItemSpawnerImpl(
         final GameTile collisionMask,
         final List<Ingredient> ingredientPool,
         final Random random
     ) {
-        this.collisionMask = Objects.requireNonNull(collisionMask, "Collision mask cannot be null");
-        this.ingredientPool = List.copyOf(Objects.requireNonNull(ingredientPool, "Ingredient pool cannot be null"));
-        this.random = Objects.requireNonNull(random, "Random generator cannot be null");
+        this.collisionMask = collisionMask;
+        this.ingredientPool = List.copyOf(ingredientPool);
+        this.random = random;
         this.activeItems = new ArrayList<>();
         this.tickCounter = 0;
     }

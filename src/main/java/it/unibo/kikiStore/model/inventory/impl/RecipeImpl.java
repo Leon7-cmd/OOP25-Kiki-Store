@@ -1,11 +1,11 @@
-package it.unibo.kikiStore.model.inventory.impl;
+package it.unibo.kikistore.model.inventory.impl;
 
-import it.unibo.kikiStore.model.inventory.api.Recipe;
-import it.unibo.kikiStore.model.inventory.api.Potion;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Potion;
+import it.unibo.kikistore.model.inventory.api.Recipe;
 
 /**
  * Concrete potion recipe - the ingredients needed and the potion

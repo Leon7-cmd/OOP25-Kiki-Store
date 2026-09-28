@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.engine.api;
+package it.unibo.kikistore.engine.api;
 
 /**
  * Manages the Deque of GameStates.

@@ -1,14 +1,12 @@
-package it.unibo.kikiStore.model.item.impl;
+package it.unibo.kikistore.model.item.impl;
 
-import java.util.Objects;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.item.api.GroundItem;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.model.item.api.GroundItem;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
 /**
- * Standard implementation of a {@link GroundItem}.
+ * Standard implementation of a GroundItem.
  */
 public final class GroundItemImpl implements GroundItem {
 
@@ -40,13 +38,13 @@ public final class GroundItemImpl implements GroundItem {
         final boolean animated,
         final Ingredient item
     ) {
-        this.id = Objects.requireNonNull(id, "Asset ID cannot be null");
+        this.id = id;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.animated = animated;
-        this.item = Objects.requireNonNull(item, "Item payload cannot be null");
+        this.item = new IngredientImpl(item.getName(), id, item.getQuantity(), item.getType());
     }
 
     @Override
@@ -85,11 +83,7 @@ public final class GroundItemImpl implements GroundItem {
     }
 
     @Override
-    @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP",
-        justification = "The ground item returns the ingredient it wraps, so it can be collected into the inventory"
-    )
     public Ingredient getItem() {
-        return item;
+        return new IngredientImpl(this.item.getName(), id, this.item.getQuantity(), this.item.getType());
     }
 }

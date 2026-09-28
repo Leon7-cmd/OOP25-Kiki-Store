@@ -1,18 +1,5 @@
-package it.unibo.kikiStore.engine.state;
+package it.unibo.kikistore.engine.state;
 
-import it.unibo.kikiStore.controller.api.CraftingController;
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.RecipeBookController;
-import it.unibo.kikiStore.controller.impl.CraftingControllerImpl;
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Recipe;
-import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -24,6 +11,19 @@ import java.util.List;
 import java.util.Optional;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.CraftingController;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.controller.api.RecipeBookController;
+import it.unibo.kikistore.controller.impl.CraftingControllerImpl;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Recipe;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.view.utility.SpriteManager;
 
 /**
  * Crafting screen — backpack grid on the left, cauldron with 3 ingredient

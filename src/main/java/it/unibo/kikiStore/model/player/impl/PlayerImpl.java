@@ -1,8 +1,8 @@
-package it.unibo.kikiStore.model.player.impl;
+package it.unibo.kikistore.model.player.impl;
 
-import it.unibo.kikiStore.model.map.impl.CollisionHandler;
-import it.unibo.kikiStore.model.player.api.Player;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.map.impl.CollisionHandler;
+import it.unibo.kikistore.model.player.api.Player;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
 /**
  * Model implementation representing the player.
@@ -44,6 +44,7 @@ public final class PlayerImpl implements Player {
      *
      * @param handler the collision detection engine.
      */
+    @Override
     public void setCollisionHandler(final CollisionHandler handler) {
         this.collisionHandler = handler;
     }

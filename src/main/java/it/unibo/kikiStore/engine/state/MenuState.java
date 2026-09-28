@@ -1,19 +1,19 @@
-package it.unibo.kikiStore.engine.state;
+package it.unibo.kikistore.engine.state;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import it.unibo.kikiStore.controller.api.InputHandler;
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.controller.api.PlayerController;
-import it.unibo.kikiStore.controller.api.RecipeBookController;
-import it.unibo.kikiStore.controller.impl.InventoryControllerImpl;
-import it.unibo.kikiStore.controller.impl.PlayerControllerImpl;
-import it.unibo.kikiStore.controller.impl.RecipeBookControllerImpl;
-import it.unibo.kikiStore.engine.api.GameState;
-import it.unibo.kikiStore.engine.api.GameStateTransition;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.inventory.impl.RecipeBookImpl;
-import it.unibo.kikiStore.model.player.impl.PlayerImpl;
-import it.unibo.kikiStore.view.utility.SpriteManager;
+import it.unibo.kikistore.controller.api.InputHandler;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.controller.api.PlayerController;
+import it.unibo.kikistore.controller.api.RecipeBookController;
+import it.unibo.kikistore.controller.impl.InventoryControllerImpl;
+import it.unibo.kikistore.controller.impl.PlayerControllerImpl;
+import it.unibo.kikistore.controller.impl.RecipeBookControllerImpl;
+import it.unibo.kikistore.engine.api.GameState;
+import it.unibo.kikistore.engine.api.GameStateTransition;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.impl.RecipeBookImpl;
+import it.unibo.kikistore.model.player.impl.PlayerImpl;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.geometry.VPos;
@@ -27,6 +27,10 @@ import javafx.scene.text.TextAlignment;
 /**
  * Initial title and main menu screen.
  */
+@SuppressFBWarnings(
+    value = "EI_EXPOSE_REP2",
+    justification = "GameStateTransition is needed to manage game startup and state transitions"
+)
 public final class MenuState implements GameState {
 
     private static final String BACKGROUND_ID = "sprites/menu/background";
@@ -71,10 +75,6 @@ public final class MenuState implements GameState {
      * @param spriteManager the manager caching graphic resources
      * @param catalog the global catalog holding game items and recipes
      */
-    @SuppressFBWarnings(
-        value = "EI_EXPOSE_REP2",
-        justification = "Controllers and resources are injected on purpose and shared between game states"
-    )
     public MenuState(
         final GameStateTransition transitionController,
         final InputHandler input,
@@ -96,6 +96,10 @@ public final class MenuState implements GameState {
     @Override
     public void init() { }
 
+    @SuppressFBWarnings(
+        value = "DM_EXIT",
+        justification = "System.exit is required to enforce graceful application shutdown, especially on macOS >:("
+    )
     @Override
     public void update() {
         if (input.isMouseClicked() && startButtonBounds != null && quitButtonBounds != null) {

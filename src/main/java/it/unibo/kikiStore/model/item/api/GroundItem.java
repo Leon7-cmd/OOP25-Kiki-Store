@@ -1,7 +1,7 @@
-package it.unibo.kikiStore.model.item.api;
+package it.unibo.kikistore.model.item.api;
 
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.utility.BoundingBox;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.utility.BoundingBox;
 
 /**
  * Defines a physical entity placed in the game world.

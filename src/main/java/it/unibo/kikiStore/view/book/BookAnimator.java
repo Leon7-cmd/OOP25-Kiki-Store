@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.view.book;
+package it.unibo.kikistore.view.book;
 
-import it.unibo.kikiStore.view.utility.SpriteManager;
+import it.unibo.kikistore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 

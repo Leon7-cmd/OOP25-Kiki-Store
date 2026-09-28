@@ -1,13 +1,5 @@
-package it.unibo.kikiStore.view.book;
+package it.unibo.kikistore.view.book;
 
-import it.unibo.kikiStore.controller.api.InventoryController;
-import it.unibo.kikiStore.model.inventory.api.GameCatalog;
-import it.unibo.kikiStore.model.item.api.GameItem;
-import it.unibo.kikiStore.model.inventory.api.Ingredient;
-import it.unibo.kikiStore.model.inventory.api.Potion;
-import it.unibo.kikiStore.model.inventory.impl.IngredientImpl;
-import it.unibo.kikiStore.model.inventory.impl.PotionImpl;
-import it.unibo.kikiStore.view.utility.SpriteManager;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -18,6 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import it.unibo.kikistore.controller.api.InventoryController;
+import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.api.Ingredient;
+import it.unibo.kikistore.model.inventory.api.Potion;
+import it.unibo.kikistore.model.inventory.impl.IngredientImpl;
+import it.unibo.kikistore.model.inventory.impl.PotionImpl;
+import it.unibo.kikistore.model.item.api.GameItem;
+import it.unibo.kikistore.view.utility.SpriteManager;
 
 /**
  * Inventory grid section — shown as two fixed facing pages inside the book:

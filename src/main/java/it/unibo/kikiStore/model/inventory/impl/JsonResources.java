@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.model.inventory.impl;
+package it.unibo.kikistore.model.inventory.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

@@ -1,4 +1,4 @@
-package it.unibo.kikiStore.view.book;
+package it.unibo.kikistore.view.book;
 
 import javafx.scene.canvas.GraphicsContext;
 

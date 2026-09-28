@@ -1,7 +1,7 @@
-package it.unibo.kikiStore.model.inventory.impl;
+package it.unibo.kikistore.model.inventory.impl;
 
-import it.unibo.kikiStore.model.inventory.api.Potion;
-import it.unibo.kikiStore.model.item.impl.AbstractGameItemImpl;
+import it.unibo.kikistore.model.inventory.api.Potion;
+import it.unibo.kikistore.model.item.impl.AbstractGameItemImpl;
 
 /**
  * Concrete potion item - extends the base game item with a

@@ -1,6 +1,6 @@
-package it.unibo.kikiStore.model.item.impl;
+package it.unibo.kikistore.model.item.impl;
 
-import it.unibo.kikiStore.model.item.api.GameItem;
+import it.unibo.kikistore.model.item.api.GameItem;
 
 /**
  * Base implementation of a game item - name, sprite path, and quantity.
