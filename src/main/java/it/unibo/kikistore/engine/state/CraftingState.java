@@ -197,7 +197,7 @@ public final class CraftingState implements GameState {
 
     private void updateSelecting() {
         if (input.isEscapePressed()) {
-            gsm.popState();
+            gsm.popState(true);
             return;
         }
 
@@ -338,7 +338,7 @@ public final class CraftingState implements GameState {
                 cursorIndex = 0;
                 phase = Phase.SELECTING;
             } else {
-                gsm.popState();
+                gsm.popState(true);
             }
         }
         actionWasPressed = actionNow;

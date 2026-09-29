@@ -7,8 +7,6 @@ import java.util.Map;
 
 /**
  * A centralized manager for graphical assets.
- * It implements a Caching pattern to ensure images are loaded from disk only once,
- * significantly improving performance during the rendering cycle.
  */
 public class SpriteManager {
 
@@ -54,8 +52,7 @@ public class SpriteManager {
 
         // 3. Manage cases where files are missing
         if (stream == null) {
-            // Cache the "null" result to avoid expensive disk lookups for the same 
-            // missing file in subsequent frames.
+            // Cache the "null" result to avoid expensive disk lookups for the same missing file in subsequent frames.
             cache.put(spriteId, null); 
             return null;
         }

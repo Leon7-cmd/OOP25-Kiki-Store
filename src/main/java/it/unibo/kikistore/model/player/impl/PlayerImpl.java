@@ -24,7 +24,6 @@ public final class PlayerImpl implements Player {
     private double y;
     private String direction = "down";
     private String state = "idle";
-    private CollisionHandler collisionHandler;
 
     /**
      * Initializes the player at a specific starting position.
@@ -39,18 +38,8 @@ public final class PlayerImpl implements Player {
         this.energy = MAX_ENERGY;
     }
 
-    /**
-     * Injects the collision handler used to validate movement against the map.
-     *
-     * @param handler the collision detection engine.
-     */
     @Override
-    public void setCollisionHandler(final CollisionHandler handler) {
-        this.collisionHandler = handler;
-    }
-
-    @Override
-    public void move(final double dx, final double dy) {
+    public void move(final double dx, final double dy, final CollisionHandler collisionHandler) {
         if (dx == 0 && dy == 0) {
             this.state = "idle";
             return;
@@ -178,4 +167,5 @@ public final class PlayerImpl implements Player {
             HITBOX_HEIGHT
         );
     }
+
 }

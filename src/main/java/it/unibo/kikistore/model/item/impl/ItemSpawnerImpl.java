@@ -25,10 +25,10 @@ import it.unibo.kikistore.model.utility.GridPos;
 public final class ItemSpawnerImpl implements ItemSpawner {
 
     private static final int WALKABLE_TILE_ID = 0;
-    private static final int MAX_SPAWN_ATTEMPTS = 200;
+    private static final int MAX_SPAWN_ATTEMPTS = 20;
 
     private static final int SPAWN_INTERVAL_TICKS = 60_000;
-    private static final int ITEMS_PER_WAVE = 50;
+    private static final int ITEMS_PER_WAVE = 40;
     private static final int MAX_ACTIVE_ITEMS = 100;
 
     private final GameTile collisionMask;
@@ -49,7 +49,7 @@ public final class ItemSpawnerImpl implements ItemSpawner {
     }
 
     /**
-     * Constructs an item spawner with a deterministic random generator for testing.
+     * Constructs an item spawner with a random generator for testing.
      *
      * @param collisionMask  the map mask used to verify walkable tiles.
      * @param ingredientPool available ingredients to spawn randomly from.
@@ -57,7 +57,7 @@ public final class ItemSpawnerImpl implements ItemSpawner {
      */
     @SuppressFBWarnings(
         value = "EI_EXPOSE_REP2",
-        justification = "Random instance is intentionally passed for deterministic unit testing"
+        justification = "Random instance is intentionally passed for unit testing"
     )
     public ItemSpawnerImpl(
         final GameTile collisionMask,
@@ -68,7 +68,7 @@ public final class ItemSpawnerImpl implements ItemSpawner {
         this.ingredientPool = List.copyOf(ingredientPool);
         this.random = random;
         this.activeItems = new ArrayList<>();
-        this.tickCounter = 0;
+        this.tickCounter = SPAWN_INTERVAL_TICKS;
     }
 
     @Override

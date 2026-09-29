@@ -19,11 +19,11 @@ import it.unibo.kikistore.engine.api.GameStateTransition;
 public final class GameStateManagerImpl implements GameStateManager, GameStateTransition {
 
     //TRANSITION VARIABLES
-    private static final boolean IS_PUSH_ACTION = true;
     private static final double FADE_SPEED = 1.0 / 30.0;
     private static final double FADE_OUT_UPDATE_THRESHOLD = 0.9;
     private boolean isTransitioning;
     private double alpha;
+    private boolean isPushAction;
     private int fadeDirection = 1;
     private GameState pendingState;
 
@@ -40,11 +40,36 @@ public final class GameStateManagerImpl implements GameStateManager, GameStateTr
         if (!stateStack.isEmpty()) {
             stateStack.clear();
         }
-        pushState(state);
+        pushState(state, true);
     }
 
     @Override
-    public void pushState(final GameState newState) {
+    public void pushState(final GameState newState, final boolean animated) {
+        if (!animated || stateStack.isEmpty()) {
+            applyPush(newState);
+            return;
+        }
+        this.pendingState = newState;
+        this.isPushAction = true;
+        this.isTransitioning = true;
+        this.fadeDirection = 1;
+    }
+
+    @Override
+    public void popState(final boolean animated) {
+        if (stateStack.isEmpty()) {
+            return;
+        }
+        if (!animated) {
+            applyPop();
+            return;
+        }
+        this.isPushAction = false;
+        this.isTransitioning = true;
+        this.fadeDirection = 1;
+    }
+
+    private void applyPush(final GameState newState) {
         if (!stateStack.isEmpty()) {
             stateStack.peek().pause();
         }
@@ -52,8 +77,7 @@ public final class GameStateManagerImpl implements GameStateManager, GameStateTr
         newState.init();
     }
 
-    @Override
-    public void popState() {
+    private void applyPop() {
         if (!stateStack.isEmpty()) {
             stateStack.pop();
         }
@@ -74,11 +98,11 @@ public final class GameStateManagerImpl implements GameStateManager, GameStateTr
             if (alpha >= 1.0) {
                 alpha = 1.0;
                 fadeDirection = -1;
-                if (IS_PUSH_ACTION && pendingState != null) {
-                    pushState(pendingState);
+                if (isPushAction && pendingState != null) {
+                    applyPush(pendingState);
                     pendingState = null;
-                } else if (!IS_PUSH_ACTION) {
-                    popState();
+                } else if (!isPushAction) {
+                    applyPop();
                 }
             } else if (alpha <= 0.0) {
                 alpha = 0.0;

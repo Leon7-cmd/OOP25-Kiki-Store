@@ -159,7 +159,7 @@ public final class BookState implements GameState {
                 closeAnimator.update();
                 if (closeAnimator.isFinished()) {
                     phase = Phase.CLOSED;
-                    gsm.popState();
+                    gsm.popState(false);
                 }
                 break;
 

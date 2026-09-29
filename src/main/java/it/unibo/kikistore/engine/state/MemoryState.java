@@ -184,7 +184,7 @@ public final class MemoryState implements GameState {
             memoryController.startNewGame();
             phase = Phase.PLAYING;
         } else {
-            gsm.popState();
+            gsm.popState(true);
         }
     }
 

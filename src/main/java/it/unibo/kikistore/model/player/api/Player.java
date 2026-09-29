@@ -13,8 +13,9 @@ public interface Player {
      *
      * @param dx horizontal (-1 for left, +1 for right, 0 for none).
      * @param dy vertical (-1 for up, +1 for down, 0 for none).
+     * @param collisionHandler the CollisionHandler to use
      */
-    void move(double dx, double dy);
+    void move(double dx, double dy, CollisionHandler collisionHandler);
 
     /**
      * @return current world X position in pixels.
@@ -76,14 +77,14 @@ public interface Player {
     int getEnergy();
 
     /**
-     * Restores energy without exceeding the limit.
+     * Restores energy.
      *
      * @param amount the energy to restore.
      */
     void restoreEnergy(int amount);
 
     /**
-     * Consumes energy if the player has enough available.
+     * Consumes energy.
      *
      * @param amount the energy to consume.
      * @return true if consumed successfully, false if insufficient energy.
@@ -96,14 +97,7 @@ public interface Player {
     int maxEnergy();
 
     /**
-     * @return the calculated bounding box used for collision detection.
+     * @return the bounding box used for collision detection.
      */
     BoundingBox getHitbox();
-
-    /**
-     * Attaches or updates the collision handler for the current map.
-     *
-     * @param collisionHandler the collision engine to validate movement against.
-     */
-    void setCollisionHandler(CollisionHandler collisionHandler);
 }

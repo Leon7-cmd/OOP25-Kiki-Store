@@ -1,7 +1,5 @@
 package it.unibo.kikistore.engine.state;
 
-import java.util.List;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikistore.controller.api.InputHandler;
 import it.unibo.kikistore.controller.api.PlayerController;
@@ -11,19 +9,12 @@ import it.unibo.kikistore.model.map.api.GameTile;
 import it.unibo.kikistore.model.map.impl.CollisionHandler;
 import it.unibo.kikistore.model.map.impl.MapLoader;
 import it.unibo.kikistore.model.map.impl.TileMapImpl;
-import it.unibo.kikistore.view.entity.api.EntityRenderData;
-import it.unibo.kikistore.view.entity.impl.EntityRenderer;
-import it.unibo.kikistore.view.environment.api.MapRenderData;
-import it.unibo.kikistore.view.environment.impl.MapRenderer;
+import it.unibo.kikistore.model.utility.BoundingBox;
 import it.unibo.kikistore.view.hud.api.HUDRenderData;
-import it.unibo.kikistore.view.hud.impl.HUDRenderer;
-import it.unibo.kikistore.view.utility.Camera;
+import it.unibo.kikistore.view.states.minigamefly.api.MinigameFlyView;
+import it.unibo.kikistore.view.states.minigamefly.impl.MinigameFlyViewImpl;
 import it.unibo.kikistore.view.utility.SpriteManager;
-import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 
 /**
  * GameState implementation for the fly minigame.
@@ -40,21 +31,16 @@ public final class MinigameFlyState implements GameState {
     private static final int PLAYER_Y = 180;
     private static final double GAME_SPEED = 1.0;
     private static final int TILE_SIZE = 32;
-    private static final int PLAYER_SIZE = 64;
     private static final int INTERACTABLE_END_TILE_ID = 2;
     private static final int REWARD = 30;
     private static final int ENERGY_RESTORED = 2;
 
     // Rendering & Camera Constants
-    private static final double MINIGAME_ZOOM = 2.5;
     private static final double CAMERA_INITIAL_OFFSET_X = 150.0;
-    private static final double ALPHA_OVERLAY = 0.75;
-
-    // Font Constants
-    private static final String FONT_FAMILY = "Verdana";
-    private static final double PROMPT_FONT_SIZE = 22.0;
+    private static final double DEFAULT_VIEWPORT_WIDTH = 320.0;
 
     private double cameraLeft;
+    private double currentViewportWidth = DEFAULT_VIEWPORT_WIDTH;
     private boolean initializedCamera;
     private boolean gameStart;
     private boolean gameEnd;
@@ -64,16 +50,9 @@ public final class MinigameFlyState implements GameState {
 
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
-    private final SpriteManager spriteManager;
-    private final EntityRenderer entityRenderer;
-    private final MapRenderer environmentRenderer;
-    private final HUDRenderer hudRenderer;
+    private final MinigameFlyView minigameFlyView;
 
-    private final Camera cam = new Camera();
     private int frameCount;
-    private final int[][] groundGrid;
-    private final int[][] decorationGrid;
-    private final int[][] maskGrid;
 
     /**
      * Constructs a new MinigameFlyState.
@@ -81,39 +60,34 @@ public final class MinigameFlyState implements GameState {
      * @param stateController the GameStateTransition controller for managing state transitions
      * @param input           the InputHandler for user input
      * @param kiki            the PlayerController for controlling the player character
+     * @param spriteManager   the shared SpriteManager for loading graphics
      */
     public MinigameFlyState(
         final GameStateTransition stateController,
         final InputHandler input,
-        final PlayerController kiki
+        final PlayerController kiki,
+        final SpriteManager spriteManager
     ) {
         this.transitionController = stateController;
         this.input = input;
+        this.kiki = kiki;
 
         // --- 1. RESOURCE LOADING ---
-        this.groundGrid = MapLoader.loadMap("maps/minigameFly/ground.txt");
-        this.decorationGrid = MapLoader.loadMap("maps/minigameFly/decor.txt");
-        this.maskGrid = MapLoader.loadMap("maps/minigameFly/col/col.txt");
+        final int[][] groundGrid = MapLoader.loadMap("maps/minigameFly/ground.txt");
+        final int[][] decorationGrid = MapLoader.loadMap("maps/minigameFly/decor.txt");
+        final int[][] maskGrid = MapLoader.loadMap("maps/minigameFly/col/col.txt");
 
         // --- 2. MODEL INITIALIZATION ---
         final GameTile collisionMap = new TileMapImpl(maskGrid, TILE_SIZE);
-        collisionHandler = new CollisionHandler(collisionMap);
-        this.kiki = kiki;
+        this.collisionHandler = new CollisionHandler(collisionMap);
 
         // --- 3. VIEW INITIALIZATION ---
-        this.spriteManager = new SpriteManager();
-        this.entityRenderer = new EntityRenderer(this.spriteManager);
-        this.environmentRenderer = new MapRenderer(this.spriteManager);
-        this.hudRenderer = new HUDRenderer(this.spriteManager);
-
-        this.cam.setZoom(MINIGAME_ZOOM);
+        this.minigameFlyView = new MinigameFlyViewImpl(spriteManager, groundGrid, decorationGrid);
     }
 
     @Override
     public void init() {
         this.kiki.setPosition(PLAYER_X, PLAYER_Y);
-        this.kiki.setCollisionHandler(this.collisionHandler);
-        this.cam.setZoom(MINIGAME_ZOOM);
     }
 
     @Override
@@ -123,7 +97,7 @@ public final class MinigameFlyState implements GameState {
         // 1. VICTORY
         if (gameEnd) {
             if (input.isAction()) {
-                transitionController.popState();
+                transitionController.popState(true);
             }
             return;
         }
@@ -137,13 +111,18 @@ public final class MinigameFlyState implements GameState {
         }
 
         // 3. RUNNING
-        kiki.update();
+        kiki.update(collisionHandler);
         cameraLeft += GAME_SPEED;
 
         // Check for victory condition
+        final BoundingBox interactionArea = kiki.getHitbox();
         final int tileId = collisionHandler.getInteractableTileId(
-            kiki.getX() + (TILE_SIZE / 2.0), kiki.getY() + TILE_SIZE, TILE_SIZE, TILE_SIZE
+            interactionArea.x(),
+            interactionArea.y(),
+            interactionArea.width(),
+            interactionArea.height()
         );
+
         if (tileId == INTERACTABLE_END_TILE_ID) {
             gameEnd = true;
             kiki.addMoney(REWARD);
@@ -152,73 +131,31 @@ public final class MinigameFlyState implements GameState {
         }
 
         // Keep the player within the boundary
-        if (kiki.getX() > cam.getX() + cam.getW() - PLAYER_SIZE) {
-            kiki.setPosition(cam.getX() + cam.getW() - PLAYER_SIZE, kiki.getY());
+        final double rightBoundary = cameraLeft + currentViewportWidth;
+        if (kiki.getX() > rightBoundary) {
+            kiki.setPosition(rightBoundary, kiki.getY());
         }
 
         // Lose condition
-        if (kiki.getX() < cam.getX() - PLAYER_SIZE) {
-            transitionController.popState();
+        if (kiki.getX() < cameraLeft) {
+            transitionController.popState(true);
         }
     }
 
     @Override
     public void render(final GraphicsContext gc) {
-        final double screenWidth = gc.getCanvas().getWidth(); 
-        final double screenHeight = gc.getCanvas().getHeight();
-        final double mapCenterY = groundGrid.length * TILE_SIZE / 2.0;
-
-        final double viewW = screenWidth / cam.getZoom();
-
         // --- CAMERA LOGIC --- 
         if (!initializedCamera) {
             this.cameraLeft = Math.max(0.0, kiki.getX() - CAMERA_INITIAL_OFFSET_X);
+            this.currentViewportWidth = minigameFlyView.getVisibleWorldWidth(gc.getCanvas().getWidth());
             this.initializedCamera = true;
         }
 
-        final double cameraCenterX = cameraLeft + (viewW / 2.0);
-        cam.update(cameraCenterX, mapCenterY, screenWidth, screenHeight);
-
-        gc.save();
-
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0.0, 0.0, screenWidth, screenHeight);
-
-        gc.setImageSmoothing(false);
-        gc.scale(cam.getZoom(), cam.getZoom());
-        gc.translate(-cam.getX(), -cam.getY());
-
-        // --- WORLD RENDERING ---
-        environmentRenderer.render(gc, new MapRenderData(groundGrid, TILE_SIZE));
-        environmentRenderer.render(gc, new MapRenderData(decorationGrid, TILE_SIZE));
-        final EntityRenderData kikiData = new EntityRenderData(
-            kiki.getX(),
-            kiki.getY(),
-            PLAYER_SIZE,
-            PLAYER_SIZE,
-            "sprites/player/kiki",
-            kiki.getState(),
-            kiki.getDirection()
-        );
-        entityRenderer.render(gc, List.of(kikiData), frameCount);
-
-        if (!gameStart && !gameEnd) {
-            gc.setGlobalAlpha(ALPHA_OVERLAY);
-            gc.setFill(Color.BLACK);
-            gc.fillRect(cam.getX(), cam.getY(), cam.getW(), cam.getH());
-            gc.setGlobalAlpha(1.0);
-            gc.setFill(Color.GREEN);
-            gc.setFont(Font.font(FONT_FAMILY, PROMPT_FONT_SIZE));
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.setTextBaseline(VPos.CENTER);
-            gc.fillText("Premi \"E\"", cam.getX() + (cam.getW() / 2.0), cam.getY() + (cam.getH() / 2.0));
-        }
-
-        gc.restore(); 
-
         // --- HUD ---
         final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), kiki.maxEnergy(), kiki.getMoney());
-        hudRenderer.render(gc, hudData);
+        final boolean showPrompt = !gameStart && !gameEnd;
+
+        minigameFlyView.render(gc, kiki.toRenderData(), hudData, cameraLeft, showPrompt, frameCount);
     }
 
     @Override

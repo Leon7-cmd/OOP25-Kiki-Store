@@ -56,13 +56,13 @@ public final class StageInitializer {
         final GameEngine engine = new GameEngineImpl(gsm, canvas.getGraphicsContext2D(), VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
 
         // 4. Final configuration of the OS window
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreen(true);
         stage.setTitle(WINDOW_TITLE);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setOnCloseRequest(event -> engine.stop());
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.setFullScreenExitHint("");
-        stage.setFullScreen(true);
         stage.show();
 
         // 5. GameLoop startup

@@ -1,36 +1,25 @@
 package it.unibo.kikistore.engine.state;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikistore.controller.api.InputHandler;
 import it.unibo.kikistore.controller.api.InventoryController;
 import it.unibo.kikistore.controller.api.PlayerController;
 import it.unibo.kikistore.controller.api.RecipeBookController;
-import it.unibo.kikistore.controller.impl.InventoryControllerImpl;
 import it.unibo.kikistore.engine.api.GameState;
 import it.unibo.kikistore.engine.api.GameStateTransition;
 import it.unibo.kikistore.model.inventory.api.GameCatalog;
-import it.unibo.kikistore.model.item.api.GroundItem;
 import it.unibo.kikistore.model.item.api.ItemSpawner;
 import it.unibo.kikistore.model.item.impl.ItemSpawnerImpl;
 import it.unibo.kikistore.model.map.api.GameTile;
 import it.unibo.kikistore.model.map.impl.CollisionHandler;
 import it.unibo.kikistore.model.map.impl.MapLoader;
 import it.unibo.kikistore.model.map.impl.TileMapImpl;
-import it.unibo.kikistore.view.entity.api.EntityRenderData;
-import it.unibo.kikistore.view.entity.impl.EntityRenderer;
-import it.unibo.kikistore.view.environment.api.MapRenderData;
-import it.unibo.kikistore.view.environment.impl.MapRenderer;
+import it.unibo.kikistore.model.utility.BoundingBox;
 import it.unibo.kikistore.view.hud.api.HUDRenderData;
-import it.unibo.kikistore.view.hud.impl.HUDRenderer;
-import it.unibo.kikistore.view.item.api.ItemRenderData;
-import it.unibo.kikistore.view.item.impl.ItemRenderer;
-import it.unibo.kikistore.view.utility.Camera;
+import it.unibo.kikistore.view.states.village.api.VillageView;
+import it.unibo.kikistore.view.states.village.impl.VillageViewImpl;
 import it.unibo.kikistore.view.utility.SpriteManager;
-
-import java.util.ArrayList;
-import java.util.List;
+import javafx.scene.canvas.GraphicsContext;
 
 /**
  * GameState implementation for the village area.
@@ -38,11 +27,10 @@ import java.util.List;
  */
 @SuppressFBWarnings(
     value = "EI_EXPOSE_REP2",
-    justification = "GameStateTransition and PlayerController are shared components for world and player management"
+    justification = "Shared engine/controller components from outside"
 )
 public final class VillageState implements GameState {
     private static final int TILE_SIZE = 32;
-    private static final int ITEM_SPAWN_COUNT = 10;
     private static final int[] TELEPORT1 = {2550, 1520};
     private static final int[] TELEPORT2 = {1280, 2410};
     private static final double DEFAULT_SPAWN_X = 1850.0;
@@ -63,17 +51,9 @@ public final class VillageState implements GameState {
     private final GameStateTransition transitionController;
     private final CollisionHandler collisionHandler;
     private final SpriteManager spriteManager;
-    private final EntityRenderer entityRenderer;
-    private final MapRenderer environmentRenderer;
-    private final ItemRenderer itemRenderer;
-    private final HUDRenderer hudRenderer;
+    private final VillageView villageView;
 
-    private final Camera cam = new Camera();
     private int frameCount;
-    private final int[][] groundGrid;
-    private final int[][] decorationGrid;
-    private final int[][] upperGrid;
-    private final int[][] maskGrid;
     private double savedX;
     private double savedY;
 
@@ -84,7 +64,7 @@ public final class VillageState implements GameState {
      * @param input                the input handler for user interactions
      * @param kiki                 the player controller for Kiki
      * @param inventory            the inventory controller for managing items
-     * @param recipeBookController the recipe book controller for crafting
+     * @param recipeBookController the recipe book controller
      * @param spriteManager        the sprite manager for rendering graphics
      * @param catalog              the game catalog containing item and recipe data
      */
@@ -101,12 +81,14 @@ public final class VillageState implements GameState {
         this.input = input;
         this.kiki = kiki;
         this.recipeBookController = recipeBookController;
+        this.inventory = inventory;
+        this.catalog = catalog;
 
         // --- 1. RESOURCE LOADING ---
-        this.groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
-        this.decorationGrid = MapLoader.loadMap("maps/map0/testDecor.txt");
-        this.upperGrid = MapLoader.loadMap("maps/map0/testUpper.txt");
-        this.maskGrid = MapLoader.loadMap("maps/map0/col/testCol.txt");
+        final int[][] groundGrid = MapLoader.loadMap("maps/map0/testGround.txt");
+        final int[][] decorationGrid = MapLoader.loadMap("maps/map0/testDecor.txt");
+        final int[][] upperGrid = MapLoader.loadMap("maps/map0/testUpper.txt");
+        final int[][] maskGrid = MapLoader.loadMap("maps/map0/col/testCol.txt");
 
         // --- 2. MODEL INITIALIZATION ---
         final GameTile collisionMap = new TileMapImpl(maskGrid, TILE_SIZE);
@@ -115,20 +97,11 @@ public final class VillageState implements GameState {
         if (this.kiki.getX() == 0.0 && this.kiki.getY() == 0.0) {
             this.kiki.setPosition(DEFAULT_SPAWN_X, DEFAULT_SPAWN_Y);
         }
-        this.kiki.setCollisionHandler(collisionHandler);
-
-        this.inventory = new InventoryControllerImpl();
-        this.catalog = catalog;
-
         this.itemSpawner = new ItemSpawnerImpl(collisionMap, catalog.getAllIngredients());
-        this.itemSpawner.spawnRandomItems(ITEM_SPAWN_COUNT);
 
         // --- 3. VIEW INITIALIZATION ---
         this.spriteManager = spriteManager;
-        this.entityRenderer = new EntityRenderer(this.spriteManager);
-        this.environmentRenderer = new MapRenderer(this.spriteManager);
-        this.itemRenderer = new ItemRenderer(this.spriteManager);
-        this.hudRenderer = new HUDRenderer(this.spriteManager);
+        this.villageView = new VillageViewImpl(this.spriteManager, groundGrid, decorationGrid, upperGrid);
     }
 
     @Override
@@ -143,61 +116,68 @@ public final class VillageState implements GameState {
     @Override
     public void resume() {
         this.kiki.setPosition(this.savedX, this.savedY);
-        this.kiki.setCollisionHandler(this.collisionHandler);
     }
 
     @Override
     public void update() {
-        kiki.update();
+        kiki.update(collisionHandler);
+        handleTileInteractions();
+        handleMenuTransitions();
 
         itemSpawner.checkCollection(kiki, inventory);
         itemSpawner.update();
 
         frameCount++;
+    }
 
-        final int tileId = collisionHandler.getInteractableTileId(kiki.getX() + 16, kiki.getY() + 32, 32, 32);
-        if (tileId == TILE_TELEPORT_SHOP_ID && input.isAction()) {
-            this.kiki.setPosition(TELEPORT1[0], TELEPORT1[1]);
-        }
-        if (tileId == TILE_TELEPORT_HOUSE_ID && input.isAction()) {
-            this.kiki.setPosition(TELEPORT2[0], TELEPORT2[1]);
-        }
-        if (tileId == TILE_MINIGAME_FLY_ID && input.isAction()) {
-            transitionController.pushState(
-                new MinigameFlyState(
-                    transitionController, 
-                    input, 
-                    kiki
-                )
-            );
-        }
-        if (tileId == TILE_MINIGAME_MEMORY_ID && input.isAction()) {
-            transitionController.pushState(
-                new MemoryState(
-                    kiki, 
-                    catalog, 
-                    inventory, 
-                    spriteManager, 
-                    transitionController, 
-                    input
-                )
-            );
+    @Override
+    public void render(final GraphicsContext gc) {
+        final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), kiki.maxEnergy(), kiki.getMoney());
+        villageView.render(gc, kiki.toRenderData(), itemSpawner.getActiveItems(), hudData, frameCount);
+    }
+
+    private void handleTileInteractions() {
+        if (!input.isAction()) {
+            return;
         }
 
+        final BoundingBox interactionArea = kiki.getHitbox();
+        final int tileId = collisionHandler.getInteractableTileId(
+            interactionArea.x(),
+            interactionArea.y(),
+            interactionArea.width(),
+            interactionArea.height()
+        );
+
+        switch (tileId) {
+            case TILE_TELEPORT_SHOP_ID -> this.kiki.setPosition(TELEPORT1[0], TELEPORT1[1]);
+            case TILE_TELEPORT_HOUSE_ID -> this.kiki.setPosition(TELEPORT2[0], TELEPORT2[1]);
+            case TILE_MINIGAME_FLY_ID -> transitionController.pushState(
+                new MinigameFlyState(transitionController, input, kiki, spriteManager), true
+            );
+            case TILE_MINIGAME_MEMORY_ID -> transitionController.pushState(
+                new MemoryState(kiki, catalog, inventory, spriteManager, transitionController, input), true
+            );
+            default -> {
+                // No interaction mapped for this tile
+            }
+        }
+    }
+
+    private void handleMenuTransitions() {
         if (input.isCraftingPressed()) {
             transitionController.pushState(
                 new CraftingState(
                     inventory, 
                     recipeBookController, 
-                    kiki,
+                    kiki, 
                     catalog, 
                     spriteManager, 
                     transitionController, 
                     input
-                )
+                ), true
             );
-        }
-        if (input.isInventoryPressed()) {
+        } else if (input.isInventoryPressed()) {
             transitionController.pushState(
                 new BookState(
                     inventory, 
@@ -206,68 +186,17 @@ public final class VillageState implements GameState {
                     spriteManager, 
                     transitionController, 
                     input
-                )
+                ), false
             );
-        }
-        if (input.isEscapePressed()) {
+        } else if (input.isEscapePressed()) {
             transitionController.pushState(
                 new PauseState(
                     transitionController, 
                     input, 
                     spriteManager, 
                     catalog
-                )
+                ), false
             );
         }
-    }
-
-    @Override
-    public void render(final GraphicsContext gc) {
-        final double screenWidth = gc.getCanvas().getWidth(); 
-        final double screenHeight = gc.getCanvas().getHeight();
-
-        gc.save();
-        gc.setFill(Color.BLACK);
-        gc.fillRect(0, 0, screenWidth, screenHeight);
-
-        // --- CAMERA LOGIC ---
-        cam.update(kiki.getX(), kiki.getY(), screenWidth, screenHeight);
-        gc.setImageSmoothing(false);
-        gc.scale(cam.getZoom(), cam.getZoom());
-        gc.translate(-cam.getX(), -cam.getY());
-
-        // --- WORLD RENDERING ---
-        environmentRenderer.render(gc, new MapRenderData(groundGrid, TILE_SIZE));
-        environmentRenderer.render(gc, new MapRenderData(decorationGrid, TILE_SIZE));
-
-        // Ground Items Layer
-        final List<ItemRenderData> itemDataList = new ArrayList<>();
-        for (final GroundItem item : itemSpawner.getActiveItems()) {
-            itemDataList.add(new ItemRenderData(
-                item.getX(),
-                item.getY(),
-                item.getWidth(),
-                item.getHeight(),
-                item.getId(),
-                item.isAnimated()
-            ));
-        }
-        itemRenderer.render(gc, itemDataList, frameCount);
-
-        // Player Layer
-        final EntityRenderData kikiData = new EntityRenderData(
-            kiki.getX(), kiki.getY(), 64, 64, "sprites/player/kiki", kiki.getState(), kiki.getDirection()
-        );
-        entityRenderer.render(gc, List.of(kikiData), frameCount);
-
-        // Foreground Layer
-        environmentRenderer.render(gc, new MapRenderData(upperGrid, TILE_SIZE));
-
-        gc.restore(); 
-
-        // --- HUD ---
-        final HUDRenderData hudData = new HUDRenderData(kiki.getEnergy(), kiki.maxEnergy(), kiki.getMoney());
-        hudRenderer.render(gc, hudData);
-
     }
 }

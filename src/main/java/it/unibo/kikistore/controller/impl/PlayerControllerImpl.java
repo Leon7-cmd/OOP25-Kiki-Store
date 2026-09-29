@@ -7,11 +7,15 @@ import it.unibo.kikistore.controller.api.PlayerController;
 import it.unibo.kikistore.model.map.impl.CollisionHandler;
 import it.unibo.kikistore.model.player.api.Player;
 import it.unibo.kikistore.model.utility.BoundingBox;
+import it.unibo.kikistore.view.entity.api.EntityRenderData;
 
 /**
  * Controller translating user input into movement intents on the Player model.
  */
 public final class PlayerControllerImpl implements PlayerController {
+
+    private static final double RENDER_SIZE = 64.0;
+    private static final String SPRITE_PATH = "sprites/player/kiki";
 
     private final Player player;
     private final InputHandler input;
@@ -28,7 +32,7 @@ public final class PlayerControllerImpl implements PlayerController {
     }
 
     @Override
-    public void update() {
+    public void update(final CollisionHandler collisionHandler) {
         double dx = 0.0;
         double dy = 0.0;
 
@@ -51,7 +55,7 @@ public final class PlayerControllerImpl implements PlayerController {
             dy /= length;
         }
 
-        player.move(dx, dy);
+        player.move(dx, dy, collisionHandler);
     }
 
     @Override
@@ -78,11 +82,6 @@ public final class PlayerControllerImpl implements PlayerController {
     public void setPosition(final double x, final double y) {
         player.setX(x);
         player.setY(y);
-    }
-
-    @Override
-    public void setCollisionHandler(final CollisionHandler collisionHandler) {
-        player.setCollisionHandler(collisionHandler);
     }
 
     @Override
@@ -123,6 +122,19 @@ public final class PlayerControllerImpl implements PlayerController {
     @Override
     public BoundingBox getHitbox() {
         return player.getHitbox();
+    }
+
+    @Override
+    public EntityRenderData toRenderData() {
+        return new EntityRenderData(
+            getX(),
+            getY(),
+            RENDER_SIZE,
+            RENDER_SIZE,
+            SPRITE_PATH,
+            getState(),
+            getDirection()
+        );
     }
 
 }

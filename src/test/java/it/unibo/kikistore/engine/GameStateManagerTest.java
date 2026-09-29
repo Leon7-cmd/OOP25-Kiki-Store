@@ -33,7 +33,7 @@ class GameStateManagerTest {
     @Test
     void testInitialPushStateWhenEmpty() {
         final DummyState state = new DummyState();
-        gsm.pushState(state);
+        gsm.pushState(state, false);
 
         assertSame(state, gsm.getCurrentState());
         assertTrue(state.isInitialized());
@@ -45,7 +45,7 @@ class GameStateManagerTest {
     @Test
     void testUpdatePropagatesToCurrentState() {
         final DummyState state = new DummyState();
-        gsm.pushState(state);
+        gsm.pushState(state, false);
 
         gsm.update();
         gsm.update();
@@ -61,8 +61,8 @@ class GameStateManagerTest {
         final DummyState firstState = new DummyState();
         final DummyState secondState = new DummyState();
 
-        gsm.pushState(firstState);
-        gsm.pushState(secondState);
+        gsm.pushState(firstState, false);
+        gsm.pushState(secondState, false);
 
         // Previous state is paused; new state is initialized and set active
         assertTrue(firstState.isPaused());
@@ -83,12 +83,12 @@ class GameStateManagerTest {
         final DummyState baseState = new DummyState();
         final DummyState overlayState = new DummyState();
 
-        gsm.pushState(baseState);
-        gsm.pushState(overlayState);
+        gsm.pushState(baseState, false);
+        gsm.pushState(overlayState, false);
         assertSame(overlayState, gsm.getCurrentState());
 
         // Pop overlay state
-        gsm.popState();
+        gsm.popState(false);
 
         // Underlying state is restored and resumed
         assertSame(baseState, gsm.getCurrentState());
@@ -107,14 +107,14 @@ class GameStateManagerTest {
         final DummyState firstState = new DummyState();
         final DummyState replacementState = new DummyState();
 
-        gsm.pushState(firstState);
+        gsm.pushState(firstState, false);
         gsm.setState(replacementState);
 
         assertSame(replacementState, gsm.getCurrentState());
         assertTrue(replacementState.isInitialized());
 
         // Popping should leave the stack empty
-        gsm.popState();
+        gsm.popState(false);
         assertEquals(null, gsm.getCurrentState());
     }
 

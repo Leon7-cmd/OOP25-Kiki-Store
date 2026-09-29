@@ -2,6 +2,7 @@ package it.unibo.kikistore.controller.api;
 
 import it.unibo.kikistore.model.map.impl.CollisionHandler;
 import it.unibo.kikistore.model.utility.BoundingBox;
+import it.unibo.kikistore.view.entity.api.EntityRenderData;
 
 /**
  * Controller responsible for translating user interactions into player model actions
@@ -11,8 +12,10 @@ public interface PlayerController {
 
     /**
      * Updates the player position based on active input.
+     * 
+     * @param collisionHandler the CollisionHandler to use
      */
-    void update();
+    void update(CollisionHandler collisionHandler);
 
     /**
      * @return the player's current X position.
@@ -58,13 +61,6 @@ public interface PlayerController {
     void setPosition(double x, double y);
 
     /**
-     * Sets the collision handler for the player.
-     *
-     * @param collisionHandler the CollisionHandler to use
-     */
-    void setCollisionHandler(CollisionHandler collisionHandler);
-
-    /**
      * Adds the specified amount of money to the player's total.
      *
      * @param amount the amount of money to add
@@ -99,4 +95,12 @@ public interface PlayerController {
      * @return the maximum energy value
      */
     int maxEnergy();
+
+    /**
+     * Converts the current player state into a DTO for rendering.
+     *
+     * @return the EntityRenderData containing the required data for rendering
+     */
+    EntityRenderData toRenderData();
+
 }
