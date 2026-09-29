@@ -60,7 +60,7 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass.set("it.unibo.kikistore.app.Main")
+    mainClass.set("it.unibo.kikistore.app.Launcher")
 }
 
 tasks.withType<Test>().configureEach {
