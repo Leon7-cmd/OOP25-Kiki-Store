@@ -25,8 +25,6 @@ public class BookAnimator {
      * @param cols          number of columns in the frame grid
      * @param rows          number of rows in the frame grid
      */
-    // Image.getWidth()/getHeight() return double: the int cast is required
-    @SuppressWarnings("PMD.UnnecessaryCast")
     public BookAnimator(final SpriteManager spriteManager, final String spriteId,
             final int cols, final int rows) {
         this.sheet = spriteManager.getStaticSprite(spriteId);

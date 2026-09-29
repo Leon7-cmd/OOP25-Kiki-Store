@@ -1,7 +1,6 @@
 plugins {
     // Apply the java plugin to add support for Java
     java
-    id("org.openjfx.javafxplugin") version "0.1.0"
     // Apply the application plugin to add support for building a CLI application
     // You can run your app via task "run": ./gradlew run
     application
@@ -15,11 +14,6 @@ plugins {
     id("org.danilopianini.gradle-java-qa") version "1.172.0"
 }
 
-javafx {
-    version = "21.0.2" 
-    modules = listOf("javafx.controls", "javafx.graphics", "javafx.media")
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -30,10 +24,22 @@ repositories { // Where to search for dependencies
     mavenCentral()
 }
 
+val javaFXModules = listOf("base", "controls", "media", "graphics")
+val supportedPlatforms = listOf("mac-aarch64", "linux", "mac", "win")
+
 dependencies {
     // Suppressions for SpotBugs
     compileOnly("com.github.spotbugs:spotbugs-annotations:4.9.8")
 
+    val javaFxVersion = "21.0.2"
+    implementation("org.openjfx:javafx:$javaFxVersion")
+    for (platform in supportedPlatforms) {
+        for (module in javaFXModules) {
+            implementation("org.openjfx:javafx-$module:$javaFxVersion:$platform")
+        }
+    }
+
+    
     // Maven dependencies are composed by a group name, a name and a version, separated by colons
     implementation("com.omertron:API-OMDB:1.5")
     implementation("org.jooq:jool:0.9.15")
