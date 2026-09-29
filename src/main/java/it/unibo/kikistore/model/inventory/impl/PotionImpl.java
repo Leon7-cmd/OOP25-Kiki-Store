@@ -10,10 +10,7 @@ import it.unibo.kikistore.model.item.impl.AbstractGameItemImpl;
 public final class PotionImpl extends AbstractGameItemImpl implements Potion {
     private String description;
     private String effect;
-    // effects provided by the potion, e.g. "help sleeping", "energizing", "help
-    // with digestion"
     private boolean isBlack;
-    // TO BE CHANGED - it describes a wrong combination used to create a potion
 
     /**
      * @param name the potion name

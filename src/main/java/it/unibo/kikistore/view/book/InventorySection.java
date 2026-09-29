@@ -103,26 +103,23 @@ public final class InventorySection implements BookSection {
 
     @Override
     public void update() {
-        // Niente da aggiornare — entrambe le pagine sono sempre visibili insieme,
-        // non c'è navigazione interna a questa sezione - solo in recipes
     }
 
     @Override
     public void render(final GraphicsContext gc, final double x, final double y,
             final double w, final double h) {
 
-        gc.setImageSmoothing(false); // Lo smoothing annulla l'effetto pixellato
+        gc.setImageSmoothing(false);
 
-        // x,y,w,h qui rappresentano l'intero quadrato del libro (w == h)
         final double bookSize = w;
 
-        // Pagina sinistra — area calcolata dalle percentuali misurate
+        // Left page — are calculated in percentage
         final double leftPageX = x + PAGE_LEFT_FRAC * bookSize;
         final double leftPageY = y + PAGE_TOP_FRAC * bookSize;
         final double leftPageW = (PAGE_CENTER_FRAC - PAGE_LEFT_FRAC) * bookSize;
         final double leftPageH = (PAGE_BOTTOM_FRAC - PAGE_TOP_FRAC) * bookSize;
 
-        // Pagina destra — stessa altezza, parte da dove finisce la sinistra
+        // Right page — same height, begins from right after the left section
         final double rightPageX = x + PAGE_CENTER_FRAC * bookSize;
         final double rightPageY = leftPageY;
         final double rightPageW = (PAGE_RIGHT_FRAC - PAGE_CENTER_FRAC) * bookSize;
@@ -133,8 +130,6 @@ public final class InventorySection implements BookSection {
             return;
         }
 
-        // Mantiene il rapporto originale dello sprite (96:144) dentro l'area della
-        // pagina
         final double spriteAspect = cubeSprite.getWidth() / cubeSprite.getHeight();
 
         renderPageBackground(gc, cubeSprite, spriteAspect, ingredientSlots,
@@ -197,8 +192,6 @@ public final class InventorySection implements BookSection {
                 final double spriteH = slotH - ITEM_PADDING * 2 - 12;
 
                 if (sprite != null) {
-                    // Mantiene il rapporto originale dello sprite invece di stirarlo
-                    // dentro lo spazio disponibile dello slot
                     final double spriteAspect = sprite.getWidth() / sprite.getHeight();
                     double itemW = spriteW;
                     double itemH = itemW / spriteAspect;

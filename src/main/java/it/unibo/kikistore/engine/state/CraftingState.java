@@ -223,7 +223,7 @@ public final class CraftingState implements GameState {
             return;
         }
 
-        // Movimento cursore nella griglia zaino
+        // Cursors movement in the backpack area
         final boolean upNow = input.isUp();
         if (upNow && !upWasPressed && cursorIndex - COLUMNS >= 0) {
             cursorIndex -= COLUMNS;
@@ -391,8 +391,6 @@ public final class CraftingState implements GameState {
             return;
         }
 
-        // Mantiene il rapporto originale dello sprite (96:144) dentro l'area
-        // disponibile
         final double spriteAspect = cubeSprite.getWidth() / cubeSprite.getHeight();
         double drawW = w;
         double drawH = drawW / spriteAspect;
@@ -513,7 +511,7 @@ public final class CraftingState implements GameState {
             final double w, final double h) {
         final double centerX = x + w / 2;
 
-        // 30% superiore riservato al titolo, 70% inferiore al calderone
+        // 30% for the title, 70% for the cauldron
         final double titleAreaHeight = h * TITLE_AREA_RATIO;
         final double cauldronAreaY = y + titleAreaHeight;
         final double cauldronAreaHeight = h - titleAreaHeight;
@@ -523,8 +521,6 @@ public final class CraftingState implements GameState {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText("CAULDRON", centerX, y + titleAreaHeight / 2);
 
-        // Il calderone resta quadrato: la sua dimensione e' il minimo tra
-        // larghezza e altezza disponibili nel 70% inferiore, con margine
         final double availableW = w - CAULDRON_MARGIN * 2;
         final double availableH = cauldronAreaHeight - CAULDRON_MARGIN - CAULDRON_BOTTOM_RESERVE;
         final double cauldronSize = Math.min(availableW, availableH);
@@ -533,7 +529,7 @@ public final class CraftingState implements GameState {
 
         renderCauldronSprite(gc, cauldronX, cauldronY, cauldronSize, cauldronSize);
 
-        // Slot centrati sul centro esatto dell'apertura, dimensione invariata
+        // Slots on the cauldron and their position
         final double slotsTotalW = CAULDRON_SLOT_SIZE * REQUIRED_INGREDIENTS + CAULDRON_SLOT_GAP * 2;
         final double apertureCenterX = cauldronX + cauldronSize * APERTURE_CENTER_X_FRAC;
         final double apertureCenterY = cauldronY + cauldronSize * APERTURE_CENTER_Y_FRAC;

@@ -51,7 +51,7 @@ public final class BookState implements GameState {
     private static final double BOOKMARK_RCP_Y_FRAC = 120.0 / 272.0;
     private static final double BOOKMARK_ORD_Y_FRAC = 140.0 / 272.0;
 
-    private static final double BOOK_ZOOM = 1.25; // 1.0 = normale, aumenta per ingrandire tutto
+    private static final double BOOK_ZOOM = 1.25;
     private static final double ZOOM_VERTICAL_ANCHOR_RATIO = 1.10;
 
     private final GameStateTransition gsm;
@@ -222,7 +222,7 @@ public final class BookState implements GameState {
             currentSection = switch (currentSection) {
                 case RECIPES -> Section.INVENTORY;
                 case ORDERS -> Section.RECIPES;
-                case INVENTORY -> Section.INVENTORY; // per ora non arriva a Orders, disabilitata
+                case INVENTORY -> Section.INVENTORY; // Orders is unavailable
             };
         }
         upWasPressed = upNow;
@@ -231,7 +231,7 @@ public final class BookState implements GameState {
         if (downNow && !downWasPressed) {
             currentSection = switch (currentSection) {
                 case INVENTORY -> Section.RECIPES;
-                case RECIPES -> Section.RECIPES; // per ora non arriva a Orders, disabilitata
+                case RECIPES -> Section.RECIPES; // Orders is unavailable
                 case ORDERS -> Section.ORDERS;
             };
         }
@@ -338,7 +338,7 @@ public final class BookState implements GameState {
         if (sheet != null) {
             final double frameW = sheet.getWidth() / BOOKMARK_SHEET_COLS;
             final double frameH = sheet.getHeight() / BOOKMARK_SHEET_ROWS;
-            final int spriteCol = isActive ? 0 : 1; // colonna destra se selezionato
+            final int spriteCol = isActive ? 0 : 1; // right column is selected
             final double sourceX = spriteCol * frameW;
             final double sourceY = spriteRow * frameH;
 

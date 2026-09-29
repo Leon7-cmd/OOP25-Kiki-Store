@@ -47,7 +47,7 @@ public final class RecipeSection implements BookSection {
     private final Font pixelFontSmall;
 
     private List<Recipe> unlockedRecipes;
-    private int leftIndex; // indice della ricetta sulla pagina sinistra; destra = leftIndex + 1
+    private int leftIndex;
 
     /**
      * @param recipeBookController the recipe book controller
@@ -81,8 +81,6 @@ public final class RecipeSection implements BookSection {
 
     @Override
     public void update() {
-        // Vuoto — BookState gestisce l'input per coordinare l'animazione di sfoglio
-        // pagina
     }
 
     @Override
@@ -97,7 +95,6 @@ public final class RecipeSection implements BookSection {
             return;
         }
 
-        // x,y,w,h qui sono l'intero quadrato del libro (w == h)
         final double bookSize = w;
 
         final double leftPageX = x + PAGE_LEFT_FRAC * bookSize;
@@ -108,10 +105,8 @@ public final class RecipeSection implements BookSection {
         final double rightPageY = leftPageY;
         final double rightPageW = (PAGE_RIGHT_FRAC - PAGE_CENTER_FRAC) * bookSize;
 
-        // Pagina sinistra — sempre presente se ci sono ricette
         renderRecipePage(gc, unlockedRecipes.get(leftIndex), leftPageX, leftPageY, leftPageW);
 
-        // Pagina destra — solo se esiste una ricetta successiva nella lista
         final int rightIndex = leftIndex + 1;
         if (rightIndex < unlockedRecipes.size()) {
             renderRecipePage(gc, unlockedRecipes.get(rightIndex), rightPageX, rightPageY, rightPageW);

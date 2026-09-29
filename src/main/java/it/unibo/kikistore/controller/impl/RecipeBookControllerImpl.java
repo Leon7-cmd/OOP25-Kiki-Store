@@ -94,8 +94,6 @@ public final class RecipeBookControllerImpl implements RecipeBookController {
 
     @Override
     public List<Recipe> getCraftableRecipes() {
-        // TO-DO: duplicates CraftingControllerImpl.getAvailableRecipes(), maybe I can
-        // remove one
         return recipeBook.getUnlockedRecipes().stream()
                 .filter(inventoryController::canCraftPotion)
                 .toList();
