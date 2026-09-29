@@ -1,5 +1,7 @@
 package it.unibo.kikistore.engine.state;
 
+import java.util.List;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.kikistore.controller.api.InputHandler;
 import it.unibo.kikistore.controller.api.InventoryController;
@@ -11,6 +13,7 @@ import it.unibo.kikistore.controller.impl.RecipeBookControllerImpl;
 import it.unibo.kikistore.engine.api.GameState;
 import it.unibo.kikistore.engine.api.GameStateTransition;
 import it.unibo.kikistore.model.inventory.api.GameCatalog;
+import it.unibo.kikistore.model.inventory.api.Recipe;
 import it.unibo.kikistore.model.inventory.impl.RecipeBookImpl;
 import it.unibo.kikistore.model.player.impl.PlayerImpl;
 import it.unibo.kikistore.view.states.menu.api.MenuView;
@@ -63,6 +66,15 @@ public final class MenuState implements GameState {
             new RecipeBookImpl(RECIPES_CONFIG_PATH),
             this.inventory
         );
+
+        final List<Recipe> allRecipes = recipeBookController.getAllRecipes();
+        if (!allRecipes.isEmpty()) {
+            recipeBookController.unlockRecipe(allRecipes.get(0));
+            recipeBookController.unlockRecipe(allRecipes.get(1));
+            recipeBookController.unlockRecipe(allRecipes.get(2));
+            recipeBookController.unlockRecipe(allRecipes.get(3));
+            recipeBookController.unlockRecipe(allRecipes.get(4));
+        }
         this.kiki = new PlayerControllerImpl(new PlayerImpl(0.0, 0.0), this.input);
 
         this.menuView = new MenuViewImpl(this.spriteManager);
