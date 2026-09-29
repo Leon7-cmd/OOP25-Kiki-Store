@@ -358,7 +358,7 @@ public final class MemoryState implements GameState {
 
         gc.setFill(COL_TEXT_DIM);
         gc.fillText(memoryController.wasLastRewardBig()
-                ? "Reward: energy boost + a random potion!"
+                ? "Reward: energy boost \n + a random potion!"
                 : "Reward: coins", centerX, y);
         y += LINE_HEIGHT;
 
